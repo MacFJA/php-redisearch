@@ -1,0 +1,27 @@
+*         text=auto
+*.md      text diff=markdown
+*.json    text
+*.toml    text
+*.xml     text
+*.yaml    text
+*.yml     text
+*.php     text diff=php
+.php_cs   text diff=php
+*.lock    text -diff
+Makefile  text
+
+#
+# Exclude files from exporting
+#
+
+/.phan            export-ignore
+/.gitattributes   export-ignore
+/.gitignore       export-ignore
+/.php_cs          export-ignore
+/.unused.php      export-ignore
+/CHANGELOG.md     export-ignore
+/CONTRIBUTING.md  export-ignore
+/Makefile         export-ignore
+/phpmd.xml        export-ignore
+/phpstan.neon     export-ignore
+/psalm.xml        export-ignore

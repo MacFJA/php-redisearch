@@ -1,0 +1,4 @@
+parameters:
+	ignoreErrors:
+		- '#type has no value type specified in iterable type Predis\\Client#'
+		- '#with no value type specified in iterable type Predis\\Client#'
