@@ -29,11 +29,17 @@
         "rskuipers/php-assumptions": "^0.8.0",
         "sebastian/phpcpd": "^6.0",
         "sensiolabs/security-checker": "^6.0",
-        "vimeo/psalm": "^4.2"
+        "vimeo/psalm": "^4.2",
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
             "MacFJA\\RedisSearch\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\MacFJA\\RedisSearch\\": "tests/"
         }
     },
     "support": {

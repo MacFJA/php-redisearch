@@ -1,4 +1,4 @@
-.PHONY: analyze fix-code
+.PHONY: analyze fix-code test
 
 analyze: | vendor
 	$(COMPOSER) install --optimize-autoloader --no-suggest --prefer-dist
@@ -18,6 +18,9 @@ fix-code: | vendor
 	$(COMPOSER) exec -v composer-normalize
 	$(COMPOSER) exec -v php-cs-fixer -- fix
 	@#$(COMPOSER) exec -v psalm -- --alter --issues=all src
+
+test: | vendor
+	$(COMPOSER) exec -v phpunit tests
 
 vendor:
 ifneq (prod,${BUILD_MODE})

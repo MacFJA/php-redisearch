@@ -87,7 +87,7 @@ class NumericFacet implements PartialQuery
             $min = ($this->isMinInclusive ? '' : '(').$this->min;
         }
         if (is_numeric($this->max)) {
-            $min = ($this->isMaxInclusive ? '' : '(').$this->max;
+            $max = ($this->isMaxInclusive ? '' : '(').$this->max;
         }
 
         return sprintf('@%s:[%s %s]', $this->fieldName, $min, $max);
