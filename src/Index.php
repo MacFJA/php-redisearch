@@ -31,6 +31,7 @@ use MacFJA\RedisSearch\Index\Builder\Field;
 use MacFJA\RedisSearch\Index\InfoResult;
 use Predis\Client;
 use Throwable;
+use function trigger_error;
 use function uniqid;
 
 class Index
@@ -54,8 +55,23 @@ class Index
      * @param array<string,float|int|string> $properties
      *
      * @throws Throwable
+     *
+     * @deprecated Use `addDocumentFromArray` instead
+     * @see Index::addDocumentFromArray()
      */
     public function addFromArray(array $properties, ?string $hash = null): string
+    {
+        trigger_error('The method '.__METHOD__.' is deprecated. Use \MacFJA\RedisSearch\Index::addDocumentFromArray instead.', \E_USER_DEPRECATED);
+
+        return $this->addDocumentFromArray($properties, $hash);
+    }
+
+    /**
+     * @param array<string,float|int|string> $properties
+     *
+     * @throws Throwable
+     */
+    public function addDocumentFromArray(array $properties, ?string $hash = null): string
     {
         DataHelper::assertArrayOf(array_keys($properties), 'string');
         DataHelper::assertArrayOf($properties, 'scalar');

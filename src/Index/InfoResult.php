@@ -21,7 +21,18 @@ declare(strict_types=1);
 
 namespace MacFJA\RedisSearch\Index;
 
+use function array_map;
+use function array_shift;
+use function in_array;
 use MacFJA\RedisSearch\Helper\DataHelper;
+use MacFJA\RedisSearch\Helper\RedisHelper;
+use MacFJA\RedisSearch\Index\Builder\Field;
+use MacFJA\RedisSearch\Index\Builder\GeoField;
+use MacFJA\RedisSearch\Index\Builder\NumericField;
+use MacFJA\RedisSearch\Index\Builder\TagField;
+use MacFJA\RedisSearch\Index\Builder\TextField;
+use function sprintf;
+use UnexpectedValueException;
 
 class InfoResult
 {
@@ -125,6 +136,51 @@ class InfoResult
     public function getFields(): array
     {
         return $this->fields;
+    }
+
+    /**
+     * @return array<Field>
+     */
+    public function getFieldsAsObject(): array
+    {
+        return array_map(function (array $field): Field {
+            $name = (string) array_shift($field);
+            array_shift($field); // type
+            $type = (string) array_shift($field);
+
+            switch ($type) {
+                case 'GEO':
+                    return new GeoField(
+                        $name,
+                        in_array('NOINDEX', $field, true)
+                    );
+                case 'NUMERIC':
+                    return new NumericField(
+                        $name,
+                        in_array('SORTABLE', $field, true),
+                        in_array('NOINDEX', $field, true)
+                    );
+                case 'TAG':
+                    return new TagField(
+                        $name,
+                        RedisHelper::getValue($field, 'SEPARATOR'),
+                        in_array('SORTABLE', $field, true),
+                        in_array('NOINDEX', $field, true)
+                    );
+                case 'TEXT':
+                    return new TextField(
+                        $name,
+                        in_array('NOSTEM', $field, true),
+                        /** @phan-suppress-next-line PhanPartialTypeMismatchArgument */
+                        DataHelper::nullOrCast(RedisHelper::getValue($field, 'WEIGHT'), 'float'),
+                        RedisHelper::getValue($field, 'PHONETIC'),
+                        in_array('SORTABLE', $field, true),
+                        in_array('NOINDEX', $field, true)
+                    );
+                default:
+                    throw new UnexpectedValueException(sprintf('Unknown field type "%s" for field "%s"', $type, $name));
+            }
+        }, $this->fields);
     }
 
     public function getDocumentCount(): int

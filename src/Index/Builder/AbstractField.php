@@ -21,7 +21,9 @@ declare(strict_types=1);
 
 namespace MacFJA\RedisSearch\Index\Builder;
 
+use function implode;
 use MacFJA\RedisSearch\Helper\RedisHelper;
+use SGH\Comparable\ComparatorException;
 
 abstract class AbstractField implements Field
 {
@@ -87,5 +89,14 @@ abstract class AbstractField implements Field
             'SORTABLE' => $this->sortable,
             'NOINDEX' => $this->noIndex,
         ]);
+    }
+
+    public function compareTo($object)
+    {
+        if (!($object instanceof Field)) {
+            throw new ComparatorException();
+        }
+
+        return implode(' ', $object->getQueryParts()) <=> implode(' ', $this->getQueryParts());
     }
 }

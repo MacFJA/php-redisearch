@@ -32,11 +32,13 @@ use function is_scalar;
 use function is_string;
 use MacFJA\RedisSearch\Index\Exception\IndexNotFoundException;
 use RuntimeException;
+use function settype;
 use function sprintf;
 use function sscanf;
 use function strpos;
 use function strtolower;
 use Throwable;
+use UnexpectedValueException;
 
 class DataHelper
 {
@@ -79,20 +81,7 @@ class DataHelper
      */
     public static function assertArrayOf(array $array, string $type, $exception = null): void
     {
-        switch ($type) {
-            case 'int':
-                $type = 'integer';
-
-                break;
-            case 'bool':
-                $type = 'boolean';
-
-                break;
-            case 'float':
-                $type = 'double';
-
-                break;
-        }
+        $type = self::getPhpType($type);
         foreach ($array as $item) {
             if (in_array($type, ['string', 'boolean', 'integer', 'double'], true)) {
                 self::assert(gettype($item) === $type, $exception, 2);
@@ -119,5 +108,41 @@ class DataHelper
         if (is_string($result) && 'unknown index name' === strtolower($result)) {
             throw new IndexNotFoundException();
         }
+    }
+
+    /**
+     * @param null|bool|float|int|string $raw
+     *
+     * @return null|bool|float|int|string
+     */
+    public static function nullOrCast($raw, string $cast)
+    {
+        if (is_scalar($raw)) {
+            settype($raw, self::getPhpType($cast, true));
+        }
+
+        return $raw;
+    }
+
+    private static function getPhpType(string $type, bool $exceptionOnUnknown = false): string
+    {
+        switch ($type) {
+            case 'int':
+            case 'integer':
+                return 'integer';
+            case 'bool':
+            case 'boolean':
+                return 'boolean';
+            case 'float':
+            case 'double':
+                return 'double';
+            case 'string':
+                return 'string';
+        }
+        if (true === $exceptionOnUnknown) {
+            throw new UnexpectedValueException(sprintf('The type "%s" is unknown', $type));
+        }
+
+        return $type;
     }
 }

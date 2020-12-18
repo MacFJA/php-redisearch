@@ -34,13 +34,16 @@ use MacFJA\RedisSearch\Helper\RedisHelper;
 use MacFJA\RedisSearch\Suggestion\Result;
 use Predis\Client;
 
+/**
+ * @property-read int $length
+ */
 class Suggestions
 {
     /** @var string */
     private $dictionaryKey;
 
-    /** @var int */
-    private $length = 0;
+    /** @var ?int */
+    private $length;
 
     /** @var Client */
     private $redis;
@@ -60,7 +63,7 @@ class Suggestions
     public function __get(string $name)
     {
         if ('length' === $name) {
-            return $this->length;
+            return $this->length ?? $this->length();
         }
 
         return;
@@ -76,6 +79,7 @@ class Suggestions
         $command = ['FT.SUGADD', $this->dictionaryKey, $suggestion, $score];
         $command = RedisHelper::buildQueryBoolean($command, ['INCR' => $increment]);
         $command = RedisHelper::buildQueryNotNull($command, ['PAYLOAD' => $payload]);
+        /** @phan-suppress-next-line PhanAccessReadOnlyMagicProperty */
         $this->length = $this->redis->executeRaw($command);
     }
 
@@ -105,6 +109,7 @@ class Suggestions
     public function delete(string $suggestion): bool
     {
         $removed = (int) $this->redis->executeRaw(['FT.SUGDEL', $this->dictionaryKey, $suggestion]);
+        /** @phan-suppress-next-line PhanAccessReadOnlyMagicProperty */
         $this->length -= $removed;
 
         return 1 === $removed;
@@ -112,6 +117,7 @@ class Suggestions
 
     public function length(): int
     {
+        /** @phan-suppress-next-line PhanAccessReadOnlyMagicProperty */
         $this->length = (int) $this->redis->executeRaw(['FT.SUGLEN', $this->dictionaryKey]);
 
         return $this->length;

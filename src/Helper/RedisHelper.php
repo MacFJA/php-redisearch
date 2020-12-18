@@ -27,6 +27,7 @@ use function array_combine;
 use function array_filter;
 use function array_keys;
 use function array_merge;
+use function array_shift;
 use function assert;
 use function count;
 use function is_array;
@@ -118,5 +119,20 @@ class RedisHelper
         assert(is_array($keyed));
 
         return $keyed;
+    }
+
+    /**
+     * @param array<float|int|string> $notKeyedArray
+     */
+    public static function getValue(array $notKeyedArray, string $key): ?string
+    {
+        while (count($notKeyedArray) > 0) {
+            $shifted = array_shift($notKeyedArray);
+            if ($shifted === $key && count($notKeyedArray) > 0) {
+                return (string) array_shift($notKeyedArray);
+            }
+        }
+
+        return null;
     }
 }

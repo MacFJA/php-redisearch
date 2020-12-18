@@ -22,8 +22,9 @@ declare(strict_types=1);
 namespace MacFJA\RedisSearch\Index\Builder;
 
 use MacFJA\RedisSearch\PartialQuery;
+use SGH\Comparable\Comparable;
 
-interface Field extends PartialQuery
+interface Field extends PartialQuery, Comparable
 {
     public const TYPE_TEXT = 'TEXT';
 

@@ -337,6 +337,7 @@ return [
     'directory_list' => [
         'src',
         'vendor/predis/predis',
+        'vendor/sgh/comparable/src'
     ],
 
     // A list of individual files to include in analysis
