@@ -20,7 +20,7 @@ fix-code: | vendor
 	@#$(COMPOSER) exec -v psalm -- --alter --issues=all src
 
 test: | vendor
-	$(COMPOSER) exec -v phpunit tests
+	$(COMPOSER) exec -v phpunit -- --whitelist=src tests
 
 vendor:
 ifneq (prod,${BUILD_MODE})

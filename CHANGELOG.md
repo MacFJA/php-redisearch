@@ -6,9 +6,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0]
+
+### Fixed
+
+- Wrong output of the NumericFacet ([Issue#1], [PR#2])
+- Missing Composer plugin
+- Missing `getSeperator` method in `TagField`
+- Missing total number of result
+- Fix typo in search parameter (`RETURN`)
+- Fix prefixes data from index information
+
+### Added
+
+- Unit test on NumericFacet ([PR#2])
+- Index stats can return fields as object.
+- Fields implements Comparable interface
+- Paginate results.
+- Syntax error detection in search.
+
+### Changed
+
+- Rename `Index::addFromArray` to `Index::addDocumentFromArray` for consistency (Depreciation, keeping BC)
+- Rename namespace from `MacFJA\RedisSearch` to `MacFJA\RediSearch`(Depreciation, keeping BC)
+- Uniformize Builder interface (Deprecation, keeping BC)
+
 ## [1.0.0] - 2020-12-05
 
 First version
 
-[Unreleased]: https://github.com/MacFJA/php-redisearch/compare/1.0.0...HEAD
+[Unreleased]: https://github.com/MacFJA/php-redisearch/compare/1.1.0...HEAD
+[1.1.0]: https://github.com/MacFJA/php-redisearch/compare/1.0.0...1.1.0
 [1.0.0]: https://github.com/MacFJA/php-redisearch/releases/tag/1.0.0
+
+[Issue#1]: https://github.com/MacFJA/php-redisearch/issues/1
+[PR#2]: https://github.com/MacFJA/php-redisearch/pulls/2
