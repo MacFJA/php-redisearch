@@ -21,17 +21,18 @@
         "sgh/comparable": "^1.1"
     },
     "require-dev": {
+        "ergebnis/composer-normalize": "^2.13",
         "friendsofphp/php-cs-fixer": "^2.16",
         "insolita/unused-scanner": "^2.2",
         "jakub-onderka/php-parallel-lint": "^1.0",
         "phan/phan": "^3.2",
         "phpmd/phpmd": "^2.9",
         "phpstan/phpstan": "^0.12.57",
+        "phpunit/phpunit": "^9.5",
         "rskuipers/php-assumptions": "^0.8.0",
         "sebastian/phpcpd": "^6.0",
         "sensiolabs/security-checker": "^6.0",
-        "vimeo/psalm": "^4.2",
-        "phpunit/phpunit": "^9.5"
+        "vimeo/psalm": "^4.2"
     },
     "autoload": {
         "psr-4": {
