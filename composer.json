@@ -35,12 +35,13 @@
     },
     "autoload": {
         "psr-4": {
-            "MacFJA\\RedisSearch\\": "src/"
+            "MacFJA\\RediSearch\\": "src/",
+            "MacFJA\\RedisSearch\\": "alias/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\MacFJA\\RedisSearch\\": "tests/"
+            "Tests\\MacFJA\\RediSearch\\": "tests/"
         }
     },
     "support": {

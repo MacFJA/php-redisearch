@@ -19,12 +19,12 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch\Search;
+namespace MacFJA\RediSearch\Search;
 
 use function in_array;
-use MacFJA\RedisSearch\Helper\DataHelper;
-use MacFJA\RedisSearch\PartialQuery;
-use MacFJA\RedisSearch\Search\Exception\UnknownUnitException;
+use MacFJA\RediSearch\Helper\DataHelper;
+use MacFJA\RediSearch\PartialQuery;
+use MacFJA\RediSearch\Search\Exception\UnknownUnitException;
 
 class GeoFilter implements PartialQuery
 {

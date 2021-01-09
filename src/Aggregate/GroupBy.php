@@ -19,14 +19,14 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch\Aggregate;
+namespace MacFJA\RediSearch\Aggregate;
 
 use function count;
-use MacFJA\RedisSearch\Aggregate\Exception\NotEnoughPropertiesException;
-use MacFJA\RedisSearch\Aggregate\Exception\NotEnoughReducersException;
-use MacFJA\RedisSearch\Helper\DataHelper;
-use MacFJA\RedisSearch\Helper\RedisHelper;
-use MacFJA\RedisSearch\PartialQuery;
+use MacFJA\RediSearch\Aggregate\Exception\NotEnoughPropertiesException;
+use MacFJA\RediSearch\Aggregate\Exception\NotEnoughReducersException;
+use MacFJA\RediSearch\Helper\DataHelper;
+use MacFJA\RediSearch\Helper\RedisHelper;
+use MacFJA\RediSearch\PartialQuery;
 use Throwable;
 
 class GroupBy implements PartialQuery

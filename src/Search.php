@@ -19,7 +19,7 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch;
+namespace MacFJA\RediSearch;
 
 use function array_chunk;
 use function array_map;
@@ -32,15 +32,15 @@ use InvalidArgumentException;
 use function is_array;
 use function is_int;
 use function is_string;
-use MacFJA\RedisSearch\Helper\DataHelper;
-use MacFJA\RedisSearch\Helper\RedisHelper;
-use MacFJA\RedisSearch\Index\Builder as IndexBuilder;
-use MacFJA\RedisSearch\Search\Exception\UnsupportedLanguageException;
-use MacFJA\RedisSearch\Search\Filter;
-use MacFJA\RedisSearch\Search\GeoFilter;
-use MacFJA\RedisSearch\Search\Highlight;
-use MacFJA\RedisSearch\Search\Result;
-use MacFJA\RedisSearch\Search\Summarize;
+use MacFJA\RediSearch\Helper\DataHelper;
+use MacFJA\RediSearch\Helper\RedisHelper;
+use MacFJA\RediSearch\Index\Builder as IndexBuilder;
+use MacFJA\RediSearch\Search\Exception\UnsupportedLanguageException;
+use MacFJA\RediSearch\Search\Filter;
+use MacFJA\RediSearch\Search\GeoFilter;
+use MacFJA\RediSearch\Search\Highlight;
+use MacFJA\RediSearch\Search\Result;
+use MacFJA\RediSearch\Search\Summarize;
 use Predis\Client;
 use function reset;
 

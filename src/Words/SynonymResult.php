@@ -19,9 +19,9 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch\Words;
+namespace MacFJA\RediSearch\Words;
 
-use MacFJA\RedisSearch\Helper\DataHelper;
+use MacFJA\RediSearch\Helper\DataHelper;
 
 class SynonymResult
 {

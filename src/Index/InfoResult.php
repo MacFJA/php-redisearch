@@ -19,18 +19,18 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch\Index;
+namespace MacFJA\RediSearch\Index;
 
 use function array_map;
 use function array_shift;
 use function in_array;
-use MacFJA\RedisSearch\Helper\DataHelper;
-use MacFJA\RedisSearch\Helper\RedisHelper;
-use MacFJA\RedisSearch\Index\Builder\Field;
-use MacFJA\RedisSearch\Index\Builder\GeoField;
-use MacFJA\RedisSearch\Index\Builder\NumericField;
-use MacFJA\RedisSearch\Index\Builder\TagField;
-use MacFJA\RedisSearch\Index\Builder\TextField;
+use MacFJA\RediSearch\Helper\DataHelper;
+use MacFJA\RediSearch\Helper\RedisHelper;
+use MacFJA\RediSearch\Index\Builder\Field;
+use MacFJA\RediSearch\Index\Builder\GeoField;
+use MacFJA\RediSearch\Index\Builder\NumericField;
+use MacFJA\RediSearch\Index\Builder\TagField;
+use MacFJA\RediSearch\Index\Builder\TextField;
 use function sprintf;
 use UnexpectedValueException;
 

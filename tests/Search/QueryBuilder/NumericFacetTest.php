@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\MacFJA\RedisSearch\Search\QueryBuilder;
+namespace Tests\MacFJA\RediSearch\Search\QueryBuilder;
 
-use MacFJA\RedisSearch\Search\QueryBuilder\NumericFacet;
+use MacFJA\RediSearch\Search\QueryBuilder\NumericFacet;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \MacFJA\RedisSearch\Search\QueryBuilder\NumericFacet
+ * @coversDefaultClass \MacFJA\RediSearch\Search\QueryBuilder\NumericFacet
  *
  * @see: https://oss.redislabs.com/redisearch/Query_Syntax/#mapping_common_sql_predicates_to_redisearch
  * WHERE num BETWEEN 10 AND 20	    @num:[10 20]

@@ -19,8 +19,8 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch\Search\Exception;
+namespace MacFJA\RediSearch\Search\Exception;
 
-class UnsupportedLanguageException extends \MacFJA\RedisSearch\Index\Builder\Exception\UnsupportedLanguageException
+class UnsupportedLanguageException extends \MacFJA\RediSearch\Index\Builder\Exception\UnsupportedLanguageException
 {
 }

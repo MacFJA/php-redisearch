@@ -19,16 +19,16 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch;
+namespace MacFJA\RediSearch;
 
 use function array_keys;
 use function array_map;
 use function array_merge;
 use function is_string;
-use MacFJA\RedisSearch\Helper\DataHelper;
-use MacFJA\RedisSearch\Helper\RedisHelper;
-use MacFJA\RedisSearch\Index\Builder\Field;
-use MacFJA\RedisSearch\Index\InfoResult;
+use MacFJA\RediSearch\Helper\DataHelper;
+use MacFJA\RediSearch\Helper\RedisHelper;
+use MacFJA\RediSearch\Index\Builder\Field;
+use MacFJA\RediSearch\Index\InfoResult;
 use Predis\Client;
 use Throwable;
 use function trigger_error;
@@ -61,7 +61,7 @@ class Index
      */
     public function addFromArray(array $properties, ?string $hash = null): string
     {
-        trigger_error('The method '.__METHOD__.' is deprecated. Use \MacFJA\RedisSearch\Index::addDocumentFromArray instead.', \E_USER_DEPRECATED);
+        trigger_error('The method '.__METHOD__.' is deprecated. Use \MacFJA\RediSearch\Index::addDocumentFromArray instead.', \E_USER_DEPRECATED);
 
         return $this->addDocumentFromArray($properties, $hash);
     }

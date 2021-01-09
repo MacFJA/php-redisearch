@@ -19,11 +19,11 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch\Index\Builder;
+namespace MacFJA\RediSearch\Index\Builder;
 
-use MacFJA\RedisSearch\Helper\DataHelper;
-use MacFJA\RedisSearch\Helper\RedisHelper;
-use MacFJA\RedisSearch\Index\Builder\Exception\MustBeSingleCharException;
+use MacFJA\RediSearch\Helper\DataHelper;
+use MacFJA\RediSearch\Helper\RedisHelper;
+use MacFJA\RediSearch\Index\Builder\Exception\MustBeSingleCharException;
 use function strlen;
 
 class TagField extends AbstractField

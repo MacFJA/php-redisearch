@@ -19,7 +19,7 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch\Helper;
+namespace MacFJA\RediSearch\Helper;
 
 use function assert;
 use function class_exists;
@@ -30,7 +30,7 @@ use function in_array;
 use function is_array;
 use function is_scalar;
 use function is_string;
-use MacFJA\RedisSearch\Index\Exception\IndexNotFoundException;
+use MacFJA\RediSearch\Index\Exception\IndexNotFoundException;
 use RuntimeException;
 use function settype;
 use function sprintf;

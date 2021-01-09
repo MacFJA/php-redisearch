@@ -19,7 +19,7 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch\Index\Exception;
+namespace MacFJA\RediSearch\Index\Exception;
 
 use RuntimeException;
 use function sprintf;

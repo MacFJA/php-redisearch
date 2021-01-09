@@ -19,7 +19,7 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch;
+namespace MacFJA\RediSearch;
 
 use function array_keys;
 use function array_map;
@@ -28,12 +28,12 @@ use function array_shift;
 use function assert;
 use function is_int;
 use function is_string;
-use MacFJA\RedisSearch\Aggregate\GroupBy;
-use MacFJA\RedisSearch\Aggregate\Reducer;
-use MacFJA\RedisSearch\Aggregate\Result;
-use MacFJA\RedisSearch\Aggregate\SortBy;
-use MacFJA\RedisSearch\Helper\DataHelper;
-use MacFJA\RedisSearch\Helper\RedisHelper;
+use MacFJA\RediSearch\Aggregate\GroupBy;
+use MacFJA\RediSearch\Aggregate\Reducer;
+use MacFJA\RediSearch\Aggregate\Result;
+use MacFJA\RediSearch\Aggregate\SortBy;
+use MacFJA\RediSearch\Helper\DataHelper;
+use MacFJA\RediSearch\Helper\RedisHelper;
 use Predis\Client;
 use Throwable;
 

@@ -19,7 +19,7 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch\Search\QueryBuilder;
+namespace MacFJA\RediSearch\Search\QueryBuilder;
 
 use function implode;
 use function is_bool;

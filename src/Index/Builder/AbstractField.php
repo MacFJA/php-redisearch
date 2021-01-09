@@ -19,10 +19,10 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch\Index\Builder;
+namespace MacFJA\RediSearch\Index\Builder;
 
 use function implode;
-use MacFJA\RedisSearch\Helper\RedisHelper;
+use MacFJA\RediSearch\Helper\RedisHelper;
 use SGH\Comparable\ComparatorException;
 
 abstract class AbstractField implements Field

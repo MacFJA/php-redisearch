@@ -19,7 +19,7 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch;
+namespace MacFJA\RediSearch;
 
 use function array_chunk;
 use function array_column;
@@ -31,11 +31,11 @@ use function count;
 use function is_array;
 use function is_bool;
 use function is_string;
-use MacFJA\RedisSearch\Helper\DataHelper;
-use MacFJA\RedisSearch\Helper\RedisHelper;
-use MacFJA\RedisSearch\Words\Exception\NotEnoughTermsException;
-use MacFJA\RedisSearch\Words\SpellingResult;
-use MacFJA\RedisSearch\Words\SynonymResult;
+use MacFJA\RediSearch\Helper\DataHelper;
+use MacFJA\RediSearch\Helper\RedisHelper;
+use MacFJA\RediSearch\Words\Exception\NotEnoughTermsException;
+use MacFJA\RediSearch\Words\SpellingResult;
+use MacFJA\RediSearch\Words\SynonymResult;
 use Predis\Client;
 use Throwable;
 

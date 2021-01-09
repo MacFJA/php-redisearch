@@ -19,18 +19,18 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch\Search;
+namespace MacFJA\RediSearch\Search;
 
 use function array_map;
 use function implode;
-use MacFJA\RedisSearch\Search\QueryBuilder\AndGroup;
-use MacFJA\RedisSearch\Search\QueryBuilder\GroupPartialQuery;
-use MacFJA\RedisSearch\Search\QueryBuilder\NumericFacet;
-use MacFJA\RedisSearch\Search\QueryBuilder\OrGroup;
-use MacFJA\RedisSearch\Search\QueryBuilder\PartialQuery;
-use MacFJA\RedisSearch\Search\QueryBuilder\TagFacet;
-use MacFJA\RedisSearch\Search\QueryBuilder\TextFacet;
-use MacFJA\RedisSearch\Search\QueryBuilder\Word;
+use MacFJA\RediSearch\Search\QueryBuilder\AndGroup;
+use MacFJA\RediSearch\Search\QueryBuilder\GroupPartialQuery;
+use MacFJA\RediSearch\Search\QueryBuilder\NumericFacet;
+use MacFJA\RediSearch\Search\QueryBuilder\OrGroup;
+use MacFJA\RediSearch\Search\QueryBuilder\PartialQuery;
+use MacFJA\RediSearch\Search\QueryBuilder\TagFacet;
+use MacFJA\RediSearch\Search\QueryBuilder\TextFacet;
+use MacFJA\RediSearch\Search\QueryBuilder\Word;
 use function strlen;
 
 class QueryBuilder

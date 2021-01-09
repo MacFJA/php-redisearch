@@ -19,9 +19,9 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch\Index\Builder;
+namespace MacFJA\RediSearch\Index\Builder;
 
-use MacFJA\RedisSearch\PartialQuery;
+use MacFJA\RediSearch\PartialQuery;
 use SGH\Comparable\Comparable;
 
 interface Field extends PartialQuery, Comparable

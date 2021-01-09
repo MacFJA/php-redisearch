@@ -19,7 +19,7 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch\Index;
+namespace MacFJA\RediSearch\Index;
 
 use function array_filter;
 use function array_merge;
@@ -27,23 +27,23 @@ use function assert;
 use function count;
 use function in_array;
 use function is_string;
-use MacFJA\RedisSearch\Helper\DataHelper;
-use MacFJA\RedisSearch\Helper\RedisHelper;
-use MacFJA\RedisSearch\Index\Builder\Exception\MissingNameException;
-use MacFJA\RedisSearch\Index\Builder\Exception\TooManyFields;
-use MacFJA\RedisSearch\Index\Builder\Exception\UnsupportedLanguageException;
-use MacFJA\RedisSearch\Index\Builder\Field;
-use MacFJA\RedisSearch\Index\Builder\GeoField;
-use MacFJA\RedisSearch\Index\Builder\NumericField;
-use MacFJA\RedisSearch\Index\Builder\TagField;
-use MacFJA\RedisSearch\Index\Builder\TextField;
+use MacFJA\RediSearch\Helper\DataHelper;
+use MacFJA\RediSearch\Helper\RedisHelper;
+use MacFJA\RediSearch\Index\Builder\Exception\MissingNameException;
+use MacFJA\RediSearch\Index\Builder\Exception\TooManyFields;
+use MacFJA\RediSearch\Index\Builder\Exception\UnsupportedLanguageException;
+use MacFJA\RediSearch\Index\Builder\Field;
+use MacFJA\RediSearch\Index\Builder\GeoField;
+use MacFJA\RediSearch\Index\Builder\NumericField;
+use MacFJA\RediSearch\Index\Builder\TagField;
+use MacFJA\RediSearch\Index\Builder\TextField;
 use Predis\Client;
 use Throwable;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields) -- Builder Class
  */
-class Builder implements \MacFJA\RedisSearch\Builder
+class Builder implements \MacFJA\RediSearch\Builder
 {
     public const STRUCTURE_HASH = 'HASH';
 
@@ -258,7 +258,7 @@ class Builder implements \MacFJA\RedisSearch\Builder
         return $this;
     }
 
-    public function reset(): \MacFJA\RedisSearch\Builder
+    public function reset(): \MacFJA\RediSearch\Builder
     {
         $this->fields = [];
         $this->name = null;

@@ -19,10 +19,10 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch\Search;
+namespace MacFJA\RediSearch\Search;
 
 use function array_keys;
-use MacFJA\RedisSearch\Helper\DataHelper;
+use MacFJA\RediSearch\Helper\DataHelper;
 
 class Result
 {

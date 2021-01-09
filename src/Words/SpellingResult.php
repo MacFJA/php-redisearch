@@ -19,14 +19,14 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RedisSearch\Words;
+namespace MacFJA\RediSearch\Words;
 
 use function array_keys;
 use function assert;
 use function count;
 use function is_string;
 use function key;
-use MacFJA\RedisSearch\Helper\DataHelper;
+use MacFJA\RediSearch\Helper\DataHelper;
 use function reset;
 use Throwable;
 
