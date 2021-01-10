@@ -46,6 +46,7 @@ use function reset;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields) -- Builder Class
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) -- Builder Class
  */
 class Search implements Builder
 {

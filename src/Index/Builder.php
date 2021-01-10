@@ -42,6 +42,7 @@ use Throwable;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields) -- Builder Class
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) -- Builder Class
  */
 class Builder implements \MacFJA\RediSearch\Builder
 {

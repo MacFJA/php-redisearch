@@ -46,6 +46,11 @@ class TagField extends AbstractField
         return self::TYPE_TAG;
     }
 
+    public function getSeparator(): ?string
+    {
+        return $this->separator;
+    }
+
     public function getQueryParts(): array
     {
         $query = parent::getQueryParts();

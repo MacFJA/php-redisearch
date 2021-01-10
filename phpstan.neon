@@ -2,5 +2,5 @@ parameters:
 	ignoreErrors:
 		- '#type has no value type specified in iterable type Predis\\Client#'
 		- '#with no value type specified in iterable type Predis\\Client#'
-		- message: '#MacFJA\\RedisSearch\\Index\\Builder\\\w+ constructor expects [\w\|]+, bool\|float\|int\|string\|null given#'
+		- message: '#MacFJA\\RediSearch\\Index\\Builder\\\w+ constructor expects [\w\|]+, bool\|float\|int\|string\|null given#'
 		  path: src/Index/InfoResult.php
