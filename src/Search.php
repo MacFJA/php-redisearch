@@ -33,6 +33,7 @@ use function is_array;
 use function is_int;
 use function is_string;
 use MacFJA\RediSearch\Helper\DataHelper;
+use MacFJA\RediSearch\Helper\PaginatedResult;
 use MacFJA\RediSearch\Helper\RedisHelper;
 use MacFJA\RediSearch\Index\Builder as IndexBuilder;
 use MacFJA\RediSearch\Search\Exception\UnsupportedLanguageException;
@@ -53,6 +54,10 @@ class Search implements Builder
     public const SORT_ASC = 'ASC';
 
     public const SORT_DESC = 'DESC';
+
+    private const DEFAULT_OFFSET = 0;
+
+    private const DEFAULT_LIMIT = 10;
 
     /** @var Client */
     private $redis;
@@ -378,13 +383,24 @@ class Search implements Builder
 
     /**
      * @return array<Result>
+     *
+     * @deprecated Use \MacFJA\RediSearch\Search::execute()
      */
     public function search(): array
+    {
+        return $this->execute()->getItems();
+    }
+
+    /**
+     * @return PaginatedResult<Result>
+     */
+    public function execute(): PaginatedResult
     {
         $rawResult = $this->redis->executeRaw($this->buildQuery());
         DataHelper::handleRawResult($rawResult);
 
-        array_shift($rawResult);
+        $totalCount = array_shift($rawResult);
+        assert(is_int($totalCount));
 
         $chunkSize = 2 // Hash + fields
             + ($this->withScores ? 1 : 0)
@@ -393,7 +409,7 @@ class Search implements Builder
 
         $documents = array_chunk($rawResult, $chunkSize);
 
-        $results = array_map(function ($document) {
+        $items = array_map(function ($document) {
             $hash = array_shift($document) ?? '';
             $score = $this->withScores ? (float) array_shift($document) : null;
             $payload = $this->withPayloads ? array_shift($document) : null;
@@ -409,9 +425,11 @@ class Search implements Builder
             return new Result($hash, $fields, $score, $payload, $sortKey);
         }, $documents);
 
+        $result = new class($totalCount, $items, $this->resultOffset ?? self::DEFAULT_OFFSET, $this->resultLimit ?? self::DEFAULT_LIMIT) extends PaginatedResult {
+        };
         $this->reset();
 
-        return $results;
+        return $result;
     }
 
     /**

@@ -33,6 +33,7 @@ use MacFJA\RediSearch\Aggregate\Reducer;
 use MacFJA\RediSearch\Aggregate\Result;
 use MacFJA\RediSearch\Aggregate\SortBy;
 use MacFJA\RediSearch\Helper\DataHelper;
+use MacFJA\RediSearch\Helper\PaginatedResult;
 use MacFJA\RediSearch\Helper\RedisHelper;
 use Predis\Client;
 use Throwable;
@@ -217,20 +218,33 @@ class Aggregate implements Builder
 
     /**
      * @return array<Result>
+     *
+     * @deprecated Use \MacFJA\RediSearch\Aggregate::execute
      */
     public function aggregate(): array
     {
+        return $this->execute()->getItems();
+    }
+
+    /**
+     * @return PaginatedResult<Result>
+     */
+    public function execute()
+    {
         $rawResult = $this->redis->executeRaw($this->buildQuery());
 
-        array_shift($rawResult);
+        $totalCount = array_shift($rawResult);
+        assert(is_int($totalCount));
 
-        $results = array_map(function (array $document) {
+        $items = array_map(function (array $document) {
             return new Result(RedisHelper::getPairs($document));
         }, $rawResult);
 
+        $result = new class($totalCount, $items, 0, 0) extends PaginatedResult {
+        };
         $this->reset();
 
-        return $results;
+        return $result;
     }
 
     /**

@@ -24,4 +24,9 @@ namespace MacFJA\RediSearch;
 interface Builder
 {
     public function reset(): self;
+
+    /**
+     * @return mixed
+     */
+    public function execute();
 }

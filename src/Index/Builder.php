@@ -283,7 +283,15 @@ class Builder implements \MacFJA\RediSearch\Builder
         return $this;
     }
 
+    /**
+     * @deprecated Use \MacFJA\RediSearch\Index\Builder::execute()
+     */
     public function create(): bool
+    {
+        return $this->execute();
+    }
+
+    public function execute(): bool
     {
         $this->validateData();
         $query = $this->createRequest();
