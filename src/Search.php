@@ -462,7 +462,7 @@ class Search implements Builder
         $query = RedisHelper::buildQueryList($query, [
             'INKEYS' => $this->inKeys,
             'INFIELDS' => $this->inFields,
-            'RETURNS' => $this->returns,
+            'RETURN' => $this->returns,
         ]);
         $query = RedisHelper::buildQueryNotNull($query, [
             'LANGUAGE' => $this->language,
