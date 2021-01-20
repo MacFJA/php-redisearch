@@ -23,7 +23,9 @@ namespace MacFJA\RediSearch\Index;
 
 use function array_map;
 use function array_shift;
+use function assert;
 use function in_array;
+use function is_array;
 use MacFJA\RediSearch\Helper\DataHelper;
 use MacFJA\RediSearch\Helper\RedisHelper;
 use MacFJA\RediSearch\Index\Builder\Field;
@@ -45,7 +47,7 @@ class InfoResult
     /** @var array<string> */
     private $indexOptions = [];
 
-    /** @var array<string> */
+    /** @var array<array<string>|string> */
     private $definition = [];
 
     /** @var array<mixed> */
@@ -81,18 +83,26 @@ class InfoResult
     /**
      * InfoResult constructor.
      *
-     * @param array<string> $indexOptions
-     * @param array<string> $definition
-     * @param array<mixed>  $fields
-     * @param array<string> $stopWords
+     * @param array<string>               $indexOptions
+     * @param array<array<string>|string> $definition
+     * @param array<mixed>                $fields
+     * @param array<string>               $stopWords
      *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(string $indexName, array $indexOptions, array $definition, array $fields, int $documentCount, int $maxDocumentId, int $termsCount, float $averageRecordSize, float $indexSize, int $indexBlockCount, bool $indexing, int $indexingFailureCount, float $percentIndexed, array $stopWords)
     {
+        /** @var array<string> $prefixes */
+        $prefixes = $definition['prefixes'] ?? [];
+        assert(is_array($prefixes));
+        unset($definition['prefixes']);
+        /** @var array<string> $definition */
         DataHelper::assertArrayOf($indexOptions, 'string');
         DataHelper::assertArrayOf($definition, 'string');
+        DataHelper::assertArrayOf($prefixes, 'string');
         DataHelper::assertArrayOf($stopWords, 'string');
+        $definition['prefixes'] = $prefixes;
+
         $this->indexName = $indexName;
         $this->indexOptions = $indexOptions;
         $this->definition = $definition;
@@ -123,7 +133,7 @@ class InfoResult
     }
 
     /**
-     * @return array<string>
+     * @return array<array<string>|string>
      */
     public function getDefinition(): array
     {

@@ -108,9 +108,9 @@ class RedisHelper
     }
 
     /**
-     * @param array<float|int|string> $notKeyedArray
+     * @param array<float|int|mixed|string> $notKeyedArray
      *
-     * @return array<string,float|int|string>
+     * @return array<string,mixed>
      */
     public static function getPairs(array $notKeyedArray): array
     {

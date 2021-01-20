@@ -24,6 +24,7 @@ namespace MacFJA\RediSearch;
 use function array_keys;
 use function array_map;
 use function array_merge;
+use function is_array;
 use function is_string;
 use MacFJA\RediSearch\Helper\DataHelper;
 use MacFJA\RediSearch\Helper\RedisHelper;
@@ -146,11 +147,20 @@ class Index
         DataHelper::handleRawResult($result);
 
         $stats = RedisHelper::getPairs($result);
+        $definitions = RedisHelper::getPairs($stats['index_definition'] ?? []);
+        $definitions = array_map(function ($item) {
+            if (!is_array($item)) {
+                return (string) $item;
+            }
+
+            return $item;
+        }, $definitions);
+        $definitions['prefixes'] = array_map('strval', (array) ($definitions['prefixes'] ?? []));
 
         return new InfoResult(
             (string) $stats['index_name'],
             array_map('strval', (array) ($stats['index_options'] ?? [])),
-            array_map('strval', (array) ($stats['index_definition'] ?? [])),
+            $definitions,
             (array) ($stats['fields'] ?? []),
             (int) $stats['num_docs'],
             (int) $stats['max_doc_id'],
