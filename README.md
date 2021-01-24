@@ -95,14 +95,12 @@ $query = $queryBuilder
 You can contribute to the library.
 To do so, you have Github issues to:
  - ask your question
- - notify any change in the providers
- - suggest new provider
- - request any change (typo, bad code, etc.)
+ - request any change (typo, bad code, new feature etc.)
  - and much more...
 
 You also have PR to:
- - add a new provider
  - suggest a correction
+ - suggest a new feature
  - and much more... 
  
 See [CONTRIBUTING](CONTRIBUTING.md) for more information.
