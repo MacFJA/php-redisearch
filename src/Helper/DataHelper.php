@@ -37,6 +37,7 @@ use function sprintf;
 use function sscanf;
 use function strpos;
 use function strtolower;
+use function substr;
 use Throwable;
 use UnexpectedValueException;
 
@@ -77,12 +78,20 @@ class DataHelper
      * @param null|string|Throwable $exception
      *
      * @throws Throwable
-     * @suppress PhanUndeclaredClass
      */
     public static function assertArrayOf(array $array, string $type, $exception = null): void
     {
+        $allowNull = false;
+        if (0 === strpos($type, '?')) {
+            $allowNull = true;
+            $type = substr($type, 1);
+            assert(is_string($type));
+        }
         $type = self::getPhpType($type);
         foreach ($array as $item) {
+            if (true === $allowNull && null === $item) {
+                continue;
+            }
             if (in_array($type, ['string', 'boolean', 'integer', 'double'], true)) {
                 self::assert(gettype($item) === $type, $exception, 2);
             } elseif ('scalar' === $type) {

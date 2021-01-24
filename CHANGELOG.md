@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Bad copy/paste in the [README](README.md) file
+- Allow `null` value in Aggregate result
 
 ## [1.1.0]
 

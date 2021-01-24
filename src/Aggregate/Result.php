@@ -26,24 +26,24 @@ use Throwable;
 
 class Result
 {
-    /** @var array<string,float|int|string> */
+    /** @var array<string,null|float|int|string> */
     private $fields = [];
 
     /**
      * Result constructor.
      *
-     * @param array<string,float|int|string> $fields
+     * @param array<string,null|float|int|string> $fields
      *
      * @throws Throwable
      */
     public function __construct(array $fields)
     {
-        DataHelper::assertArrayOf($fields, 'scalar');
+        DataHelper::assertArrayOf($fields, '?scalar');
         $this->fields = $fields;
     }
 
     /**
-     * @return array<string,float|int|string>
+     * @return array<string,null|float|int|string>
      */
     public function getFields(): array
     {
