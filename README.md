@@ -16,10 +16,10 @@ composer require macfja/redisearch
 
 ```php
 $client = new \Predis\Client(/* ... */);
-$builder = new \MacFJA\RedisSearch\Index\Builder($client);
+$builder = new \MacFJA\RediSearch\Index\Builder($client);
 
 // Field can be create in advance
-$address = new \MacFJA\RedisSearch\Index\Builder\GeoField('address');
+$address = new \MacFJA\RediSearch\Index\Builder\GeoField('address');
 
 $builder
     ->withName('person')
@@ -35,7 +35,7 @@ $builder
 
 ```php
 $client = new \Predis\Client(/* ... */);
-$index = new \MacFJA\RedisSearch\Index('person', $client);
+$index = new \MacFJA\RediSearch\Index('person', $client);
 $index->addFromArray([
     'firstname' => 'Joe',
     'lastname' => 'Doe',
@@ -48,7 +48,7 @@ $index->addFromArray([
 
 ```php
 $client = new \Predis\Client(/* ... */);
-$search = new \MacFJA\RedisSearch\Search($client);
+$search = new \MacFJA\RediSearch\Search($client);
 
 $results = $search
     ->withIndex('person')
@@ -61,14 +61,14 @@ $results = $search
 #### Create a search query
 
 ```php
-use \MacFJA\RedisSearch\Search\QueryBuilder\NumericFacet;
-use \MacFJA\RedisSearch\Search\QueryBuilder\Negation;
-use \MacFJA\RedisSearch\Search\QueryBuilder\GeoFacet;
-use \MacFJA\RedisSearch\Search\QueryBuilder\Optional;
-use \MacFJA\RedisSearch\Search\QueryBuilder\Word;
-use \MacFJA\RedisSearch\Search\GeoFilter;
+use \MacFJA\RediSearch\Search\QueryBuilder\NumericFacet;
+use \MacFJA\RediSearch\Search\QueryBuilder\Negation;
+use \MacFJA\RediSearch\Search\QueryBuilder\GeoFacet;
+use \MacFJA\RediSearch\Search\QueryBuilder\Optional;
+use \MacFJA\RediSearch\Search\QueryBuilder\Word;
+use \MacFJA\RediSearch\Search\GeoFilter;
 
-$queryBuilder = \MacFJA\RedisSearch\Search\QueryBuilder::create();
+$queryBuilder = \MacFJA\RediSearch\Search\QueryBuilder::create();
 $query = $queryBuilder
     ->addExpression(NumericFacet::greaterThan('age', 17))
     ->addString('Doe')

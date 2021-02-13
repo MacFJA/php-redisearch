@@ -31,6 +31,7 @@ use function is_array;
 use function is_scalar;
 use function is_string;
 use MacFJA\RediSearch\Index\Exception\IndexNotFoundException;
+use MacFJA\RediSearch\Search\Exception\SyntaxErrorException;
 use RuntimeException;
 use function settype;
 use function sprintf;
@@ -106,6 +107,7 @@ class DataHelper
      * @param array<mixed>|mixed $result
      *
      * @throws IndexNotFoundException
+     * @throws SyntaxErrorException
      */
     public static function handleRawResult($result): void
     {
@@ -116,6 +118,9 @@ class DataHelper
         }
         if (is_string($result) && 'unknown index name' === strtolower($result)) {
             throw new IndexNotFoundException();
+        }
+        if (is_string($result) && 0 === strpos($result, 'Syntax error')) {
+            throw new SyntaxErrorException($result);
         }
     }
 

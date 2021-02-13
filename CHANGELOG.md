@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bad copy/paste in the [README](README.md) file
 - Allow `null` value in Aggregate result
+- Use correct namespace in the [README](README.md) file
+
+### Added
+
+- Detection of syntax error from Redis response
 
 ## [1.1.0]
 
