@@ -21,6 +21,7 @@
         "sgh/comparable": "^1.1"
     },
     "require-dev": {
+        "enlightn/security-checker": "^1.5",
         "ergebnis/composer-normalize": "^2.13",
         "friendsofphp/php-cs-fixer": "^2.16",
         "insolita/unused-scanner": "^2.2",
@@ -31,7 +32,6 @@
         "phpunit/phpunit": "^9.5",
         "rskuipers/php-assumptions": "^0.8.0",
         "sebastian/phpcpd": "^6.0",
-        "sensiolabs/security-checker": "^6.0",
         "vimeo/psalm": "^4.2"
     },
     "autoload": {
