@@ -38,8 +38,6 @@ class GroupBy implements PartialQuery
     private $reducers = [];
 
     /**
-     * GroupBy constructor.
-     *
      * @param array<string>  $properties
      * @param array<Reducer> $reducers
      *

@@ -41,9 +41,6 @@ class NumericFacet implements PartialQuery
     /** @var bool */
     private $isMinInclusive;
 
-    /**
-     * NumericFacet constructor.
-     */
     public function __construct(string $fieldName, ?float $min, ?float $max, bool $isMinInclusive = true, bool $isMaxInclusive = true)
     {
         $this->fieldName = $fieldName;

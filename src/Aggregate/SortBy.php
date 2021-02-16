@@ -50,8 +50,6 @@ class SortBy implements \MacFJA\RediSearch\PartialQuery
     private $max;
 
     /**
-     * SortBy constructor.
-     *
      * @psalm-param array<string,"ASC"|"DESC"> $properties
      * @phpstab-param array<string,"ASC"|"DESC"> $properties
      *

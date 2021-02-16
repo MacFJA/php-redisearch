@@ -39,8 +39,6 @@ class Reducer implements PartialQuery
     private $name;
 
     /**
-     * Reducer constructor.
-     *
      * @param array<float|int|string> $arguments
      *
      * @throws Throwable

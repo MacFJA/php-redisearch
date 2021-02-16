@@ -39,8 +39,6 @@ class SpellingResult
     private $suggestions = [];
 
     /**
-     * SpellingResult constructor.
-     *
      * @param array<string, float> $suggestions
      *
      * @throws Throwable

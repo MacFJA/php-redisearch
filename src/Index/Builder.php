@@ -114,9 +114,6 @@ class Builder implements \MacFJA\RediSearch\Builder
     /** @var bool */
     private $skipInitialScan = false;
 
-    /**
-     * Builder constructor.
-     */
     public function __construct(Client $redis)
     {
         $this->redis = $redis;

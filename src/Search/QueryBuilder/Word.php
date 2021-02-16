@@ -30,8 +30,6 @@ class Word implements PartialQuery
     private $words = [];
 
     /**
-     * Word constructor.
-     *
      * @param string ...$words
      */
     public function __construct(string ...$words)

@@ -32,8 +32,6 @@ class SynonymResult
     private $synonyms = [];
 
     /**
-     * SynonymResult constructor.
-     *
      * @param array<string> $synonyms
      */
     public function __construct(string $for, array $synonyms)

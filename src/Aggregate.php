@@ -73,9 +73,6 @@ class Aggregate implements Builder
     /** @var null|string */
     private $filter;
 
-    /**
-     * Aggregate constructor.
-     */
     public function __construct(Client $redis)
     {
         $this->redis = $redis;

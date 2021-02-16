@@ -39,8 +39,6 @@ class Summarize implements \MacFJA\RediSearch\PartialQuery
     private $separator;
 
     /**
-     * Summarize constructor.
-     *
      * @param array<string> $fields
      * @param array<string> $fragments
      */

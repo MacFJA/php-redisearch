@@ -81,8 +81,6 @@ class InfoResult
     private $stopWords;
 
     /**
-     * InfoResult constructor.
-     *
      * @param array<string>               $indexOptions
      * @param array<array<string>|string> $definition
      * @param array<mixed>                $fields

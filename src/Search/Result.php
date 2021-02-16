@@ -42,8 +42,6 @@ class Result
     private $sortKey;
 
     /**
-     * Result constructor.
-     *
      * @param array<string,bool|float|int|string> $fields
      */
     public function __construct(string $hash, array $fields = [], ?float $score = null, ?string $payload = null, ?string $sortKey = null)

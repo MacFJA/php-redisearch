@@ -37,8 +37,6 @@ class Highlight implements \MacFJA\RediSearch\PartialQuery
     private $closeTag;
 
     /**
-     * Highlight constructor.
-     *
      * @param array<string> $fields
      */
     public function __construct(array $fields = [], ?string $openTag = null, ?string $closeTag = null)

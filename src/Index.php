@@ -43,9 +43,6 @@ class Index
     /** @var Client */
     private $redis;
 
-    /**
-     * Index constructor.
-     */
     public function __construct(string $indexKey, Client $redis)
     {
         $this->indexKey = $indexKey;

@@ -30,8 +30,6 @@ class Result
     private $fields = [];
 
     /**
-     * Result constructor.
-     *
      * @param array<string,null|float|int|string> $fields
      *
      * @throws Throwable

@@ -29,8 +29,6 @@ use UnexpectedValueException;
 class UnknownSortDirectionException extends UnexpectedValueException
 {
     /**
-     * UnknownSortDirectionException constructor.
-     *
      * @param array<string> $directions
      */
     public function __construct(array $directions, int $code = 0, ?Throwable $previous = null)

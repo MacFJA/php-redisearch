@@ -48,9 +48,6 @@ class Suggestions
     /** @var Client */
     private $redis;
 
-    /**
-     * Suggestions constructor.
-     */
     public function __construct(string $dictionaryKey, Client $redis)
     {
         $this->dictionaryKey = $dictionaryKey;

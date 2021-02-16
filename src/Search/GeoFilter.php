@@ -51,9 +51,6 @@ class GeoFilter implements PartialQuery
     /** @var string */
     private $unit;
 
-    /**
-     * GeoFilter constructor.
-     */
     public function __construct(string $fieldName, float $lon, float $lat, int $radius, string $unit)
     {
         DataHelper::assert(

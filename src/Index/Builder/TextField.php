@@ -34,9 +34,6 @@ class TextField extends AbstractField
     /** @var null|string */
     private $phonetic;
 
-    /**
-     * TextField constructor.
-     */
     public function __construct(string $name, bool $noStem = false, ?float $weight = null, ?string $phonetic = null, bool $sortable = false, bool $noIndex = false)
     {
         parent::__construct($name, $sortable, $noIndex);

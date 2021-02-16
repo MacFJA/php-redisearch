@@ -41,9 +41,6 @@ class QueryBuilder
     /** @var array<QueryBuilder> */
     private $queryBuilders = [];
 
-    /**
-     * QueryBuilder constructor.
-     */
     private function __construct(bool $isOrGroup)
     {
         if (true === $isOrGroup) {
