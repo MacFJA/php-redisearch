@@ -21,7 +21,8 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Search\QueryBuilder;
 
-use function implode;
+use function array_map;
+use MacFJA\RediSearch\Helper\EscapeHelper;
 use function sprintf;
 
 class TagFacet implements PartialQuery
@@ -40,7 +41,11 @@ class TagFacet implements PartialQuery
 
     public function render(): string
     {
-        return sprintf('@%s:{%s}', $this->field, implode(' | ', $this->orValues));
+        $terms = OrGroup::renderNoParentheses(...array_map(function (string $orValue) {
+            return new Word($orValue);
+        }, $this->orValues));
+
+        return sprintf('@%s:{%s}', EscapeHelper::escapeFieldName($this->field), $terms);
     }
 
     public function includeSpace(): bool

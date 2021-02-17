@@ -19,43 +19,16 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RediSearch\Search\QueryBuilder;
+namespace MacFJA\RediSearch\Search\Exception;
 
-use function ctype_digit;
+use OutOfRangeException;
 use function sprintf;
-use function substr;
+use Throwable;
 
-class Negation implements PartialQuery
+class OutOfRangeLevenshteinDistanceException extends OutOfRangeException
 {
-    private const WITH_SPACE_PATTERN = '-(%s)';
-
-    private const WITHOUT_SPACE_PATTERN = '-%s';
-
-    /** @var PartialQuery */
-    private $expression;
-
-    public function __construct(PartialQuery $expression)
+    public function __construct(int $providedDistance, int $code = 0, ?Throwable $previous = null)
     {
-        $this->expression = $expression;
-    }
-
-    public function render(): string
-    {
-        $withParentheses = $this->expression->includeSpace() || ctype_digit(substr($this->expression->render(), 0, 1));
-
-        return sprintf(
-            true === $withParentheses ? self::WITH_SPACE_PATTERN : self::WITHOUT_SPACE_PATTERN,
-            $this->expression->render()
-        );
-    }
-
-    public function includeSpace(): bool
-    {
-        return false;
-    }
-
-    public function priority(): int
-    {
-        return $this->expression->priority();
+        parent::__construct(sprintf('The Levenshtein distance should be between 1 and 3 (%d provided)', $providedDistance), $code, $previous);
     }
 }

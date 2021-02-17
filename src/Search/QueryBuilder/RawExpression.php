@@ -21,41 +21,28 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Search\QueryBuilder;
 
-use function ctype_digit;
-use function sprintf;
-use function substr;
-
-class Negation implements PartialQuery
+class RawExpression implements PartialQuery
 {
-    private const WITH_SPACE_PATTERN = '-(%s)';
+    /** @var string */
+    private $content;
 
-    private const WITHOUT_SPACE_PATTERN = '-%s';
-
-    /** @var PartialQuery */
-    private $expression;
-
-    public function __construct(PartialQuery $expression)
+    public function __construct(string $content)
     {
-        $this->expression = $expression;
+        $this->content = $content;
     }
 
     public function render(): string
     {
-        $withParentheses = $this->expression->includeSpace() || ctype_digit(substr($this->expression->render(), 0, 1));
-
-        return sprintf(
-            true === $withParentheses ? self::WITH_SPACE_PATTERN : self::WITHOUT_SPACE_PATTERN,
-            $this->expression->render()
-        );
+        return $this->content;
     }
 
     public function includeSpace(): bool
     {
-        return false;
+        return true;
     }
 
     public function priority(): int
     {
-        return $this->expression->priority();
+        return self::PRIORITY_NORMAL;
     }
 }

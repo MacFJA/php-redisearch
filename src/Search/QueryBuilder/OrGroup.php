@@ -22,8 +22,10 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Search\QueryBuilder;
 
 use function array_map;
+use function count;
 use function implode;
 use function sprintf;
+use function substr;
 use function usort;
 
 class OrGroup implements GroupPartialQuery
@@ -60,5 +62,20 @@ class OrGroup implements GroupPartialQuery
     public function priority(): int
     {
         return self::PRIORITY_NORMAL;
+    }
+
+    public static function renderNoParentheses(PartialQuery ...$queries): string
+    {
+        if (0 === count($queries)) {
+            return '';
+        }
+
+        $group = new self();
+        foreach ($queries as $query) {
+            $group->addExpression($query);
+        }
+        $rendered = $group->render();
+
+        return substr($rendered, 1, -1) ?: $rendered;
     }
 }

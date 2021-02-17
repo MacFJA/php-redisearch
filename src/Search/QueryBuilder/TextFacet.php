@@ -21,8 +21,9 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Search\QueryBuilder;
 
+use function array_map;
 use function count;
-use function implode;
+use MacFJA\RediSearch\Helper\EscapeHelper;
 use function reset;
 use function sprintf;
 use function strpos;
@@ -48,15 +49,19 @@ class TextFacet implements PartialQuery
     public function render(): string
     {
         if (count($this->orValues) > 1) {
-            return sprintf(self::WITH_SPACE_PATTERN, $this->field, implode(' | ', $this->orValues));
+            $terms = OrGroup::renderNoParentheses(...array_map(function (string $orValue) {
+                return new Word($orValue);
+            }, $this->orValues));
+
+            return sprintf(self::WITH_SPACE_PATTERN, EscapeHelper::escapeFieldName($this->field), $terms);
         }
 
         $value = reset($this->orValues) ?: '';
         if (false === strpos($value, ' ')) {
-            return sprintf(self::WITHOUT_SPACE_PATTERN, $this->field, $value);
+            return sprintf(self::WITHOUT_SPACE_PATTERN, EscapeHelper::escapeFieldName($this->field), EscapeHelper::escapeWord($value));
         }
 
-        return sprintf(self::WITH_SPACE_PATTERN, $this->field, $value);
+        return sprintf(self::WITH_SPACE_PATTERN, EscapeHelper::escapeFieldName($this->field), EscapeHelper::escapeWord($value));
     }
 
     public function includeSpace(): bool

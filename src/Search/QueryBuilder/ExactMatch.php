@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Search\QueryBuilder;
 
+use MacFJA\RediSearch\Helper\EscapeHelper;
 use function sprintf;
 
 class ExactMatch implements PartialQuery
@@ -35,7 +36,7 @@ class ExactMatch implements PartialQuery
 
     public function render(): string
     {
-        return sprintf('"%s"', $this->match);
+        return sprintf('"%s"', EscapeHelper::escapeExactMatch($this->match));
     }
 
     public function includeSpace(): bool

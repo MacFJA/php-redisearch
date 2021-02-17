@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Search\QueryBuilder;
 
 use function is_numeric;
+use MacFJA\RediSearch\Helper\EscapeHelper;
 use function sprintf;
 
 class NumericFacet implements PartialQuery
@@ -87,7 +88,7 @@ class NumericFacet implements PartialQuery
             $max = ($this->isMaxInclusive ? '' : '(').$this->max;
         }
 
-        return sprintf('@%s:[%s %s]', $this->fieldName, $min, $max);
+        return sprintf('@%s:[%s %s]', EscapeHelper::escapeFieldName($this->fieldName), $min, $max);
     }
 
     public function includeSpace(): bool

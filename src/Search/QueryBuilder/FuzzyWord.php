@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Search\QueryBuilder;
 
+use MacFJA\RediSearch\Helper\EscapeHelper;
 use MacFJA\RediSearch\Search\Exception\OutOfRangeLevenshteinDistanceException;
 use function sprintf;
 use function str_repeat;
@@ -44,7 +45,7 @@ class FuzzyWord implements PartialQuery
 
     public function render(): string
     {
-        return sprintf('%1$s%2$s%1$s', str_repeat('%%', $this->levenshteinDistance), $this->word);
+        return sprintf('%1$s%2$s%1$s', str_repeat('%%', $this->levenshteinDistance), EscapeHelper::escapeFuzzy($this->word));
     }
 
     public function includeSpace(): bool

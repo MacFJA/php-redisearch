@@ -23,6 +23,7 @@ namespace MacFJA\RediSearch\Search\QueryBuilder;
 
 use function in_array;
 use MacFJA\RediSearch\Helper\DataHelper;
+use MacFJA\RediSearch\Helper\EscapeHelper;
 use MacFJA\RediSearch\Search\Exception\UnknownUnitException;
 use MacFJA\RediSearch\Search\GeoFilter;
 use function sprintf;
@@ -59,7 +60,7 @@ class GeoFacet implements PartialQuery
 
     public function render(): string
     {
-        return sprintf('@%s:[%f %f %f %s]', $this->fieldName, $this->lon, $this->lat, $this->radius, $this->unit);
+        return sprintf('@%s:[%f %f %f %s]', EscapeHelper::escapeFieldName($this->fieldName), $this->lon, $this->lat, $this->radius, $this->unit);
     }
 
     public function includeSpace(): bool

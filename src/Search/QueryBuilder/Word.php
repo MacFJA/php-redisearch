@@ -23,6 +23,7 @@ namespace MacFJA\RediSearch\Search\QueryBuilder;
 
 use function count;
 use function implode;
+use MacFJA\RediSearch\Helper\EscapeHelper;
 
 class Word implements PartialQuery
 {
@@ -39,7 +40,7 @@ class Word implements PartialQuery
 
     public function render(): string
     {
-        return implode(' ', $this->words);
+        return EscapeHelper::escapeWord(implode(' ', $this->words));
     }
 
     public function includeSpace(): bool
