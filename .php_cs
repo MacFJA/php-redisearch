@@ -143,7 +143,7 @@ return PhpCsFixer\Config::create()
         // Replaces superfluous `elseif` with `if`.
         'no_superfluous_elseif' => true,
         // Removes `@param`, `@return` and `@var` tags that don't provide any useful information.
-        'no_superfluous_phpdoc_tags' => true,
+        'no_superfluous_phpdoc_tags' => ['allow_mixed'=>true,'remove_inheritdoc'=>true],
         // Remove trailing commas in list function calls.
         'no_trailing_comma_in_list_call' => true,
         // PHP single-line arrays should not have trailing comma.

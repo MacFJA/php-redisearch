@@ -1,4 +1,4 @@
-.PHONY: analyze fix-code test
+.PHONY: analyze fix-code test coverage
 
 analyze: | vendor
 	$(COMPOSER) install --optimize-autoloader --no-suggest --prefer-dist
@@ -20,7 +20,10 @@ fix-code: | vendor
 	@#$(COMPOSER) exec -v psalm -- --alter --issues=all src
 
 test: | vendor
-	$(COMPOSER) exec -v phpunit -- --whitelist=src tests
+	$(COMPOSER) exec -v phpunit
+
+coverage: | vendor
+	$(COMPOSER) exec -v phpunit -- --coverage-text --color
 
 vendor:
 ifneq (prod,${BUILD_MODE})

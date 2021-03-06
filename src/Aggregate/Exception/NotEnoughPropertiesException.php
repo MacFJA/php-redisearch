@@ -24,6 +24,7 @@ namespace MacFJA\RediSearch\Aggregate\Exception;
 use OutOfRangeException;
 use Throwable;
 
+/** @deprecated This exception is never used. */
 class NotEnoughPropertiesException extends OutOfRangeException
 {
     public function __construct(string $message = 'You must have at least one property', int $code = 0, ?Throwable $previous = null)

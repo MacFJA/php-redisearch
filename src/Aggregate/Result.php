@@ -21,27 +21,25 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Aggregate;
 
-use MacFJA\RediSearch\Helper\DataHelper;
 use Throwable;
 
 class Result
 {
-    /** @var array<string,null|float|int|string> */
+    /** @var array<string,null|array<mixed>|float|int|string> */
     private $fields = [];
 
     /**
-     * @param array<string,null|float|int|string> $fields
+     * @param array<string,null|array<mixed>|float|int|string> $fields
      *
      * @throws Throwable
      */
     public function __construct(array $fields)
     {
-        DataHelper::assertArrayOf($fields, '?scalar');
         $this->fields = $fields;
     }
 
     /**
-     * @return array<string,null|float|int|string>
+     * @return array<string,null|array<mixed>|float|int|string>
      */
     public function getFields(): array
     {
@@ -49,9 +47,9 @@ class Result
     }
 
     /**
-     * @param null|float|int|string $default
+     * @param null|array<mixed>|float|int|string $default
      *
-     * @return null|float|int|string
+     * @return null|array<mixed>|float|int|string
      */
     public function getValue(string $fieldName, $default = null)
     {

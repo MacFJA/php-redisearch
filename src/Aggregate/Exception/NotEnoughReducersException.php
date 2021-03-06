@@ -24,6 +24,7 @@ namespace MacFJA\RediSearch\Aggregate\Exception;
 use OutOfRangeException;
 use Throwable;
 
+/** @deprecated This exception is never used. */
 class NotEnoughReducersException extends OutOfRangeException
 {
     public function __construct(string $message = 'You must have at least one reducer', int $code = 0, ?Throwable $previous = null)

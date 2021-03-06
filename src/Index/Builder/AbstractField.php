@@ -78,9 +78,6 @@ abstract class AbstractField implements Field
         return $this->name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getQueryParts(): array
     {
         $query = [$this->name, $this->getType()];

@@ -22,11 +22,15 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Aggregate;
 
 use function count;
+use function is_bool;
 use function is_string;
 use MacFJA\RediSearch\Helper\DataHelper;
 use MacFJA\RediSearch\PartialQuery;
 use Throwable;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class Reducer implements PartialQuery
 {
     /** @var string */
@@ -63,5 +67,74 @@ class Reducer implements PartialQuery
         }
 
         return $query;
+    }
+
+    public static function count(?string $name = null): self
+    {
+        return new self('COUNT', [], $name);
+    }
+
+    public static function countDistinct(string $property, ?string $name = null): self
+    {
+        return new self('COUNT_DISTINCT', ['@'.$property], $name);
+    }
+
+    public static function countDistinctish(string $property, ?string $name = null): self
+    {
+        return new self('COUNT_DISTINCTISH', ['@'.$property], $name);
+    }
+
+    public static function sum(string $property, ?string $name = null): self
+    {
+        return new self('SUM', ['@'.$property], $name);
+    }
+
+    public static function minimum(string $property, ?string $name = null): self
+    {
+        return new self('MIN', ['@'.$property], $name);
+    }
+
+    public static function maximum(string $property, ?string $name = null): self
+    {
+        return new self('MAX', ['@'.$property], $name);
+    }
+
+    public static function average(string $property, ?string $name = null): self
+    {
+        return new self('AVG', ['@'.$property], $name);
+    }
+
+    public static function standardDeviation(string $property, ?string $name = null): self
+    {
+        return new self('STDDEV', ['@'.$property], $name);
+    }
+
+    public static function quantile(string $property, float $quantile, ?string $name = null): self
+    {
+        return new self('QUANTILE', ['@'.$property, $quantile], $name);
+    }
+
+    public static function median(string $property, ?string $name = null): self
+    {
+        return new self('QUANTILE', ['@'.$property, 0.5], $name);
+    }
+
+    public static function toList(string $property, ?string $name = null): self
+    {
+        return new self('TOLIST', ['@'.$property], $name);
+    }
+
+    public static function firstValue(string $property, ?string $sortByProperty = null, ?bool $ascending = null, ?string $name = null): self
+    {
+        $arguments = ['@'.$property];
+        if (is_string($sortByProperty)) {
+            $arguments[] = 'BY';
+            $arguments[] = '@'.$sortByProperty;
+            if (is_bool($ascending)) {
+                $arguments[] = true === $ascending ? 'ASC' : 'DESC';
+            }
+        }
+
+        return new self('FIRST_VALUE', $arguments, $name);
     }
 }

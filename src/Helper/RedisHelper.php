@@ -62,10 +62,10 @@ class RedisHelper
      *
      * @return array<float|int|string>
      */
-    public static function buildQueryList(array $query, array $data): array
+    public static function buildQueryList(array $query, array $data, bool $allowEmpty = false): array
     {
         foreach ($data as $queryWord => $list) {
-            if (count($list) > 0) {
+            if (true === $allowEmpty || count($list) > 0) {
                 $query[] = $queryWord;
                 $query[] = count($list);
                 $query = array_merge($query, $list);

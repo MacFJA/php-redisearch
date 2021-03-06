@@ -47,9 +47,6 @@ class Highlight implements \MacFJA\RediSearch\PartialQuery
         $this->closeTag = $closeTag;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getQueryParts(): array
     {
         $query = ['HIGHLIGHT'];

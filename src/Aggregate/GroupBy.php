@@ -21,9 +21,7 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Aggregate;
 
-use function count;
-use MacFJA\RediSearch\Aggregate\Exception\NotEnoughPropertiesException;
-use MacFJA\RediSearch\Aggregate\Exception\NotEnoughReducersException;
+use function array_map;
 use MacFJA\RediSearch\Helper\DataHelper;
 use MacFJA\RediSearch\Helper\RedisHelper;
 use MacFJA\RediSearch\PartialQuery;
@@ -45,8 +43,6 @@ class GroupBy implements PartialQuery
      */
     public function __construct(array $properties, array $reducers)
     {
-        DataHelper::assert(count($properties) > 0, NotEnoughPropertiesException::class);
-        DataHelper::assert(count($reducers) > 0, NotEnoughReducersException::class);
         DataHelper::assertArrayOf($properties, 'string');
         DataHelper::assertArrayOf($reducers, Reducer::class);
 
@@ -56,7 +52,10 @@ class GroupBy implements PartialQuery
 
     public function getQueryParts(): array
     {
-        $query = RedisHelper::buildQueryList([], ['GROUPBY' => $this->properties]);
+        $atProperties = array_map(static function (string $property) {
+            return '@'.$property;
+        }, $this->properties);
+        $query = RedisHelper::buildQueryList([], ['GROUPBY' => $atProperties], true);
 
         return RedisHelper::buildQueryPartial($query, $this->reducers);
     }

@@ -52,9 +52,6 @@ class Summarize implements \MacFJA\RediSearch\PartialQuery
         $this->separator = $separator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getQueryParts(): array
     {
         $query = ['SUMMARIZE'];

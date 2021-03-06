@@ -71,9 +71,6 @@ class SortBy implements \MacFJA\RediSearch\PartialQuery
         $this->max = $max;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getQueryParts(): array
     {
         $query = ['SORTBY', count($this->properties) * 2];

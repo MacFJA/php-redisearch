@@ -6,6 +6,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Shorthand for Reducer functions
+- Add **Deprecated** section in `CHANGELOG.md`
+
+### Changed
+
+- Allow `GROUPBY` with no properties
+- Allow `GROUPBY` with no reducers
+- (dev) Replace `php-parallel-lint` lib.
+
+### Fixed
+
+- Fix namespace of tests
+- Aggregation result can now be an array
+
+### Deprecated
+
+- `MacFJA\RediSearch\Aggregate\Exception\NotEnoughPropertiesException`
+- `MacFJA\RediSearch\Aggregate\Exception\NotEnoughReducersException`
+
 ## [1.2.0]
 
 ### Fixed
@@ -44,6 +65,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rename `Index::addFromArray` to `Index::addDocumentFromArray` for consistency (Depreciation, keeping BC)
 - Rename namespace from `MacFJA\RedisSearch` to `MacFJA\RediSearch`(Depreciation, keeping BC)
 - Uniformize Builder interface (Deprecation, keeping BC)
+
+### Deprecated
+
+- The whole namespace `MacFJA\RedisSearch` (replaced by `MacFJA\RediSearch`)
+- `MacFJA\RediSearch\Aggregate::aggregate`
+- `MacFJA\RediSearch\Index::addFromArray`
+- `MacFJA\RediSearch\Index\Builder::create`
+- `MacFJA\RediSearch\Search::search`
 
 ## [1.0.0] - 2020-12-05
 
