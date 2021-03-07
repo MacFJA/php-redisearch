@@ -34,6 +34,7 @@ use function is_int;
 use function is_string;
 use MacFJA\RediSearch\Helper\DataHelper;
 use MacFJA\RediSearch\Helper\PaginatedResult;
+use MacFJA\RediSearch\Helper\PipelineItem;
 use MacFJA\RediSearch\Helper\RedisHelper;
 use MacFJA\RediSearch\Index\Builder as IndexBuilder;
 use MacFJA\RediSearch\Search\Exception\UnsupportedLanguageException;
@@ -44,12 +45,13 @@ use MacFJA\RediSearch\Search\Result;
 use MacFJA\RediSearch\Search\Summarize;
 use Predis\Client;
 use function reset;
+use Throwable;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields) -- Builder Class
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) -- Builder Class
  */
-class Search implements Builder
+class Search implements Builder, Pipeable
 {
     public const SORT_ASC = 'ASC';
 
@@ -249,6 +251,8 @@ class Search implements Builder
     /**
      * @param array<string> $inKeys
      *
+     * @throws Throwable If $inKeys is not an array of strings
+     *
      * @return $this
      */
     public function withInKeys(array $inKeys): Search
@@ -262,6 +266,8 @@ class Search implements Builder
     /**
      * @param array<string> $inFields
      *
+     * @throws Throwable If $inFields is not an array of strings
+     *
      * @return $this
      */
     public function withInFields(array $inFields): Search
@@ -274,6 +280,8 @@ class Search implements Builder
 
     /**
      * @param array<string> $returns
+     *
+     * @throws Throwable If $returns is not an array of strings
      *
      * @return $this
      */
@@ -317,6 +325,11 @@ class Search implements Builder
         return $this;
     }
 
+    /**
+     * @throws UnsupportedLanguageException
+     *
+     * @return $this
+     */
     public function withLanguage(string $language): Search
     {
         DataHelper::assert(in_array($language, IndexBuilder::SUPPORTED_LANGUAGES, true), UnsupportedLanguageException::class);
@@ -396,40 +409,10 @@ class Search implements Builder
      */
     public function execute(): PaginatedResult
     {
-        $rawResult = $this->redis->executeRaw($this->buildQuery());
-        DataHelper::handleRawResult($rawResult);
+        $request = $this->asPipelineItem();
+        $raw = $this->redis->executeCommand($request->getCommand());
 
-        $totalCount = array_shift($rawResult);
-        assert(is_int($totalCount));
-
-        $chunkSize = 2 // Hash + fields
-            + ($this->withScores ? 1 : 0)
-            + ($this->withPayloads ? 1 : 0)
-            + ($this->withSortKeys ? 1 : 0);
-
-        $documents = array_chunk($rawResult, $chunkSize);
-
-        $items = array_map(function ($document) {
-            $hash = array_shift($document) ?? '';
-            $score = $this->withScores ? (float) array_shift($document) : null;
-            $payload = $this->withPayloads ? array_shift($document) : null;
-            $sortKey = $this->withSortKeys ? array_shift($document) : null;
-
-            if (!(1 === count($document))) {
-                throw new InvalidArgumentException();
-            }
-            $rawData = reset($document);
-            assert(is_array($rawData));
-            $fields = RedisHelper::getPairs($rawData);
-
-            return new Result($hash, $fields, $score, $payload, $sortKey);
-        }, $documents);
-
-        $result = new class($totalCount, $items, $this->resultOffset ?? self::DEFAULT_OFFSET, $this->resultLimit ?? self::DEFAULT_LIMIT) extends PaginatedResult {
-        };
-        $this->reset();
-
-        return $result;
+        return $request->transform($raw);
     }
 
     /**
@@ -438,6 +421,56 @@ class Search implements Builder
     public function explainQuery(bool $asArray = false)
     {
         return $this->redis->executeRaw([true === $asArray ? 'FT.EXPLAINCLI' : 'FT.EXPLAIN', $this->index, $this->query]);
+    }
+
+    public function asPipelineItem(): PipelineItem
+    {
+        try {
+            return PipelineItem::createFromRaw(
+                $this->buildQuery(),
+                static function ($rawResult, array $context): PaginatedResult {
+                    DataHelper::handleRawResult($rawResult);
+
+                    $totalCount = array_shift($rawResult);
+                    assert(is_int($totalCount));
+
+                    $chunkSize = 2 // Hash + fields
+                        + (($context['scores'] ?? false) ? 1 : 0)
+                        + (($context['payloads'] ?? false) ? 1 : 0)
+                        + (($context['sortKeys'] ?? false) ? 1 : 0);
+
+                    $documents = array_chunk($rawResult, $chunkSize);
+
+                    $items = array_map(function ($document) use ($context) {
+                        $hash = array_shift($document) ?? '';
+                        $score = ($context['scores'] ?? false) ? (float) array_shift($document) : null;
+                        $payload = ($context['payloads'] ?? false) ? array_shift($document) : null;
+                        $sortKey = ($context['sortKeys'] ?? false) ? array_shift($document) : null;
+
+                        if (!(1 === count($document))) {
+                            throw new InvalidArgumentException();
+                        }
+                        $rawData = reset($document);
+                        assert(is_array($rawData));
+                        $fields = RedisHelper::getPairs($rawData);
+
+                        return new Result($hash, $fields, $score, $payload, $sortKey);
+                    }, $documents);
+
+                    return new class($totalCount, $items, $context['offset'] ?? self::DEFAULT_OFFSET, $context['limit'] ?? self::DEFAULT_LIMIT) extends PaginatedResult {
+                    };
+                },
+                [
+                    'offset' => $this->resultOffset,
+                    'limit' => $this->resultLimit,
+                    'scores' => $this->withScores,
+                    'payloads' => $this->withPayloads,
+                    'sortKeys' => $this->withSortKeys,
+                ]
+            );
+        } finally {
+            $this->reset();
+        }
     }
 
     /**

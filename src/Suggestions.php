@@ -30,6 +30,7 @@ use function in_array;
 use InvalidArgumentException;
 use function is_string;
 use MacFJA\RediSearch\Helper\DataHelper;
+use MacFJA\RediSearch\Helper\PipelineItem;
 use MacFJA\RediSearch\Helper\RedisHelper;
 use MacFJA\RediSearch\Suggestion\Result;
 use Predis\Client;
@@ -85,6 +86,14 @@ class Suggestions
      */
     public function get(string $prefix, bool $fuzzy = false, bool $withScores = false, bool $withPayloads = false, ?int $max = null): array
     {
+        $request = $this->pipeableGet($prefix, $fuzzy, $withScores, $withPayloads, $max);
+        $result = $this->redis->executeCommand($request->getCommand());
+
+        return $request->transform($result);
+    }
+
+    public function pipeableGet(string $prefix, bool $fuzzy = false, bool $withScores = false, bool $withPayloads = false, ?int $max = null): PipelineItem
+    {
         $command = ['FT.SUGGET', $this->dictionaryKey, $prefix];
         $command = RedisHelper::buildQueryBoolean($command, [
             'FUZZY' => $fuzzy,
@@ -94,13 +103,18 @@ class Suggestions
         $command = RedisHelper::buildQueryNotNull($command, [
             'MAX' => $max,
         ]);
-        $result = $this->redis->executeRaw($command);
 
-        if (null === $result) {
-            return [];
-        }
+        return PipelineItem::createFromRaw(
+            $command,
+            function ($rawResult, array $context) {
+                if (null === $rawResult) {
+                    return [];
+                }
 
-        return self::listFromRawRedis($result, $withPayloads, $withScores);
+                return self::listFromRawRedis($rawResult, $context['payloads'], $context['scores']);
+            },
+            ['payloads' => $withPayloads, 'scores' => $withScores]
+        );
     }
 
     public function delete(string $suggestion): bool

@@ -84,6 +84,53 @@ $query = $queryBuilder
 // Doe ~John @age:[(17 +inf] -@address:[40.589247 -74.044502 40.000000 km]
 ```
 
+### Pipeline
+
+```php
+use MacFJA\RediSearch\Aggregate;
+use MacFJA\RediSearch\Aggregate\Reducer;
+use MacFJA\RediSearch\Pipeline;
+use MacFJA\RediSearch\Search;
+use MacFJA\RediSearch\Suggestions;
+use Predis\Client;
+
+$client = new Client(/* ... */);
+$suggestion = new Suggestions($client);
+$pipeline = new Pipeline($client);
+$query = '@age:[(17 +inf] %john%';
+$search = new Search($client);
+$aggregate = new Aggregate($client);
+
+$pipeline
+    ->addPipeable(
+        $search->withIndex('people')->withQuery($query)
+    )
+    ->addPipeable(
+        $aggregate
+            ->withIndexName('people')
+            ->withQuery($query)
+            ->addGroupBy([], [
+                Reducer::average('age', 'avg'),
+                Reducer::maximum('age', 'oldest')
+            ])
+    )
+    ->addPipeable(
+        $aggregate
+            ->withIndexName('people')
+            ->withQuery($query)
+            ->addGroupBy(['lastname'], [Reducer::count('count')])
+    )
+    ->addItem(
+        $suggestion->pipeableGet('john', true)
+    );
+$result = $pipeline->executePipeline();
+
+// $result[0] is the search result
+// $result[1] is the first aggregation result
+// $result[2] is the second aggregation result
+// $result[3] is the suggestion result
+```
+
 ## Similar projects
 
 - [ethanhann/redisearch-php](https://packagist.org/packages/ethanhann/redisearch-php) - Abandoned

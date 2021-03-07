@@ -34,11 +34,12 @@ use MacFJA\RediSearch\Aggregate\Result;
 use MacFJA\RediSearch\Aggregate\SortBy;
 use MacFJA\RediSearch\Helper\DataHelper;
 use MacFJA\RediSearch\Helper\PaginatedResult;
+use MacFJA\RediSearch\Helper\PipelineItem;
 use MacFJA\RediSearch\Helper\RedisHelper;
 use Predis\Client;
 use Throwable;
 
-class Aggregate implements Builder
+class Aggregate implements Builder, Pipeable
 {
     /** @var Client */
     private $redis;
@@ -228,20 +229,33 @@ class Aggregate implements Builder
      */
     public function execute()
     {
-        $rawResult = $this->redis->executeRaw($this->buildQuery());
+        $request = $this->asPipelineItem();
+        $rawResult = $this->redis->executeCommand($request->getCommand());
 
-        $totalCount = array_shift($rawResult);
-        assert(is_int($totalCount));
+        return $request->transform($rawResult);
+    }
 
-        $items = array_map(function (array $document) {
-            return new Result(RedisHelper::getPairs($document));
-        }, $rawResult);
+    public function asPipelineItem(): PipelineItem
+    {
+        try {
+            return PipelineItem::createFromRaw(
+                $this->buildQuery(),
+                static function ($rawResult, array $context): PaginatedResult {
+                    $totalCount = array_shift($rawResult);
+                    assert(is_int($totalCount));
 
-        $result = new class($totalCount, $items, 0, 0) extends PaginatedResult {
-        };
-        $this->reset();
+                    $items = array_map(function (array $document) {
+                        return new Result(RedisHelper::getPairs($document));
+                    }, $rawResult);
 
-        return $result;
+                    return new class($totalCount, $items, $context['offset'] ?? 0, $context['limit'] ?? 0) extends PaginatedResult {
+                    };
+                },
+                ['offset' => $this->resultOffset, 'limit' => $this->resultLimit]
+            );
+        } finally {
+            $this->reset();
+        }
     }
 
     /**

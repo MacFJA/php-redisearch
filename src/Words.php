@@ -32,6 +32,7 @@ use function is_array;
 use function is_bool;
 use function is_string;
 use MacFJA\RediSearch\Helper\DataHelper;
+use MacFJA\RediSearch\Helper\PipelineItem;
 use MacFJA\RediSearch\Helper\RedisHelper;
 use MacFJA\RediSearch\Words\Exception\NotEnoughTermsException;
 use MacFJA\RediSearch\Words\SpellingResult;
@@ -84,6 +85,28 @@ class Words
     public function getSpellCheck(string $index, string $query, ?int $distance = null): array
     {
         return $this->internalSpellCheck($index, $query, $distance);
+    }
+
+    public function getPipeableSpellCheck(string $index, string $query, ?int $distance = null): PipelineItem
+    {
+        $redisQuery = ['FT.SPELLCHECK', $index, $query];
+        $redisQuery = RedisHelper::buildQueryNotNull($redisQuery, ['DISTANCE' => $distance]);
+
+        return PipelineItem::createFromRaw(
+            $redisQuery,
+            function ($result) {
+                return array_map(function (array $term): SpellingResult {
+                    $searched = $term[1];
+                    $suggestions = array_combine(
+                        array_column($term[2], 1),
+                        array_column($term[2], 0)
+                    );
+                    assert(is_array($suggestions));
+
+                    return new SpellingResult($searched, $suggestions);
+                }, $result);
+            }
+        );
     }
 
     /**
