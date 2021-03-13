@@ -54,7 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Wrong output of the NumericFacet ([Issue#1], [PR#2])
+- Wrong output of the NumericFacet ([Issue#2], [PR#1])
 - Missing Composer plugin
 - Missing `getSeperator` method in `TagField`
 - Missing total number of result
@@ -63,7 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Unit test on NumericFacet ([PR#2])
+- Unit test on NumericFacet ([PR#1])
 - Index stats can return fields as object.
 - Fields implements Comparable interface
 - Paginate results.
@@ -92,5 +92,6 @@ First version
 [1.1.0]: https://github.com/MacFJA/php-redisearch/compare/1.0.0...1.1.0
 [1.0.0]: https://github.com/MacFJA/php-redisearch/releases/tag/1.0.0
 
-[Issue#1]: https://github.com/MacFJA/php-redisearch/issues/1
-[PR#2]: https://github.com/MacFJA/php-redisearch/pulls/2
+[Issue#2]: https://github.com/MacFJA/php-redisearch/issues/2
+[PR#1]: https://github.com/MacFJA/php-redisearch/pull/1
+[PR#3]: https://github.com/MacFJA/php-redisearch/pull/3
