@@ -23,7 +23,9 @@ namespace MacFJA\RediSearch\Search\QueryBuilder;
 
 use function array_map;
 use function count;
+use MacFJA\RediSearch\Helper\DataHelper;
 use MacFJA\RediSearch\Helper\EscapeHelper;
+use MacFJA\RediSearch\Search\Exception\NotEnoughTermsException;
 use function reset;
 use function sprintf;
 use function strpos;
@@ -42,6 +44,7 @@ class TextFacet implements PartialQuery
 
     public function __construct(string $field, string ...$orValues)
     {
+        DataHelper::assert(count($orValues) > 0, NotEnoughTermsException::class);
         $this->field = $field;
         $this->orValues = $orValues;
     }

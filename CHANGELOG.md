@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Aggregation SortBy allow 0 (not limit) as value for Max
 - Fix helper removing _"nullish"_ values (`array_filter` is too lax by default)
 - Fix order in fields creation not being correct
+- Don't allow empty facet in search query
 
 ### Deprecated
 

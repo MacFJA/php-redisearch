@@ -19,46 +19,8 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RediSearch\Search\QueryBuilder;
+namespace MacFJA\RediSearch\Search\Exception;
 
-use function array_map;
-use function count;
-use MacFJA\RediSearch\Helper\DataHelper;
-use MacFJA\RediSearch\Helper\EscapeHelper;
-use MacFJA\RediSearch\Search\Exception\NotEnoughTermsException;
-use function sprintf;
-
-class TagFacet implements PartialQuery
+class NotEnoughTermsException extends \MacFJA\RediSearch\Words\Exception\NotEnoughTermsException
 {
-    /** @var string */
-    private $field;
-
-    /** @var array<string> */
-    private $orValues;
-
-    public function __construct(string $field, string ...$orValues)
-    {
-        DataHelper::assert(count($orValues) > 0, NotEnoughTermsException::class);
-        $this->field = $field;
-        $this->orValues = $orValues;
-    }
-
-    public function render(): string
-    {
-        $terms = OrGroup::renderNoParentheses(...array_map(function (string $orValue) {
-            return new Word($orValue);
-        }, $this->orValues));
-
-        return sprintf('@%s:{%s}', EscapeHelper::escapeFieldName($this->field), $terms);
-    }
-
-    public function includeSpace(): bool
-    {
-        return false;
-    }
-
-    public function priority(): int
-    {
-        return self::PRIORITY_NORMAL;
-    }
 }

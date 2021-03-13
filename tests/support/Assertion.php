@@ -24,6 +24,7 @@ namespace Tests\MacFJA\RediSearch\support;
 use function implode;
 use function is_subclass_of;
 use MacFJA\RediSearch\PartialQuery;
+use MacFJA\RediSearch\Search\QueryBuilder\PartialQuery as RenderablePartialQuery;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -35,5 +36,13 @@ trait Assertion
             throw new RuntimeException();
         }
         self::assertSame($expected, implode(' ', $partialQuery->getQueryParts()));
+    }
+
+    private static function assertSameRender(string $expected, RenderablePartialQuery $partialQuery): void
+    {
+        if (!is_subclass_of(self::class, TestCase::class)) {
+            throw new RuntimeException();
+        }
+        self::assertSame($expected, $partialQuery->render());
     }
 }
