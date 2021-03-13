@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fix namespace of tests
 - Aggregation result can now be an array
+- Fix Index builder options not preserved ([PR#3])
 
 ### Deprecated
 
