@@ -355,7 +355,7 @@ class Builder implements \MacFJA\RediSearch\Builder
             'NOFREQS' => $this->noFrequencies,
             'SKIPINITIALSCAN' => $this->skipInitialScan,
         ]);
-        RedisHelper::buildQueryNotNull($query, [
+        $query = RedisHelper::buildQueryNotNull($query, [
             'FILTER' => $this->filter,
             'LANGUAGE' => $this->language,
             'LANGUAGE_FIELD' => $this->languageField,
