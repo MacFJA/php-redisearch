@@ -19,20 +19,31 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RediSearch\Aggregate\Exception;
+namespace Tests\MacFJA\RediSearch\Index\Builder;
 
-use OutOfRangeException;
-use Throwable;
+use MacFJA\RediSearch\Index\Builder\NumericField;
+use PHPUnit\Framework\TestCase;
+use Tests\MacFJA\RediSearch\support\Assertion;
 
 /**
- * @codeCoverageIgnore
+ * @covers \MacFJA\RediSearch\Index\Builder\NumericField
  *
- * @deprecated This exception is never used.
+ * @uses \MacFJA\RediSearch\Index\Builder\AbstractField
+ * @uses \MacFJA\RediSearch\Helper\RedisHelper
  */
-class NotEnoughReducersException extends OutOfRangeException
+class NumericFieldTest extends TestCase
 {
-    public function __construct(string $message = 'You must have at least one reducer', int $code = 0, ?Throwable $previous = null)
+    use Assertion;
+
+    public function testNominal(): void
     {
-        parent::__construct($message, $code, $previous);
+        self::assertSameQuery('age NUMERIC SORTABLE', new NumericField('age', true));
+        self::assertSameQuery('weight NUMERIC NOINDEX', new NumericField('weight', false, true));
+        self::assertSameQuery('speed NUMERIC SORTABLE NOINDEX', new NumericField('speed', true, true));
+    }
+
+    public function testGetType(): void
+    {
+        self::assertSame('NUMERIC', (new NumericField('foobar'))->getType());
     }
 }

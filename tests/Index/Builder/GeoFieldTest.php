@@ -19,20 +19,31 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RediSearch\Aggregate\Exception;
+namespace Tests\MacFJA\RediSearch\Index\Builder;
 
-use OutOfRangeException;
-use Throwable;
+use MacFJA\RediSearch\Index\Builder\GeoField;
+use PHPUnit\Framework\TestCase;
+use Tests\MacFJA\RediSearch\support\Assertion;
 
 /**
- * @codeCoverageIgnore
+ * @covers \MacFJA\RediSearch\Index\Builder\GeoField
  *
- * @deprecated This exception is never used.
+ * @uses \MacFJA\RediSearch\Index\Builder\AbstractField
+ * @uses \MacFJA\RediSearch\Helper\RedisHelper
  */
-class NotEnoughReducersException extends OutOfRangeException
+class GeoFieldTest extends TestCase
 {
-    public function __construct(string $message = 'You must have at least one reducer', int $code = 0, ?Throwable $previous = null)
+    use Assertion;
+
+    public function testNominal(): void
     {
-        parent::__construct($message, $code, $previous);
+        self::assertSameQuery('address GEO NOINDEX', new GeoField('address', true));
+        self::assertSameQuery('position GEO', new GeoField('position', false));
+        self::assertSameQuery('coordinate GEO', new GeoField('coordinate'));
+    }
+
+    public function testGetType(): void
+    {
+        self::assertSame('GEO', (new GeoField('foobar'))->getType());
     }
 }

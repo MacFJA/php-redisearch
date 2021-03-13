@@ -260,9 +260,7 @@ return [
     //
     // This is useful for excluding hopelessly unanalyzable
     // files that can't be removed for whatever reason.
-    'exclude_file_list' => [
-        'src/Kernel.php'
-    ],
+    'exclude_file_list' => [],
 
     // A directory list that defines files that will be excluded
     // from static analysis, but whose class and method
@@ -277,7 +275,6 @@ return [
     //       to `exclude_analysis_directory_list`.
     'exclude_analysis_directory_list' => [
         'vendor/',
-        'src/DataFixtures/',
     ],
 
     // Enable this to enable checks of require/include statements referring to valid paths.

@@ -270,5 +270,6 @@ return PhpCsFixer\Config::create()
         ->exclude('vendor')
         ->in(__DIR__.'/src')
         ->in(__DIR__.'/alias')
+        ->in(__DIR__.'/tests')
     )
     ;

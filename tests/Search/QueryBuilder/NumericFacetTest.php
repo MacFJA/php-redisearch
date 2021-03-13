@@ -22,14 +22,15 @@ declare(strict_types=1);
 namespace Tests\MacFJA\RediSearch\Search\QueryBuilder;
 
 use MacFJA\RediSearch\Search\QueryBuilder\NumericFacet;
+use MacFJA\RediSearch\Search\QueryBuilder\PartialQuery;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \MacFJA\RediSearch\Search\QueryBuilder\NumericFacet
+ * @covers ::__construct
  * @covers ::render
  *
  * @uses \MacFJA\RediSearch\Helper\EscapeHelper
- * @uses \MacFJA\RediSearch\Search\QueryBuilder\NumericFacet
  *
  * @see: https://oss.redislabs.com/redisearch/Query_Syntax/#mapping_common_sql_predicates_to_redisearch
  * WHERE num BETWEEN 10 AND 20	    @num:[10 20]
@@ -84,5 +85,21 @@ class NumericFacetTest extends TestCase
     {
         $facet = NumericFacet::equalsTo('num', 10);
         self::assertSame('@num:[10 10]', $facet->render());
+    }
+
+    /**
+     * @covers ::includeSpace
+     */
+    public function testIncludeSpace(): void
+    {
+        self::assertFalse((new NumericFacet('foobar', null, null))->includeSpace());
+    }
+
+    /**
+     * @covers ::priority
+     */
+    public function testPriority(): void
+    {
+        self::assertSame(PartialQuery::PRIORITY_NORMAL, (new NumericFacet('foobar', null, null))->priority());
     }
 }

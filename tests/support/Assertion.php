@@ -19,20 +19,21 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RediSearch\Aggregate\Exception;
+namespace Tests\MacFJA\RediSearch\support;
 
-use OutOfRangeException;
-use Throwable;
+use function implode;
+use function is_subclass_of;
+use MacFJA\RediSearch\PartialQuery;
+use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
-/**
- * @codeCoverageIgnore
- *
- * @deprecated This exception is never used.
- */
-class NotEnoughReducersException extends OutOfRangeException
+trait Assertion
 {
-    public function __construct(string $message = 'You must have at least one reducer', int $code = 0, ?Throwable $previous = null)
+    private static function assertSameQuery(string $expected, PartialQuery $partialQuery): void
     {
-        parent::__construct($message, $code, $previous);
+        if (!is_subclass_of(self::class, TestCase::class)) {
+            throw new RuntimeException();
+        }
+        self::assertSame($expected, implode(' ', $partialQuery->getQueryParts()));
     }
 }

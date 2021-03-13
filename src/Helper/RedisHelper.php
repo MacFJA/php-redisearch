@@ -47,7 +47,7 @@ class RedisHelper
      */
     public static function buildQueryBoolean(array $query, array $data): array
     {
-        return array_merge($query, array_keys(array_filter($data, function ($item) {
+        return array_merge($query, array_keys(array_filter($data, function (bool $item): bool {
             return $item;
         })));
     }
@@ -65,6 +65,9 @@ class RedisHelper
     public static function buildQueryList(array $query, array $data, bool $allowEmpty = false): array
     {
         foreach ($data as $queryWord => $list) {
+            if (!is_array($list)) {
+                continue;
+            }
             if (true === $allowEmpty || count($list) > 0) {
                 $query[] = $queryWord;
                 $query[] = count($list);
@@ -80,10 +83,15 @@ class RedisHelper
      * @param array<string, null|mixed> $data
      *
      * @return array<float|int|string>
+     *
+     * @phan-suppress PhanPartialTypeMismatchReturn
      */
     public static function buildQueryNotNull($query, array $data): array
     {
-        foreach (array_filter($data) as $queryWord => $value) {
+        $notNullValues = array_filter($data, function ($value): bool {
+            return !(null === $value);
+        });
+        foreach ($notNullValues as $queryWord => $value) {
             $query[] = $queryWord;
             $query[] = $value;
         }
@@ -101,6 +109,9 @@ class RedisHelper
     {
         /** @var PartialQuery $partial */
         foreach (array_filter($partials) as $partial) {
+            if (!$partial instanceof PartialQuery) {
+                continue;
+            }
             $query = array_merge($query, $partial->getQueryParts());
         }
 

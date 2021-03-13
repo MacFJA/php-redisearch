@@ -11,18 +11,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shorthand for Reducer functions
 - Add **Deprecated** section in `CHANGELOG.md`
 - Add Redis pipeline support
+- Prefix properties name with `@` in Aggregation's SortBy (keep BC)
+- Add more unit tests (Aggregation options, Field creation)
 
 ### Changed
 
 - Allow `GROUPBY` with no properties
 - Allow `GROUPBY` with no reducers
 - (dev) Replace `php-parallel-lint` lib.
+- (dev) Add Php-Cs-Fixer on `tests/`
+- (dev) Improve Makefile
 
 ### Fixed
 
 - Fix namespace of tests
 - Aggregation result can now be an array
 - Fix Index builder options not preserved ([PR#3])
+- Aggregation SortBy allow 0 (not limit) as value for Max
+- Fix helper removing _"nullish"_ values (`array_filter` is too lax by default)
+- Fix order in fields creation not being correct
 
 ### Deprecated
 

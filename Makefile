@@ -1,7 +1,6 @@
 .PHONY: analyze fix-code test coverage
 
 analyze: | vendor
-	$(COMPOSER) install --optimize-autoloader --no-suggest --prefer-dist
 	$(COMPOSER) exec -v parallel-lint -- src
 	$(COMPOSER) exec -v php-cs-fixer -- fix --dry-run
 	$(COMPOSER) exec -v unused_scanner -- .unused.php
@@ -13,8 +12,7 @@ analyze: | vendor
 	$(COMPOSER) exec -v psalm -- --show-info=true src
 	$(COMPOSER) exec -v phan -- --allow-polyfill-parser --color --color-scheme=light --output-mode=text
 
-fix-code: | vendor
-	$(COMPOSER) install --optimize-autoloader --no-suggest --prefer-dist
+fix-code: |vendor
 	$(COMPOSER) normalize
 	$(COMPOSER) exec -v php-cs-fixer -- fix
 	@#$(COMPOSER) exec -v psalm -- --alter --issues=all src
@@ -23,14 +21,12 @@ test: | vendor
 	$(COMPOSER) exec -v phpunit
 
 coverage: | vendor
+	@if [ -z "`php -v | grep -i 'xdebug'`" ]; then echo "You need to install Xdebug in order to do this action"; exit 1; fi
 	$(COMPOSER) exec -v phpunit -- --coverage-text --color
 
-vendor:
-ifneq (prod,${BUILD_MODE})
-	$(COMPOSER) install --optimize-autoloader
-else
-	APP_ENV=prod $(COMPOSER) install --optimize-autoloader --no-dev --no-suggest --prefer-dist
-endif
+vendor: composer.json
+	$(COMPOSER) install --optimize-autoloader --no-suggest --prefer-dist
+	touch vendor
 
 composer.phar:
 	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"

@@ -62,10 +62,9 @@ class TextField extends AbstractField
         return self::TYPE_TEXT;
     }
 
-    public function getQueryParts(): array
+    protected function getAdditionalQueryParts(): array
     {
-        $query = parent::getQueryParts();
-        $query = RedisHelper::buildQueryBoolean($query, ['NOSTEM' => $this->noStem]);
+        $query = RedisHelper::buildQueryBoolean([], ['NOSTEM' => $this->noStem]);
 
         return RedisHelper::buildQueryNotNull($query, ['WEIGHT' => $this->weight, 'PHONETIC' => $this->phonetic]);
     }

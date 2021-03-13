@@ -51,11 +51,9 @@ class TagField extends AbstractField
         return $this->separator;
     }
 
-    public function getQueryParts(): array
+    protected function getAdditionalQueryParts(): array
     {
-        $query = parent::getQueryParts();
-
-        return RedisHelper::buildQueryNotNull($query, [
+        return RedisHelper::buildQueryNotNull([], [
             'SEPARATOR' => $this->separator,
         ]);
     }

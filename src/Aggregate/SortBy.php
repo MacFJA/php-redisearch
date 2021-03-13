@@ -30,6 +30,7 @@ use MacFJA\RediSearch\Aggregate\Exception\UnknownSortDirectionException;
 use MacFJA\RediSearch\Helper\DataHelper;
 use MacFJA\RediSearch\Helper\RedisHelper;
 use OutOfRangeException;
+use function strpos;
 use Throwable;
 
 class SortBy implements \MacFJA\RediSearch\PartialQuery
@@ -66,7 +67,7 @@ class SortBy implements \MacFJA\RediSearch\PartialQuery
             new UnknownSortDirectionException(array_diff($allValues, ['ASC', 'DESC']))
 
         );
-        DataHelper::assert(null === $max || $max > 0, new OutOfRangeException('MAX such by greater than 0'));
+        DataHelper::assert(null === $max || $max >= 0, new OutOfRangeException('MAX such by greater or equals to 0'));
         $this->properties = $properties;
         $this->max = $max;
     }
@@ -75,6 +76,9 @@ class SortBy implements \MacFJA\RediSearch\PartialQuery
     {
         $query = ['SORTBY', count($this->properties) * 2];
         foreach ($this->properties as $property => $direction) {
+            if (!(0 === strpos($property, '@'))) {
+                $property = '@'.$property;
+            }
             $query[] = $property;
             $query[] = $direction;
         }

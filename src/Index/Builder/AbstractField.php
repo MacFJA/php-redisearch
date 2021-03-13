@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Index\Builder;
 
+use function array_merge;
 use function implode;
 use MacFJA\RediSearch\Helper\RedisHelper;
 use SGH\Comparable\ComparatorException;
@@ -80,7 +81,10 @@ abstract class AbstractField implements Field
 
     public function getQueryParts(): array
     {
-        $query = [$this->name, $this->getType()];
+        $query = array_merge(
+            [$this->name, $this->getType()],
+            $this->getAdditionalQueryParts()
+        );
 
         return RedisHelper::buildQueryBoolean($query, [
             'SORTABLE' => $this->sortable,
@@ -95,5 +99,13 @@ abstract class AbstractField implements Field
         }
 
         return implode(' ', $object->getQueryParts()) <=> implode(' ', $this->getQueryParts());
+    }
+
+    /**
+     * @return array<float|int|string>
+     */
+    protected function getAdditionalQueryParts(): array
+    {
+        return [];
     }
 }
