@@ -33,7 +33,7 @@ class UnknownSortDirectionException extends UnexpectedValueException
      */
     public function __construct(array $directions, int $code = 0, ?Throwable $previous = null)
     {
-        $message = sprintf('Sort By direction can only be "ASC" or "DESC". Provided: %s', implode(', ', $directions));
+        $message = sprintf('Sort By direction can only be "ASC" or "DESC". Provided: %s.', implode(', ', $directions));
         parent::__construct($message, $code, $previous);
     }
 }

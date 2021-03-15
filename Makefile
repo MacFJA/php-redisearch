@@ -1,4 +1,4 @@
-.PHONY: analyze fix-code test coverage
+.PHONY: analyze fix-code test coverage mutation-test clean
 
 analyze: | vendor
 	$(COMPOSER) exec -v parallel-lint -- src
@@ -23,6 +23,14 @@ test: | vendor
 coverage: | vendor
 	@if [ -z "`php -v | grep -i 'xdebug'`" ]; then echo "You need to install Xdebug in order to do this action"; exit 1; fi
 	$(COMPOSER) exec -v phpunit -- --coverage-text --color
+
+mutation-test: | vendor
+	@if [ -z "`php -v | grep -i 'xdebug'`" ]; then echo "You need to install Xdebug in order to do this action"; exit 1; fi
+	$(COMPOSER) exec -v infection -- --only-covered --min-covered-msi=95
+
+clean:
+	rm -rf .phpunit.cache vendor
+	rm -f .php_cs.cache .phpunit.result.cache composer.phar composer.lock infection.log
 
 vendor: composer.json
 	$(COMPOSER) install --optimize-autoloader --no-suggest --prefer-dist

@@ -22,6 +22,7 @@ Makefile  text
 /.unused.php      export-ignore
 /CHANGELOG.md     export-ignore
 /CONTRIBUTING.md  export-ignore
+/infection.json   export-ignore
 /Makefile         export-ignore
 /phpmd.xml        export-ignore
 /phpstan.neon     export-ignore

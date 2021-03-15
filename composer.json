@@ -24,6 +24,7 @@
         "enlightn/security-checker": "^1.5",
         "ergebnis/composer-normalize": "^2.13",
         "friendsofphp/php-cs-fixer": "^2.16",
+        "infection/infection": "^0.18.2",
         "insolita/unused-scanner": "^2.2",
         "phan/phan": "^3.2",
         "php-parallel-lint/php-parallel-lint": "^1.2",

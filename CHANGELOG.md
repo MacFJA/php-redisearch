@@ -12,7 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add **Deprecated** section in `CHANGELOG.md`
 - Add Redis pipeline support
 - Prefix properties name with `@` in Aggregation's SortBy (keep BC)
-- Add more unit tests (Aggregation options, Field creation)
+- Add more unit tests (Aggregation options, Field creation, DataHelper, RedisHelper)
+- (dev) Add mutation testing
 
 ### Changed
 

@@ -256,8 +256,6 @@ return PhpCsFixer\Config::create()
         'no_php4_constructor' => true,
         // Adds or removes `?` before type declarations for parameters with a default `null` value.
         'nullable_type_declaration_for_default_null_value' => true,
-        // A return statement wishing to return `void` should not return `null`.
-        'simplified_null_return' => true,
         // Changes doc blocks from single to multi line, or reversed. Works for class constants, properties and methods only.
         'phpdoc_line_span' => ['const'=>'multi','property'=>'single'],
         // Function `implode` must be called with 2 arguments in the documented order.

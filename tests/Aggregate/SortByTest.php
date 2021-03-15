@@ -25,6 +25,7 @@ use MacFJA\RediSearch\Aggregate\Exception\UnknownSortDirectionException;
 use MacFJA\RediSearch\Aggregate\SortBy;
 use OutOfRangeException;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Tests\MacFJA\RediSearch\support\Assertion;
 
 /**
@@ -49,6 +50,10 @@ class SortByTest extends TestCase
             new SortBy(['name' => SortBy::SORT_ASC, 'age' => SortBy::SORT_DESC], 20)
         );
         self::assertSameQuery(
+            'SORTBY 4 @name ASC @age DESC MAX 20',
+            new SortBy(['name' => SortBy::SORT_ASC, '@age' => SortBy::SORT_DESC], 20)
+        );
+        self::assertSameQuery(
             'SORTBY 2 @name ASC', new SortBy(['name' => SortBy::SORT_ASC]));
     }
 
@@ -69,7 +74,13 @@ class SortByTest extends TestCase
     public function testInvalidSort(): void
     {
         $this->expectException(UnknownSortDirectionException::class);
-        $this->expectExceptionMessage('Sort By direction can only be "ASC" or "DESC". Provided: UP, DOWN');
+        $this->expectExceptionMessage('Sort By direction can only be "ASC" or "DESC". Provided: UP, DOWN.');
         new SortBy(['foo' => 'UP', 'bar' => 'DOWN']);
+    }
+
+    public function testInvalidSortProperties(): void
+    {
+        $this->expectException(RuntimeException::class);
+        new SortBy([1 => 'ASC', false => 'DESC']);
     }
 }

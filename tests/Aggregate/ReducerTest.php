@@ -23,6 +23,8 @@ namespace Tests\MacFJA\RediSearch\Aggregate;
 
 use MacFJA\RediSearch\Aggregate\Reducer;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
+use stdClass;
 use Tests\MacFJA\RediSearch\support\Assertion;
 
 /**
@@ -37,6 +39,12 @@ use Tests\MacFJA\RediSearch\support\Assertion;
 class ReducerTest extends TestCase
 {
     use Assertion;
+
+    public function testInvalidArgumentsDataType(): void
+    {
+        $this->expectException(RuntimeException::class);
+        new Reducer('foo', [new stdClass()]);
+    }
 
     /**
      * @covers ::count

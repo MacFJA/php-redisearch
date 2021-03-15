@@ -34,11 +34,19 @@ The application use PSR-12 code conventions, strong typing.
 
 The source code must be, at least, compatible with **PHP 7.2**.
 
-Check your code by running the command:
+Check your code by running the commands:
 ```sh
 make analyze
+make test
 ```
 The command will output any information worth knowing. No error should be left.
+
+If Xdebug is installed, you can also run the commands:
+```sh
+make coverage
+make mutation-test
+```
+Ideally, coverage should only increase, and **Covered Code MSI** shouldn't be below 95%
 
 ----
 

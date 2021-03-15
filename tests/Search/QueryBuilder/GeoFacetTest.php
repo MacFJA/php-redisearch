@@ -52,6 +52,15 @@ class GeoFacetTest extends TestCase
         self::assertSameRender('@foobar:[-74.044502 40.689247 40.000000 km]', new GeoFacet('foobar', -74.044502, 40.689247, 40, GeoFilter::UNIT_KILOMETERS));
     }
 
+    public function testValidUnits(): void
+    {
+        $this->expectNotToPerformAssertions();
+        new GeoFacet('foobar', -74.044502, 40.689247, 40, GeoFilter::UNIT_KILOMETERS);
+        new GeoFacet('foobar', -74.044502, 40.689247, 40, GeoFilter::UNIT_FEET);
+        new GeoFacet('foobar', -74.044502, 40.689247, 40, GeoFilter::UNIT_METERS);
+        new GeoFacet('foobar', -74.044502, 40.689247, 40, GeoFilter::UNIT_MILES);
+    }
+
     /**
      * @covers \MacFJA\RediSearch\Search\Exception\UnknownUnitException
      */

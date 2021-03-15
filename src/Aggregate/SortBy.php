@@ -39,6 +39,8 @@ class SortBy implements \MacFJA\RediSearch\PartialQuery
 
     public const SORT_DESC = 'DESC';
 
+    private const SORT_ACCEPTABLE_VALUES = [self::SORT_ASC, self::SORT_DESC];
+
     /**
      * @psalm-var array<string,"ASC"|"DESC">
      * @phpstan-var array<string,"ASC"|"DESC">
@@ -61,10 +63,10 @@ class SortBy implements \MacFJA\RediSearch\PartialQuery
     public function __construct(array $properties, ?int $max = null)
     {
         DataHelper::assertArrayOf(array_keys($properties), 'string');
-        $allValues = array_unique(array_merge($properties, ['ASC', 'DESC']));
+        $allValues = array_unique(array_merge($properties, self::SORT_ACCEPTABLE_VALUES));
         DataHelper::assert(
             2 === count($allValues),
-            new UnknownSortDirectionException(array_diff($allValues, ['ASC', 'DESC']))
+            new UnknownSortDirectionException(array_diff($allValues, self::SORT_ACCEPTABLE_VALUES))
 
         );
         DataHelper::assert(null === $max || $max >= 0, new OutOfRangeException('MAX such by greater or equals to 0'));

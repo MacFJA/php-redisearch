@@ -171,7 +171,8 @@ class InfoResult
                 case 'TAG':
                     return new TagField(
                         $name,
-                        RedisHelper::getValue($field, 'SEPARATOR'),
+                        /** @phan-suppress-next-line PhanPartialTypeMismatchArgument */
+                        DataHelper::nullOrCast(RedisHelper::getValue($field, 'SEPARATOR'), 'string'),
                         in_array('SORTABLE', $field, true),
                         in_array('NOINDEX', $field, true)
                     );
@@ -181,7 +182,8 @@ class InfoResult
                         in_array('NOSTEM', $field, true),
                         /** @phan-suppress-next-line PhanPartialTypeMismatchArgument */
                         DataHelper::nullOrCast(RedisHelper::getValue($field, 'WEIGHT'), 'float'),
-                        RedisHelper::getValue($field, 'PHONETIC'),
+                        /** @phan-suppress-next-line PhanPartialTypeMismatchArgument */
+                        DataHelper::nullOrCast(RedisHelper::getValue($field, 'PHONETIC'), 'string'),
                         in_array('SORTABLE', $field, true),
                         in_array('NOINDEX', $field, true)
                     );

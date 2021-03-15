@@ -24,6 +24,7 @@ namespace Tests\MacFJA\RediSearch\Aggregate;
 use MacFJA\RediSearch\Aggregate\GroupBy;
 use MacFJA\RediSearch\Aggregate\Reducer;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Tests\MacFJA\RediSearch\support\Assertion;
 
 /**
@@ -75,5 +76,17 @@ class GroupByTest extends TestCase
             'GROUPBY 2 @name @age',
             new GroupBy(['name', 'age'], [])
         );
+    }
+
+    public function testInvalidPropertiesDataType(): void
+    {
+        $this->expectException(RuntimeException::class);
+        new GroupBy([1, false], []);
+    }
+
+    public function testInvalidReducerDataType(): void
+    {
+        $this->expectException(RuntimeException::class);
+        new GroupBy([], ['foo', 1, false]);
     }
 }

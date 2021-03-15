@@ -38,6 +38,7 @@ class RedisHelperTest extends TestCase
         self::assertSame([], RedisHelper::buildQueryBoolean([], ['foobar' => false]));
         self::assertSame(['foobar'], RedisHelper::buildQueryBoolean([], ['foobar' => true]));
         self::assertSame(['foobar', 'foo'], RedisHelper::buildQueryBoolean([], ['foobar' => true, 'foo' => true, 'bar' => false]));
+        self::assertSame(['foo', 'bar'], RedisHelper::buildQueryBoolean(['foo'], ['bar' => true]));
     }
 
     /**
@@ -51,6 +52,7 @@ class RedisHelperTest extends TestCase
         self::assertSame(['foobar', 0], RedisHelper::buildQueryList([], ['foobar' => []], true));
         self::assertSame(['foo', 2, 'foo', 'bar', 'bar', 1, 'foobar'], RedisHelper::buildQueryList([], ['foo' => ['foo', 'bar'], 'bar' => ['foobar']]));
         self::assertSame(['foobar', 2, 2, 'bar'], RedisHelper::buildQueryList([], ['foobar' => [2, 'bar']]));
+        self::assertSame(['foo', 'foobar', 2, 2, 'bar'], RedisHelper::buildQueryList(['foo'], ['foobar' => [2, 'bar']]));
     }
 
     /**
@@ -63,5 +65,28 @@ class RedisHelperTest extends TestCase
         self::assertSame(['foobar', 2], RedisHelper::buildQueryNotNull([], ['foobar' => 2]));
         self::assertSame(['foo', 'bar'], RedisHelper::buildQueryNotNull([], ['foo' => 'bar']));
         self::assertSame(['foo', 'bar', 'hello', 'world'], RedisHelper::buildQueryNotNull([], ['foo' => 'bar', 'hello' => 'world']));
+        self::assertSame(['foobar', 'foo', 'bar'], RedisHelper::buildQueryNotNull(['foobar'], ['foo' => 'bar']));
+    }
+
+    /**
+     * @covers ::getPairs
+     */
+    public function testGetPairs(): void
+    {
+        self::assertSame(['key1' => 'value1', 'key2' => 'value2'], RedisHelper::getPairs(['key1', 'value1', 'key2', 'value2']));
+        self::assertSame(['key1' => 'value1'], RedisHelper::getPairs(['key1', 'value1', 'key2']));
+    }
+
+    /**
+     * @covers ::getValue
+     */
+    public function testGetValue(): void
+    {
+        self::assertSame('value1', RedisHelper::getValue(['key1', 'value1', 'key2', 'value2'], 'key1'));
+        self::assertSame('value2', RedisHelper::getValue(['key1', 'value1', 'key2', 'value2'], 'key2'));
+        self::assertNull(RedisHelper::getValue(['key1', 'value1', 'key2', 'value2'], 'key3'));
+        self::assertSame('value1', RedisHelper::getValue(['key1', 'value1', 'key2'], 'key1'));
+        self::assertNull(RedisHelper::getValue(['key1', 'value1', 'key2'], 'key2'));
+        self::assertSame('value', RedisHelper::getValue(['foo', 'bar', 'foobar', 'key', 'value'], 'key'));
     }
 }

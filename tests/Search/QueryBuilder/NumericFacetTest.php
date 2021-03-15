@@ -24,6 +24,7 @@ namespace Tests\MacFJA\RediSearch\Search\QueryBuilder;
 use MacFJA\RediSearch\Search\QueryBuilder\NumericFacet;
 use MacFJA\RediSearch\Search\QueryBuilder\PartialQuery;
 use PHPUnit\Framework\TestCase;
+use Tests\MacFJA\RediSearch\support\Assertion;
 
 /**
  * @coversDefaultClass \MacFJA\RediSearch\Search\QueryBuilder\NumericFacet
@@ -42,13 +43,24 @@ use PHPUnit\Framework\TestCase;
  */
 class NumericFacetTest extends TestCase
 {
+    use Assertion;
+
+    public function testNominal(): void
+    {
+        self::assertSameRender('@foo:[0 10]', new NumericFacet('foo', 0, 10));
+        self::assertSameRender('@foo:[0 10]', new NumericFacet('foo', 0, 10, true, true));
+        self::assertSameRender('@foo:[(0 10]', new NumericFacet('foo', 0, 10, false));
+        self::assertSameRender('@foo:[0 (10]', new NumericFacet('foo', 0, 10, true, false));
+        self::assertSameRender('@foo:[(0 (10]', new NumericFacet('foo', 0, 10, false, false));
+    }
+
     /**
      * @covers ::greaterThan
      */
     public function testGreaterThan()
     {
         $facet = NumericFacet::greaterThan('num', 10);
-        self::assertSame('@num:[(10 +inf]', $facet->render());
+        self::assertSameRender('@num:[(10 +inf]', $facet);
     }
 
     /**
@@ -57,7 +69,7 @@ class NumericFacetTest extends TestCase
     public function testGreaterThanOrEquals()
     {
         $facet = NumericFacet::greaterThanOrEquals('num', 10);
-        self::assertSame('@num:[10 +inf]', $facet->render());
+        self::assertSameRender('@num:[10 +inf]', $facet);
     }
 
     /**
@@ -66,7 +78,7 @@ class NumericFacetTest extends TestCase
     public function testLessThan()
     {
         $facet = NumericFacet::lessThan('num', 10);
-        self::assertSame('@num:[-inf (10]', $facet->render());
+        self::assertSameRender('@num:[-inf (10]', $facet);
     }
 
     /**
@@ -75,7 +87,7 @@ class NumericFacetTest extends TestCase
     public function testLessThanOrEquals()
     {
         $facet = NumericFacet::lessThanOrEquals('num', 10);
-        self::assertSame('@num:[-inf 10]', $facet->render());
+        self::assertSameRender('@num:[-inf 10]', $facet);
     }
 
     /**
@@ -84,7 +96,7 @@ class NumericFacetTest extends TestCase
     public function testEqualsTo()
     {
         $facet = NumericFacet::equalsTo('num', 10);
-        self::assertSame('@num:[10 10]', $facet->render());
+        self::assertSameRender('@num:[10 10]', $facet);
     }
 
     /**

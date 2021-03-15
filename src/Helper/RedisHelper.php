@@ -27,6 +27,7 @@ use function array_combine;
 use function array_filter;
 use function array_keys;
 use function array_merge;
+use function array_pop;
 use function array_shift;
 use function assert;
 use function count;
@@ -125,6 +126,9 @@ class RedisHelper
      */
     public static function getPairs(array $notKeyedArray): array
     {
+        if (count($notKeyedArray) % 2 > 0) {
+            array_pop($notKeyedArray);
+        }
         $entries = array_chunk($notKeyedArray, 2);
         $keyed = array_combine(array_column($entries, 0), array_column($entries, 1));
         assert(is_array($keyed));
@@ -133,14 +137,16 @@ class RedisHelper
     }
 
     /**
-     * @param array<float|int|string> $notKeyedArray
+     * @param array<bool|float|int|string> $notKeyedArray
+     *
+     * @return null|bool|float|int|string
      */
-    public static function getValue(array $notKeyedArray, string $key): ?string
+    public static function getValue(array $notKeyedArray, string $key)
     {
-        while (count($notKeyedArray) > 0) {
+        while (count($notKeyedArray) >= 2) {
             $shifted = array_shift($notKeyedArray);
-            if ($shifted === $key && count($notKeyedArray) > 0) {
-                return (string) array_shift($notKeyedArray);
+            if ($shifted === $key) {
+                return array_shift($notKeyedArray);
             }
         }
 
