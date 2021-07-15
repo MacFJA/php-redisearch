@@ -109,7 +109,8 @@ class Search implements Builder, Pipeable
     /** @var null|Highlight */
     private $highlight;
 
-    //slop
+    /** @var int */
+    private $slop = 0;
 
     /** @var bool */
     private $inOrder = false;
@@ -164,6 +165,7 @@ class Search implements Builder, Pipeable
         $this->returns = [];
         $this->summarize = null;
         $this->highlight = null;
+        $this->slop = 0;
         $this->inOrder = false;
         $this->language = null;
         $this->expander = null;
@@ -317,6 +319,14 @@ class Search implements Builder, Pipeable
 
         return $this;
     }
+
+    public function withSlop(int $slop = 0): Search
+    {
+        $this->slop = $slop;
+
+        return $this;
+    }
+
 
     public function withInOrder(bool $inOrder = true): Search
     {
@@ -506,6 +516,10 @@ class Search implements Builder, Pipeable
         $query = RedisHelper::buildQueryPartial($query,
             array_merge($this->filters, [$this->geoFilter, $this->summarize, $this->highlight])
         );
+        if (is_int($this->slop)) {
+            $query[] = 'SLOP';
+            $query[] = $this->slop;
+        }
         if (is_string($this->sortBy)) {
             $query[] = 'SORTBY';
             $query[] = $this->sortBy;
