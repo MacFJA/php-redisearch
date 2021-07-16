@@ -109,8 +109,8 @@ class Search implements Builder, Pipeable
     /** @var null|Highlight */
     private $highlight;
 
-    /** @var int */
-    private $slop = 0;
+    /** @var null|int */
+    private $slop = null;
 
     /** @var bool */
     private $inOrder = false;
@@ -165,7 +165,7 @@ class Search implements Builder, Pipeable
         $this->returns = [];
         $this->summarize = null;
         $this->highlight = null;
-        $this->slop = 0;
+        $this->slop = null;
         $this->inOrder = false;
         $this->language = null;
         $this->expander = null;
