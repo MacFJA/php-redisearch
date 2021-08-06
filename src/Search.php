@@ -457,12 +457,15 @@ class Search implements Builder, Pipeable
                         $payload = ($context['payloads'] ?? false) ? array_shift($document) : null;
                         $sortKey = ($context['sortKeys'] ?? false) ? array_shift($document) : null;
 
-                        if (!(1 === count($document))) {
-                            throw new InvalidArgumentException();
+                        $fields = [];
+                        if (false === $context['noContent']) {
+                            if (!(1 === count($document))) {
+                                throw new InvalidArgumentException();
+                            }
+                            $rawData = reset($document);
+                            assert(is_array($rawData));
+                            $fields = RedisHelper::getPairs($rawData);
                         }
-                        $rawData = reset($document);
-                        assert(is_array($rawData));
-                        $fields = RedisHelper::getPairs($rawData);
 
                         return new Result($hash, $fields, $score, $payload, $sortKey);
                     }, $documents);
@@ -476,6 +479,7 @@ class Search implements Builder, Pipeable
                     'scores' => $this->withScores,
                     'payloads' => $this->withPayloads,
                     'sortKeys' => $this->withSortKeys,
+                    'noContent' => $this->noContent,
                 ]
             );
         } finally {
