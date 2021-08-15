@@ -1,30 +1,26 @@
-*         text=auto
-*.md      text diff=markdown
-*.json    text
-*.toml    text
-*.xml     text
-*.yaml    text
-*.yml     text
-*.php     text diff=php
-.php_cs   text diff=php
-*.lock    text -diff
-Makefile  text
+*               text=auto
+
+*.*ignore       text
+.gitattributes  text
+*.lock          text -diff
+Makefile        text
+*.md            text diff=markdown
+*.neon          text
+*.php           text diff=php
+*.xml           text
+*.xml.dist      text
 
 #
 # Exclude files from exporting
 #
-
-/.phan            export-ignore
 /tests            export-ignore
 /.gitattributes   export-ignore
 /.gitignore       export-ignore
-/.php_cs          export-ignore
-/.unused.php      export-ignore
+/.gitkeep         export-ignore
 /CHANGELOG.md     export-ignore
 /CONTRIBUTING.md  export-ignore
-/infection.json   export-ignore
 /Makefile         export-ignore
-/phpmd.xml        export-ignore
+/*.dist.php       export-ignore
+/*.xml.dist       export-ignore
 /phpstan.neon     export-ignore
-/phpunit.xml      export-ignore
 /psalm.xml        export-ignore

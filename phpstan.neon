@@ -1,6 +1,12 @@
 parameters:
-	ignoreErrors:
-		- '#type has no value type specified in iterable type Predis\\Client#'
-		- '#with no value type specified in iterable type Predis\\Client#'
-		- message: '#MacFJA\\RediSearch\\Index\\Builder\\\w+ constructor expects [\w\|]+, bool\|float\|int\|string\|null given#'
-		  path: src/Index/InfoResult.php
+    level: 8
+    paths:
+        - src
+        - tests
+    ignoreErrors:
+        - '#Method MacFJA\\RediSearch\\Redis\\Command\\\w+::getLanguageOptions\(\) should return#'
+        - '#uses generic trait MacFJA\\RediSearch\\Redis\\Command\\Option\\DecoratedOptionTrait but does not specify its types: T#'
+        - '#Call to an undefined method MacFJA\\RediSearch\\Redis\\Command\\Option\\CustomValidatorOption::setValue\(\).#'
+        -
+            message: '#Call to an undefined method MacFJA\\RediSearch\\Redis\\Command\\Option\\CommandOption::set\w+\(\).#'
+            path: src/Redis/Command/Option/GroupedOption.php

@@ -21,113 +21,110 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch;
 
-use function array_keys;
-use function array_map;
-use function array_merge;
+use function count;
 use function is_array;
 use function is_string;
-use MacFJA\RediSearch\Helper\DataHelper;
-use MacFJA\RediSearch\Helper\RedisHelper;
-use MacFJA\RediSearch\Index\Builder\Field;
-use MacFJA\RediSearch\Index\InfoResult;
-use Predis\Client;
-use Throwable;
-use function trigger_error;
-use function uniqid;
+use MacFJA\RediSearch\Redis\Command\AliasAdd;
+use MacFJA\RediSearch\Redis\Command\AliasDel;
+use MacFJA\RediSearch\Redis\Command\AliasUpdate;
+use MacFJA\RediSearch\Redis\Command\Alter;
+use MacFJA\RediSearch\Redis\Command\CreateCommand\CreateCommandFieldOption;
+use MacFJA\RediSearch\Redis\Command\DropIndex;
+use MacFJA\RediSearch\Redis\Command\Info;
+use MacFJA\RediSearch\Redis\Command\TagVals;
+use MacFJA\RediSearch\Redis\Initializer;
+use MacFJA\RediSearch\Redis\Response\InfoResponse;
+use Predis\ClientInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class Index
 {
+    /** @var ClientInterface */
+    private $client;
+    /** @var InfoResponse */
+    private $info;
     /** @var string */
-    private $indexKey;
+    private $index;
+    /** @var string */
+    private $version;
 
-    /** @var Client */
-    private $redis;
-
-    public function __construct(string $indexKey, Client $redis)
+    public function __construct(string $index, ClientInterface $client)
     {
-        $this->indexKey = $indexKey;
-        $this->redis = $redis;
+        $this->client = $client;
+        $this->index = $index;
+        $this->version = Initializer::getRediSearchVersion($client) ?? '2.0.0';
+        $this->getInfo();
     }
 
     /**
      * @param array<string,float|int|string> $properties
-     *
-     * @throws Throwable
-     *
-     * @deprecated Use `addDocumentFromArray` instead
-     * @see Index::addDocumentFromArray()
-     */
-    public function addFromArray(array $properties, ?string $hash = null): string
-    {
-        trigger_error('The method '.__METHOD__.' is deprecated. Use \MacFJA\RediSearch\Index::addDocumentFromArray instead.', \E_USER_DEPRECATED);
-
-        return $this->addDocumentFromArray($properties, $hash);
-    }
-
-    /**
-     * @param array<string,float|int|string> $properties
-     *
-     * @throws Throwable
      */
     public function addDocumentFromArray(array $properties, ?string $hash = null): string
     {
-        DataHelper::assertArrayOf(array_keys($properties), 'string');
-        DataHelper::assertArrayOf($properties, 'scalar');
-        $documentId = is_string($hash) ? $hash : uniqid();
-        $query = ['HSET', $documentId];
+        $prefixes = $this->info->getIndexDefinition('prefixes');
+        $prefix = '';
+        if (is_array($prefixes) && count($prefixes) > 0) {
+            $prefix = (string) reset($prefixes);
+        }
+        $documentId = is_string($hash) ? $hash : uniqid($prefix, true);
+        $query = [$documentId];
         foreach ($properties as $name => $value) {
             $query[] = $name;
             $query[] = $value;
         }
 
-        $this->redis->executeRaw($query);
+        $this->client->hset(...$query);
 
         return $documentId;
     }
 
     public function deleteDocument(string $hash): bool
     {
-        $count = $this->redis->del($hash);
+        $count = $this->client->del($hash);
 
         return 1 === $count;
     }
 
-    public function addField(Field $field): bool
+    public function addField(CreateCommandFieldOption $field): bool
     {
-        $result = $this->redis->executeRaw(array_merge([
-            'FT.ALTER',
-            $this->indexKey,
-            'SCHEMA',
-            'ADD',
-        ], $field->getQueryParts()));
+        $command = new Alter($this->version);
+        $command
+            ->setIndex($this->index)
+            ->addField($field)
+        ;
 
-        return 'OK' === $result;
+        return 'OK' === (string) $this->client->executeCommand($command);
     }
 
     public function delete(bool $withDocuments = false): bool
     {
-        $query = ['FT.DROPINDEX', $this->indexKey];
-        if (true === $withDocuments) {
-            $query[] = 'DD';
-        }
-        $result = $this->redis->executeRaw($query);
+        $command = new DropIndex($this->version);
+        $command->setIndex($this->index)
+            ->setDeleteDocument($withDocuments)
+        ;
 
-        return 'OK' === $result;
+        return 'OK' === (string) $this->client->executeCommand($command);
     }
 
     public function addAlias(string $alias): bool
     {
-        return $this->redis->executeRaw(['FT.ALIASADD', $alias, $this->indexKey]);
+        return 'OK' === (string) $this->client->executeCommand(
+            (new AliasAdd($this->version))
+                ->setIndex($this->index)
+                ->setAlias($alias)
+        );
     }
 
     public function updateAlias(string $alias): bool
     {
-        return $this->redis->executeRaw(['FT.ALIASUPDATE', $alias, $this->indexKey]);
+        return 'OK' === (string) $this->client->executeCommand((new AliasUpdate($this->version))->setIndex($this->index)->setAlias($alias));
     }
 
     public function deleteAlias(string $alias): bool
     {
-        return $this->redis->executeRaw(['FT.ALIASDEL', $alias]);
+        return 'OK' === (string) $this->client->executeCommand((new AliasDel($this->version))->setAlias($alias));
     }
 
     /**
@@ -135,48 +132,13 @@ class Index
      */
     public function getTagValues(string $fieldName): array
     {
-        return $this->redis->executeRaw(['FT.TAGVALS', $this->indexKey, $fieldName]);
+        return $this->client->executeCommand((new TagVals($this->version))->setIndex($this->index)->setField($fieldName));
     }
 
-    public function getStats(): InfoResult
+    public function getInfo(): InfoResponse
     {
-        $result = $this->redis->executeRaw(['FT.INFO', $this->indexKey]);
-        DataHelper::handleRawResult($result);
+        $this->info = $this->client->executeCommand((new Info($this->version))->setIndex($this->index));
 
-        $stats = RedisHelper::getPairs($result);
-        $definitions = RedisHelper::getPairs($stats['index_definition'] ?? []);
-        $definitions = array_map(function ($item) {
-            if (!is_array($item)) {
-                return (string) $item;
-            }
-
-            return $item;
-        }, $definitions);
-        $definitions['prefixes'] = array_map('strval', (array) ($definitions['prefixes'] ?? []));
-
-        return new InfoResult(
-            (string) $stats['index_name'],
-            array_map('strval', (array) ($stats['index_options'] ?? [])),
-            $definitions,
-            (array) ($stats['fields'] ?? []),
-            (int) $stats['num_docs'],
-            (int) $stats['max_doc_id'],
-            (int) $stats['num_terms'],
-            (float) $stats['bytes_per_record_avg'],
-            (float) $stats['inverted_sz_mb'],
-            (int) ($stats['total_inverted_index_blocks'] ?? 0),
-            '1' === $stats['indexing'],
-            (int) ($stats['hash_indexing_failures'] ?? 0),
-            (float) ($stats['percent_indexed'] ?? 1),
-            array_map('strval', (array) ($stats['stopwords_list'] ?? []))
-        );
-    }
-
-    /**
-     * @return array<string>
-     */
-    public static function getIndexes(Client $redis): array
-    {
-        return $redis->executeRaw(['FT._LIST']);
+        return $this->info;
     }
 }

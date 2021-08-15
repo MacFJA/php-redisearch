@@ -21,106 +21,85 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch;
 
-use function array_chunk;
-use function array_map;
-use function array_shift;
-use function assert;
-use function count;
-use function in_array;
-use InvalidArgumentException;
+use function is_int;
 use function is_string;
-use MacFJA\RediSearch\Helper\DataHelper;
-use MacFJA\RediSearch\Helper\PipelineItem;
-use MacFJA\RediSearch\Helper\RedisHelper;
-use MacFJA\RediSearch\Suggestion\Result;
-use Predis\Client;
+use MacFJA\RediSearch\Redis\Command\SugAdd;
+use MacFJA\RediSearch\Redis\Command\SugDel;
+use MacFJA\RediSearch\Redis\Command\SugGet;
+use MacFJA\RediSearch\Redis\Command\SugLen;
+use MacFJA\RediSearch\Redis\Initializer;
+use MacFJA\RediSearch\Redis\Response\SuggestionResponseItem;
+use Predis\ClientInterface;
 
 /**
- * @property-read int $length
+ * @codeCoverageIgnore
  */
 class Suggestions
 {
     /** @var string */
-    private $dictionaryKey;
-
-    /** @var ?int */
+    private $dictionary;
+    /** @var ClientInterface */
+    private $client;
+    /** @var int */
     private $length;
+    /** @var string */
+    private $version;
 
-    /** @var Client */
-    private $redis;
-
-    public function __construct(string $dictionaryKey, Client $redis)
+    public function __construct(string $dictionary, ClientInterface $client)
     {
-        $this->dictionaryKey = $dictionaryKey;
-        $this->redis = $redis;
-    }
-
-    /**
-     * @return int|void
-     */
-    public function __get(string $name)
-    {
-        if ('length' === $name) {
-            return $this->length ?? $this->length();
-        }
-
-        return;
-    }
-
-    public function __isset(string $name)
-    {
-        return in_array($name, ['length'], true);
+        $this->dictionary = $dictionary;
+        $this->client = $client;
+        $this->length = $client->executeCommand((new SugLen())->setDictionary($dictionary));
+        $this->version = Initializer::getRediSearchVersion($client) ?? '2.0.0';
     }
 
     public function add(string $suggestion, float $score, bool $increment = false, ?string $payload = null): void
     {
-        $command = ['FT.SUGADD', $this->dictionaryKey, $suggestion, $score];
-        $command = RedisHelper::buildQueryBoolean($command, ['INCR' => $increment]);
-        $command = RedisHelper::buildQueryNotNull($command, ['PAYLOAD' => $payload]);
-        /** @phan-suppress-next-line PhanAccessReadOnlyMagicProperty */
-        $this->length = $this->redis->executeRaw($command);
+        $command = new SugAdd($this->version);
+        $command
+            ->setDictionary($this->dictionary)
+            ->setScore($score)
+            ->setSuggestion($suggestion)
+            ->setIncrement($increment)
+        ;
+        if (is_string($payload)) {
+            $command->setPayload($payload);
+        }
+
+        $response = $this->client->executeCommand($command);
+
+        if (is_int($response)) {
+            $this->length = $response;
+        }
     }
 
     /**
-     * @return array<Result>
+     * @return array<SuggestionResponseItem>
      */
     public function get(string $prefix, bool $fuzzy = false, bool $withScores = false, bool $withPayloads = false, ?int $max = null): array
     {
-        $request = $this->pipeableGet($prefix, $fuzzy, $withScores, $withPayloads, $max);
-        $result = $this->redis->executeCommand($request->getCommand());
+        $command = new SugGet($this->version);
+        $command->setDictionary($this->dictionary)
+            ->setWithPayloads($withPayloads)
+            ->setWithScores($withScores)
+            ->setPrefix($prefix)
+            ->setFuzzy($fuzzy)
+        ;
+        if (is_int($max)) {
+            $command->setMax($max);
+        }
 
-        return $request->transform($result);
-    }
-
-    public function pipeableGet(string $prefix, bool $fuzzy = false, bool $withScores = false, bool $withPayloads = false, ?int $max = null): PipelineItem
-    {
-        $command = ['FT.SUGGET', $this->dictionaryKey, $prefix];
-        $command = RedisHelper::buildQueryBoolean($command, [
-            'FUZZY' => $fuzzy,
-            'WITHSCORES' => $withScores,
-            'WITHPAYLOADS' => $withPayloads,
-        ]);
-        $command = RedisHelper::buildQueryNotNull($command, [
-            'MAX' => $max,
-        ]);
-
-        return PipelineItem::createFromRaw(
-            $command,
-            function ($rawResult, array $context) {
-                if (null === $rawResult) {
-                    return [];
-                }
-
-                return self::listFromRawRedis($rawResult, $context['payloads'], $context['scores']);
-            },
-            ['payloads' => $withPayloads, 'scores' => $withScores]
-        );
+        return $this->client->executeCommand($command);
     }
 
     public function delete(string $suggestion): bool
     {
-        $removed = (int) $this->redis->executeRaw(['FT.SUGDEL', $this->dictionaryKey, $suggestion]);
-        /** @phan-suppress-next-line PhanAccessReadOnlyMagicProperty */
+        $command = new SugDel($this->version);
+        $command
+            ->setDictionary($this->dictionary)
+            ->setSuggestion($suggestion)
+        ;
+        $removed = (int) $this->client->executeCommand($command);
         $this->length -= $removed;
 
         return 1 === $removed;
@@ -128,57 +107,6 @@ class Suggestions
 
     public function length(): int
     {
-        /** @phan-suppress-next-line PhanAccessReadOnlyMagicProperty */
-        $this->length = (int) $this->redis->executeRaw(['FT.SUGLEN', $this->dictionaryKey]);
-
         return $this->length;
-    }
-
-    /**
-     * @param array<float|string> $data
-     *
-     * @return array<Result>
-     */
-    private static function listFromRawRedis(array $data, bool $withPayload = true, bool $withScore = false): array
-    {
-        $size = 1;
-        if (true === $withPayload) {
-            $size++;
-        }
-        if (true === $withScore) {
-            $size++;
-        }
-        $suggestions = array_chunk($data, $size, false);
-
-        return array_map(function (array $grouped) use ($withPayload, $withScore) {
-            return self::fromRawRedis($grouped, $withPayload, $withScore);
-        }, $suggestions);
-    }
-
-    /**
-     * @param array<float|string> $data
-     */
-    private static function fromRawRedis(array $data, bool $withPayload = true, bool $withScore = false): Result
-    {
-        $expectedSize = 1 + (true === $withPayload ? 1 : 0) + (true === $withScore ? 1 : 0);
-        if (!(count($data) === $expectedSize)) {
-            throw new InvalidArgumentException();
-        }
-
-        $value = array_shift($data);
-        $score = null;
-        $payload = null;
-
-        if (true === $withScore) {
-            $score = (float) array_shift($data);
-        }
-        if (true === $withPayload) {
-            $payload = array_shift($data);
-        }
-
-        DataHelper::assert(is_string($payload) || null === $payload);
-        assert(is_string($payload) || null === $payload);
-
-        return new Result((string) $value, $score, $payload);
     }
 }

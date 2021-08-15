@@ -1,8 +1,16 @@
+### Composer
 /composer.phar
 /vendor/
 /composer.lock
 
-/.php_cs.cache
-/.phpunit.cache/
+### PHP CS Fixer
+/.php-cs-fixer.cache
+
+### PHPUnit
 /.phpunit.result.cache
-/infection.log
+
+### Documentation
+/docs
+
+### Local test
+/test*.php

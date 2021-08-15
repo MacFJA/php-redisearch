@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
 <psalm
-        totallyTyped="false"
-        errorLevel="5"
-        resolveFromConfigFile="true"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="https://getpsalm.org/schema/config"
-        xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    errorLevel="7"
+    resolveFromConfigFile="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 >
     <projectFiles>
         <directory name="src" />
@@ -13,11 +12,4 @@
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
-
-<!--    <issueHandlers>-->
-<!--        <PropertyNotSetInConstructor/>-->
-<!--        <MissingParamType/>-->
-<!--        <PossiblyNullArgument/>-->
-<!--        <ImplicitToStringCast errorLevel="suppress" />-->
-<!--    </issueHandlers>-->
 </psalm>

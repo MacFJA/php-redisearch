@@ -1,21 +1,19 @@
-.PHONY: analyze fix-code test coverage mutation-test clean
+.PHONY: analyze fix-code test coverage mutation-test validation
 
 analyze: | vendor
 	$(COMPOSER) exec -v parallel-lint -- src
 	$(COMPOSER) exec -v php-cs-fixer -- fix --dry-run
-	$(COMPOSER) exec -v unused_scanner -- .unused.php
+	$(COMPOSER) exec -v unused_scanner -- .unused.dist.php
 	$(COMPOSER) exec -v security-checker -- security:check
 	$(COMPOSER) exec -v phpcpd -- --fuzzy src
-	$(COMPOSER) exec -v phpmd -- src ansi phpmd.xml
+	$(COMPOSER) exec -v phpmd -- src ansi codesize,controversial,design,naming,unusedcode
 	$(COMPOSER) exec -v phpa -- src
-	$(COMPOSER) exec -v phpstan -- analyse --level=8 src
-	$(COMPOSER) exec -v psalm -- --show-info=true src
-	$(COMPOSER) exec -v phan -- --allow-polyfill-parser --color --color-scheme=light --output-mode=text
+	$(COMPOSER) exec -v phpstan -- analyse
+	$(COMPOSER) exec -v psalm -- src
 
-fix-code: |vendor
+fix-code: | vendor
 	$(COMPOSER) normalize
 	$(COMPOSER) exec -v php-cs-fixer -- fix
-	@#$(COMPOSER) exec -v psalm -- --alter --issues=all src
 
 test: | vendor
 	$(COMPOSER) exec -v phpunit
@@ -24,13 +22,7 @@ coverage: | vendor
 	@if [ -z "`php -v | grep -i 'xdebug'`" ]; then echo "You need to install Xdebug in order to do this action"; exit 1; fi
 	$(COMPOSER) exec -v phpunit -- --coverage-text --color
 
-mutation-test: | vendor
-	@if [ -z "`php -v | grep -i 'xdebug'`" ]; then echo "You need to install Xdebug in order to do this action"; exit 1; fi
-	$(COMPOSER) exec -v infection -- --only-covered --min-covered-msi=95
-
-clean:
-	rm -rf .phpunit.cache vendor
-	rm -f .php_cs.cache .phpunit.result.cache composer.phar composer.lock infection.log
+validation: fix-code analyze test coverage
 
 vendor: composer.json
 	$(COMPOSER) install --optimize-autoloader --no-suggest --prefer-dist
