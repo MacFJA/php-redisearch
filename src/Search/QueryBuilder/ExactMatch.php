@@ -23,6 +23,7 @@ namespace MacFJA\RediSearch\Search\QueryBuilder;
 
 use MacFJA\RediSearch\Helper\EscapeHelper;
 use function sprintf;
+use function strpos;
 
 class ExactMatch implements PartialQuery
 {
@@ -36,6 +37,10 @@ class ExactMatch implements PartialQuery
 
     public function render(): string
     {
+        if (false === strpos($this->match, ' ')) {
+            return EscapeHelper::escapeWord($this->match);
+        }
+
         return sprintf('"%s"', EscapeHelper::escapeExactMatch($this->match));
     }
 
