@@ -110,7 +110,7 @@ class Search implements Builder, Pipeable
     private $highlight;
 
     /** @var null|int */
-    private $slop = null;
+    private $slop;
 
     /** @var bool */
     private $inOrder = false;
@@ -326,7 +326,6 @@ class Search implements Builder, Pipeable
 
         return $this;
     }
-
 
     public function withInOrder(bool $inOrder = true): Search
     {
