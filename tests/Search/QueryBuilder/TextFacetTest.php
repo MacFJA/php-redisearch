@@ -35,6 +35,7 @@ use Tests\MacFJA\RediSearch\support\Assertion;
  *
  * @uses \MacFJA\RediSearch\Helper\EscapeHelper
  * @uses \MacFJA\RediSearch\Helper\DataHelper
+ * @uses \MacFJA\RediSearch\Search\QueryBuilder\ExactMatch
  * @uses \MacFJA\RediSearch\Search\QueryBuilder\OrGroup
  * @uses \MacFJA\RediSearch\Search\QueryBuilder\Word
  */

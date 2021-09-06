@@ -6,15 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0]
+
 ### Added
 
 - Implementation of SLOP parameter ([PR#8])
 
 ### Fixed
 
-- Correclty handle Search result with NoContent flag ([Issue#9], [Issue#10], [PR#13])
+- Correctly handle Search result with NoContent flag ([Issue#9], [Issue#10], [PR#13])
 - Don't double % in fuzzy search ([Issue#11], [PR#14])
 - Fix exact match not used inside text facet ([Issue#12], [PR#15])
+- (dev) Fix missing `@uses` in Unit Test
 
 ## [1.3.0]
 
@@ -101,7 +104,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First version
 
-[Unreleased]: https://github.com/MacFJA/php-redisearch/compare/1.3.0...HEAD
+[Unreleased]: https://github.com/MacFJA/php-redisearch/compare/1.4.0...HEAD
+[1.4.0]: https://github.com/MacFJA/php-redisearch/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/MacFJA/php-redisearch/compare/1.2.0...1.3.0
 [1.2.0]: https://github.com/MacFJA/php-redisearch/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/MacFJA/php-redisearch/compare/1.0.0...1.1.0
