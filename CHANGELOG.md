@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Correclty handle Search result with NoContent flag ([Issue#9], [Issue#10], [PR#13])
 - Don't double % in fuzzy search ([Issue#11], [PR#14])
+- Fix exact match not used inside text facet ([Issue#12], [PR#15])
 
 ## [1.3.0]
 
@@ -110,8 +111,10 @@ First version
 [Issue#9]: https://github.com/MacFJA/php-redisearch/issues/9
 [Issue#10]: https://github.com/MacFJA/php-redisearch/issues/10
 [Issue#11]: https://github.com/MacFJA/php-redisearch/issues/11
+[Issue#12]: https://github.com/MacFJA/php-redisearch/issues/12
 [PR#1]: https://github.com/MacFJA/php-redisearch/pull/1
 [PR#3]: https://github.com/MacFJA/php-redisearch/pull/3
 [PR#8]: https://github.com/MacFJA/php-redisearch/pull/8
 [PR#13]: https://github.com/MacFJA/php-redisearch/pull/13
 [PR#14]: https://github.com/MacFJA/php-redisearch/pull/14
+[PR#15]: https://github.com/MacFJA/php-redisearch/pull/15

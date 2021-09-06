@@ -53,7 +53,7 @@ class TextFacet implements PartialQuery
     {
         if (count($this->orValues) > 1) {
             $terms = OrGroup::renderNoParentheses(...array_map(function (string $orValue) {
-                return new Word($orValue);
+                return new ExactMatch($orValue);
             }, $this->orValues));
 
             return sprintf(self::WITH_SPACE_PATTERN, EscapeHelper::escapeFieldName($this->field), $terms);
