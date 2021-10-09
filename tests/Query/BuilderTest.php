@@ -243,8 +243,8 @@ class BuilderTest extends TestCase
         ;
 
         static::assertSame($expected, str_replace(
-            ['00000; ', ' })', '(('],
-            ['; ', ' }', '('],
+            [' })', '(('],
+            [' }', '('],
             $builder->render()
         ));
     }
@@ -267,8 +267,8 @@ class BuilderTest extends TestCase
         ;
 
         static::assertSame($expected, str_replace(
-            ['00000; ', ' })', '(~('],
-            ['; ', ' }', '~('],
+            [' })', '(~('],
+            [' }', '~('],
             $builder->render()
         ));
     }
@@ -293,8 +293,8 @@ class BuilderTest extends TestCase
         ;
 
         static::assertNotSame($expected, str_replace(
-            ['00000; ', ' })', '(~('],
-            ['; ', ' }', '~('],
+            [' })', '(~('],
+            [' }', '~('],
             $builder->render()
         ));
     }

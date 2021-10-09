@@ -26,6 +26,7 @@ use function implode;
 use function is_bool;
 use function is_float;
 use function is_int;
+use NumberFormatter;
 use function sprintf;
 
 class QueryElementAttribute implements QueryElement, QueryElementDecorator
@@ -58,7 +59,8 @@ class QueryElementAttribute implements QueryElement, QueryElementDecorator
     {
         $attributes = [];
         if (is_float($this->weight)) {
-            $attributes[] = sprintf('$weight: %f;', $this->weight);
+            $formatter = new NumberFormatter('en_US', NumberFormatter::PATTERN_DECIMAL, '0.0###');
+            $attributes[] = sprintf('$weight: %s;', $formatter->format($this->weight));
         }
         if (is_int($this->slop)) {
             $attributes[] = sprintf('$slop: %d;', $this->slop);
