@@ -44,9 +44,7 @@ The command will output any information worth knowing. No error should be left.
 If Xdebug is installed, you can also run the commands:
 ```sh
 make coverage
-make mutation-test
 ```
-Ideally, coverage should only increase, and **Covered Code MSI** shouldn't be below 95%
 
 ----
 
