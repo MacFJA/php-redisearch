@@ -21,8 +21,7 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Query\Builder;
 
-use function call_user_func;
-use function is_callable;
+use MacFJA\RediSearch\Query\Escaper;
 
 class Prefix implements QueryElement
 {
@@ -36,11 +35,7 @@ class Prefix implements QueryElement
 
     public function render(?callable $escaper = null): string
     {
-        if (is_callable($escaper)) {
-            return call_user_func($escaper, $this->prefix).'*';
-        }
-
-        return $this->prefix.'*';
+        return Escaper::escapeWord($this->prefix).'*';
     }
 
     public function priority(): int

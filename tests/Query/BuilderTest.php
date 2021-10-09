@@ -193,6 +193,22 @@ class BuilderTest extends TestCase
     }
 
     /**
+     * @see https://oss.redis.com/redisearch/Query_Syntax/#prefix_matching
+     */
+    public function testDocPrefixExample1(): void
+    {
+        $expected = 'hel* world';
+        $builder = new Builder();
+
+        $builder
+            ->addElement(new Builder\Prefix('hel'))
+            ->addString('world')
+        ;
+
+        static::assertSame($expected, $builder->render());
+    }
+
+    /**
      * @see https://oss.redislabs.com/redisearch/Query_Syntax/#fuzzy_matching
      */
     public function testDocFuzzyExample1(): void
