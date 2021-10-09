@@ -21,10 +21,21 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Query\Builder;
 
+use function count;
+use MacFJA\RediSearch\Exception\NotEnoughFieldsException;
+use MacFJA\RediSearch\Exception\NotEnoughTermsException;
+
 class TagFacet extends FieldFacet
 {
     public function __construct(array $fields, string ...$values)
     {
+        if (0 === count($fields)) {
+            throw new NotEnoughFieldsException();
+        }
+        if (0 === count($values)) {
+            throw new NotEnoughTermsException();
+        }
+
         $orGroup = new OrGroup(array_map(static function (string $value): QueryElement {
             return new Word($value);
         }, $values));

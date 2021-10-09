@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Query\Builder;
 
+use function count;
+use MacFJA\RediSearch\Exception\NotEnoughFieldsException;
 use MacFJA\RediSearch\Query\Escaper;
 
 class FieldFacet implements QueryElement
@@ -35,6 +37,9 @@ class FieldFacet implements QueryElement
      */
     public function __construct(array $fields, QueryElement $element)
     {
+        if (0 === count($fields)) {
+            throw new NotEnoughFieldsException();
+        }
         $this->fields = array_map([Escaper::class, 'escapeFieldName'], $fields);
         $this->element = $element;
     }

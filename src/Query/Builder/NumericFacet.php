@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Query\Builder;
 
 use function is_array;
+use MacFJA\RediSearch\Exception\NotEnoughFieldsException;
 use MacFJA\RediSearch\Redis\Command\SearchCommand\NumericRangeTrait;
 
 class NumericFacet extends FieldFacet
@@ -33,9 +34,13 @@ class NumericFacet extends FieldFacet
      */
     public function __construct($fields, ?float $min, ?float $max, bool $isMinInclusive = true, bool $isMaxInclusive = true)
     {
+        if (empty($fields)) {
+            throw new NotEnoughFieldsException();
+        }
         if (!is_array($fields)) {
             $fields = [$fields];
         }
+
         $bounds = self::renderBound($min, $max, $isMinInclusive, $isMaxInclusive);
         $group = new EncapsulationGroup('[', ']', AndGroup::fromStrings(...$bounds));
         parent::__construct($fields, $group);

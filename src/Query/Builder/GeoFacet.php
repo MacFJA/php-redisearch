@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Query\Builder;
 
+use function count;
+use MacFJA\RediSearch\Exception\NotEnoughFieldsException;
 use MacFJA\RediSearch\Exception\UnknownUnitException;
 use MacFJA\RediSearch\Redis\Command\SearchCommand\GeoFilterOption;
 use Respect\Validation\Rules\In;
@@ -32,6 +34,9 @@ class GeoFacet extends FieldFacet
      */
     public function __construct(array $fields, float $lon, float $lat, float $radius, string $unit)
     {
+        if (0 === count($fields)) {
+            throw new NotEnoughFieldsException();
+        }
         if (!(new In(GeoFilterOption::UNITS))->validate($unit)) {
             throw new UnknownUnitException($unit);
         }
