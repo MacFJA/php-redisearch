@@ -25,7 +25,6 @@ use MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption;
 use MacFJA\RediSearch\Redis\Command\Option\FlagOption;
 use MacFJA\RediSearch\Redis\Command\Option\GroupedOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamedOption;
-use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
 use MacFJA\RediSearch\Redis\Command\Option\WithPublicGroupedSetterTrait;
 use Respect\Validation\Rules\Length;
 
@@ -34,20 +33,20 @@ use Respect\Validation\Rules\Length;
  * @method TagFieldOption setNoIndex(bool $active)
  * @method TagFieldOption setSortable(bool $active)
  * @method TagFieldOption setSeparator(?string $separator)
+ * @method TagFieldOption setCaseSensitive(bool $active)
+ * @method TagFieldOption setUnNormalizedSortable(bool $unNormalized)
  */
 class TagFieldOption extends GroupedOption implements CreateCommandFieldOption
 {
+    use BaseCreateFieldOptionTrait;
     use WithPublicGroupedSetterTrait;
 
     public function __construct()
     {
-        parent::__construct([
-            'field' => new NamelessOption(null, '>=2.0.0'),
-            'type' => new FlagOption('TAG', true, '>=2.0.0'),
+        parent::__construct($this->getConstructorOptions('TAG', [
             'separator' => new CustomValidatorOption(new NamedOption('SEPARATOR', null, '>=2.0.0'), new Length(1, 1)),
-            'sortable' => new FlagOption('SORTABLE', false, '>=2.0.0'),
-            'no_index' => new FlagOption('NOINDEX', false, '>=2.0.0'),
-        ], ['field', 'type'], ['type'], '>=2.0.0');
+            'case_sensitive' => new FlagOption('CASESENSITIVE', false, '>=2.0.11'),
+        ]), ['field', 'type'], ['type'], '>=2.0.0');
     }
 
     public function getFieldName(): string
@@ -60,6 +59,6 @@ class TagFieldOption extends GroupedOption implements CreateCommandFieldOption
      */
     protected function publicSetter(): array
     {
-        return ['field', 'separator', 'sortable', 'no_index'];
+        return ['field', 'separator', 'sortable', 'no_index', 'case_sensitive', 'un_normalized_sortable'];
     }
 }

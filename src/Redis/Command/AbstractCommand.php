@@ -32,6 +32,8 @@ use Predis\Command\Command;
  */
 abstract class AbstractCommand extends Command
 {
+    public const MAX_IMPLEMENTED_VERSION = '2.0.12';
+    public const MIN_IMPLEMENTED_VERSION = '2.0.0';
     /**
      * @var array<array<CommandOption>|CommandOption|mixed>
      */
@@ -153,8 +155,8 @@ abstract class AbstractCommand extends Command
             return $option->isCompatible($this->rediSearchVersion) && $option->isValid();
         });
 
-        $arguments = array_reduce($arguments, static function ($carry, CommandOption $option) {
-            return array_merge($carry, $option->render());
+        $arguments = array_reduce($arguments, function ($carry, CommandOption $option) {
+            return array_merge($carry, $option->render($this->rediSearchVersion));
         }, []);
         $this->setRawArguments($arguments);
     }

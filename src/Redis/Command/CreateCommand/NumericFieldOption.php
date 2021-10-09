@@ -21,28 +21,23 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Command\CreateCommand;
 
-use MacFJA\RediSearch\Redis\Command\Option\FlagOption;
 use MacFJA\RediSearch\Redis\Command\Option\GroupedOption;
-use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
 use MacFJA\RediSearch\Redis\Command\Option\WithPublicGroupedSetterTrait;
 
 /**
  * @method NumericFieldOption setField(string $name)
  * @method NumericFieldOption setNoIndex(bool $active)
  * @method NumericFieldOption setSortable(bool $active)
+ * @method NumericFieldOption setUnNormalizedSortable(bool $unNormalized)
  */
 class NumericFieldOption extends GroupedOption implements CreateCommandFieldOption
 {
+    use BaseCreateFieldOptionTrait;
     use WithPublicGroupedSetterTrait;
 
     public function __construct()
     {
-        parent::__construct([
-            'field' => new NamelessOption(null, '>=2.0.0'),
-            'type' => new FlagOption('NUMERIC', true, '>=2.0.0'),
-            'sortable' => new FlagOption('SORTABLE', false, '>=2.0.0'),
-            'no_index' => new FlagOption('NOINDEX', false, '>=2.0.0'),
-        ], ['field', 'type'], ['type'], '>=2.0.0');
+        parent::__construct($this->getConstructorOptions('NUMERIC'), ['field', 'type'], ['type'], '>=2.0.0');
     }
 
     public function getFieldName(): string
@@ -55,6 +50,6 @@ class NumericFieldOption extends GroupedOption implements CreateCommandFieldOpti
      */
     protected function publicSetter(): array
     {
-        return ['field', 'no_index', 'sortable'];
+        return ['field', 'no_index', 'sortable', 'un_normalized_sortable'];
     }
 }

@@ -21,7 +21,9 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\tests\Redis\Command;
 
+use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\Create;
+use MacFJA\RediSearch\Redis\Command\CreateCommand\TextFieldOption;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -80,7 +82,7 @@ class CreateTest extends TestCase
 
     public function testFullOption(): void
     {
-        $command = new Create();
+        $command = new Create(AbstractCommand::MAX_IMPLEMENTED_VERSION);
         $command
             ->addNumericField('num1')
             ->addNumericField('num2', false, true)
@@ -90,7 +92,7 @@ class CreateTest extends TestCase
             ->addGeoField('geo2', true)
             ->addTextField('text1')
             ->addTextField('text2', true)
-            ->addTextField('text3', false, 1.0, )
+            ->addTextField('text3', false, 1.0)
             ->addTextField('text4', false, null, 'dm:en')
             ->addTextField('text5', false, null, null, true)
             ->addTextField('text6', false, null, null, false, true)
@@ -99,7 +101,8 @@ class CreateTest extends TestCase
             ->addTagField('tag2', '|')
             ->addTagField('tag3', null, true)
             ->addTagField('tag4', null, false, true)
-            ->addTagField('tag5', '#', true, true)
+            ->addTagField('tag5', null, false, false, true)
+            ->addTagField('tag6', '#', true, true, true)
             ->setPrefixes('doc_', 'document_')
             ->setIndex('idx')
             ->setDefaultLanguage('french')
@@ -149,7 +152,8 @@ class CreateTest extends TestCase
             'tag2', 'TAG', 'SEPARATOR', '|',
             'tag3', 'TAG', 'SORTABLE',
             'tag4', 'TAG', 'NOINDEX',
-            'tag5', 'TAG', 'SEPARATOR', '#', 'SORTABLE', 'NOINDEX',
+            'tag5', 'TAG', 'CASESENSITIVE',
+            'tag6', 'TAG', 'SEPARATOR', '#', 'CASESENSITIVE', 'SORTABLE', 'NOINDEX',
         ], $command->getArguments());
     }
 
@@ -162,5 +166,29 @@ class CreateTest extends TestCase
         ;
 
         static::assertSame(['idx', 'STOPWORDS', 0, 'SCHEMA', 'foo', 'TEXT'], $command->getArguments());
+    }
+
+    public function testUnNormalizedForm(): void
+    {
+        $command = new Create('2.0.0');
+        $command->setIndex('idx');
+
+        $textField = new TextFieldOption();
+        $textField->setField('foo')
+            ->setSortable(true)
+            ->setUnNormalizedSortable(true)
+        ;
+
+        $command->addField($textField);
+
+        static::assertSame(['idx', 'SCHEMA', 'foo', 'TEXT', 'SORTABLE'], $command->getArguments());
+
+        // Change version
+        $command->setRediSearchVersion('2.0.12');
+        static::assertSame(['idx', 'SCHEMA', 'foo', 'TEXT', 'SORTABLE', 'UNF'], $command->getArguments());
+
+        // Remove sorting
+        $textField->setSortable(false);
+        static::assertSame(['idx', 'SCHEMA', 'foo', 'TEXT'], $command->getArguments());
     }
 }

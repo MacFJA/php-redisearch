@@ -63,12 +63,13 @@ trait AddFieldOptionTrait
         );
     }
 
-    public function addTagField(string $name, ?string $separator = null, bool $sortable = false, bool $noIndex = false): self
+    public function addTagField(string $name, ?string $separator = null, bool $sortable = false, bool $noIndex = false, bool $caseSensitive = false): self
     {
         return $this->addField(
             (new TagFieldOption())
                 ->setField($name)
                 ->setSeparator($separator)
+                ->setCaseSensitive($caseSensitive)
                 ->setSortable($sortable)
                 ->setNoIndex($noIndex)
         );

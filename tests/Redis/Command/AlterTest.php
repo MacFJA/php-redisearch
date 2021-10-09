@@ -36,6 +36,7 @@ use PHPUnit\Framework\TestCase;
  * @uses \MacFJA\RediSearch\Redis\Command\Option\NamelessOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\FlagOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\GroupedOption
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption
  *
  * @internal
  */

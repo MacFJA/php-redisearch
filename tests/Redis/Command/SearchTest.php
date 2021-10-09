@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\tests\Redis\Command;
 
+use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\Search;
 use MacFJA\RediSearch\Redis\Command\SearchCommand\FilterOption;
 use PHPUnit\Framework\TestCase;
@@ -71,7 +72,7 @@ class SearchTest extends TestCase
 
     public function testFullOption(): void
     {
-        $command = new Search();
+        $command = new Search(AbstractCommand::MAX_IMPLEMENTED_VERSION);
         $command
             ->setIndex('idx')
             ->setQuery('@text1:"hello world"')

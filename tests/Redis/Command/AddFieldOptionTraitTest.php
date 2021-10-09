@@ -31,6 +31,8 @@ use MacFJA\RediSearch\tests\fixtures\Redis\Command\FakeAddFieldOptionTraitClass2
  * @uses \MacFJA\RediSearch\Redis\Command\AbstractCommand
  * @uses \MacFJA\RediSearch\Redis\Command\CreateCommand\NumericFieldOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\DecoratedOptionTrait
  * @uses \MacFJA\RediSearch\Redis\Command\Option\FlagOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\GroupedOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\NamelessOption

@@ -25,7 +25,6 @@ use MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption;
 use MacFJA\RediSearch\Redis\Command\Option\FlagOption;
 use MacFJA\RediSearch\Redis\Command\Option\GroupedOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamedOption;
-use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
 use MacFJA\RediSearch\Redis\Command\Option\WithPublicGroupedSetterTrait;
 
 /**
@@ -35,22 +34,20 @@ use MacFJA\RediSearch\Redis\Command\Option\WithPublicGroupedSetterTrait;
  * @method TextFieldOption setNoStem(bool $active)
  * @method TextFieldOption setWeight(?float $weight)
  * @method TextFieldOption setPhonetic(?string $phonetic)
+ * @method TextFieldOption setUnNormalizedSortable(bool $unNormalized)
  */
 class TextFieldOption extends GroupedOption implements CreateCommandFieldOption
 {
+    use BaseCreateFieldOptionTrait;
     use WithPublicGroupedSetterTrait;
 
     public function __construct()
     {
-        parent::__construct([
-            'field' => new NamelessOption(null, '>=2.0.0'),
-            'type' => new FlagOption('TEXT', true, '>=2.0.0'),
+        parent::__construct($this->getConstructorOptions('TEXT', [
             'no_stem' => new FlagOption('NOSTEM', false, '>=2.0.0'),
             'weight' => CustomValidatorOption::isNumeric(new NamedOption('WEIGHT', null, '>=2.0.0')),
             'phonetic' => CustomValidatorOption::allowedValues(new NamedOption('PHONETIC', null, '>=2.0.0'), ['dm:en', 'dm:fr', 'dm:pt', 'dm:es']),
-            'sortable' => new FlagOption('SORTABLE', false, '>=2.0.0'),
-            'no_index' => new FlagOption('NOINDEX', false, '>=2.0.0'),
-        ], ['field', 'type'], ['type'], '>=2.0.0');
+        ]), ['field', 'type'], ['type'], '>=2.0.0');
     }
 
     public function getFieldName(): string
@@ -63,6 +60,6 @@ class TextFieldOption extends GroupedOption implements CreateCommandFieldOption
      */
     protected function publicSetter(): array
     {
-        return ['field', 'no_stem', 'weight', 'phonetic', 'sortable', 'no_index'];
+        return ['field', 'no_stem', 'weight', 'phonetic', 'sortable', 'no_index', 'un_normalized_sortable'];
     }
 }
