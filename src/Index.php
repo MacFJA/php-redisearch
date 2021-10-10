@@ -24,6 +24,7 @@ namespace MacFJA\RediSearch;
 use function count;
 use function is_array;
 use function is_string;
+use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\AliasAdd;
 use MacFJA\RediSearch\Redis\Command\AliasDel;
 use MacFJA\RediSearch\Redis\Command\AliasUpdate;
@@ -54,7 +55,7 @@ class Index
     {
         $this->client = $client;
         $this->index = $index;
-        $this->version = Initializer::getRediSearchVersion($client) ?? '2.0.0';
+        $this->version = Initializer::getRediSearchVersion($client) ?? AbstractCommand::MIN_IMPLEMENTED_VERSION;
         $this->getInfo();
     }
 

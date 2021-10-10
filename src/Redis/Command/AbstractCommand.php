@@ -46,7 +46,7 @@ abstract class AbstractCommand extends Command
     /**
      * @param array<array<CommandOption>|CommandOption|mixed> $options
      */
-    public function __construct(array $options, string $rediSearchVersion = '2.0.0')
+    public function __construct(array $options, string $rediSearchVersion = self::MIN_IMPLEMENTED_VERSION)
     {
         $this->rediSearchVersion = $rediSearchVersion;
 

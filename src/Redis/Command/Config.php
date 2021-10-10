@@ -29,7 +29,7 @@ use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
  */
 class Config extends AbstractCommand
 {
-    public function __construct(string $rediSearchVersion = '2.0.0')
+    public function __construct(string $rediSearchVersion = self::MIN_IMPLEMENTED_VERSION)
     {
         parent::__construct([
             'action' => CustomValidatorOption::allowedValues(new NamelessOption(null, '>=2.0.0'), ['GET', 'HELP']),

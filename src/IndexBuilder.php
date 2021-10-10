@@ -29,6 +29,7 @@ use function is_array;
 use function is_float;
 use function is_int;
 use function is_string;
+use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\AddFieldOptionTrait;
 use MacFJA\RediSearch\Redis\Command\Create;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\CreateCommandFieldOption;
@@ -167,7 +168,7 @@ class IndexBuilder
         return $this;
     }
 
-    public function create(ClientInterface $client, string $rediSearchVersion = '2.0.0'): ResponseInterface
+    public function create(ClientInterface $client, string $rediSearchVersion = AbstractCommand::MIN_IMPLEMENTED_VERSION): ResponseInterface
     {
         $command = $this->getCommand($rediSearchVersion);
 
@@ -180,7 +181,7 @@ class IndexBuilder
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function getCommand(string $rediSearchVersion = '2.0.0'): Create
+    public function getCommand(string $rediSearchVersion = AbstractCommand::MIN_IMPLEMENTED_VERSION): Create
     {
         if (!is_string($this->index)) {
             throw new RuntimeException('The index name is missing');

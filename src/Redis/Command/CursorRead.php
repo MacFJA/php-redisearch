@@ -39,7 +39,7 @@ class CursorRead extends AbstractCommand
 {
     use ArrayResponseTrait;
 
-    public function __construct(string $rediSearchVersion = '2.0.0')
+    public function __construct(string $rediSearchVersion = self::MIN_IMPLEMENTED_VERSION)
     {
         parent::__construct([
             'type' => new FlagOption('READ', true, '>=2.0.0'),
@@ -85,7 +85,7 @@ class CursorRead extends AbstractCommand
     /**
      * @param array<array<mixed>|int> $data
      */
-    public static function transformResponse(array $data, ?int $count, string $index, string $rediSearchVersion = '2.0.0'): CursorResponse
+    public static function transformResponse(array $data, ?int $count, string $index, string $rediSearchVersion = self::MIN_IMPLEMENTED_VERSION): CursorResponse
     {
         [$rawResult, $cursorId] = $data;
 

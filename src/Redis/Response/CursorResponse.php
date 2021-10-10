@@ -23,6 +23,7 @@ namespace MacFJA\RediSearch\Redis\Response;
 
 use function count;
 use Iterator;
+use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\CursorRead;
 use Predis\ClientInterface;
 use Predis\Response\ResponseInterface;
@@ -54,7 +55,7 @@ class CursorResponse implements ResponseInterface, Iterator
     /**
      * @param array<AggregateResponseItem> $items
      */
-    public function __construct(int $cursorId, int $totalCount, array $items, int $size, string $index, string $redisVersion = '2.0.0')
+    public function __construct(int $cursorId, int $totalCount, array $items, int $size, string $index, string $redisVersion = AbstractCommand::MIN_IMPLEMENTED_VERSION)
     {
         $this->totalCount = $totalCount;
         $this->items = $items;

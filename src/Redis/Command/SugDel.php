@@ -28,7 +28,7 @@ use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
  */
 class SugDel extends AbstractCommand
 {
-    public function __construct(string $rediSearchVersion = '2.0.0')
+    public function __construct(string $rediSearchVersion = self::MIN_IMPLEMENTED_VERSION)
     {
         parent::__construct([
             'dictionary' => new NamelessOption(null, '>=2.0.0'),

@@ -23,6 +23,7 @@ namespace MacFJA\RediSearch;
 
 use function is_int;
 use function is_string;
+use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\SugAdd;
 use MacFJA\RediSearch\Redis\Command\SugDel;
 use MacFJA\RediSearch\Redis\Command\SugGet;
@@ -50,7 +51,7 @@ class Suggestions
         $this->dictionary = $dictionary;
         $this->client = $client;
         $this->length = $client->executeCommand((new SugLen())->setDictionary($dictionary));
-        $this->version = Initializer::getRediSearchVersion($client) ?? '2.0.0';
+        $this->version = Initializer::getRediSearchVersion($client) ?? AbstractCommand::MIN_IMPLEMENTED_VERSION;
     }
 
     public function add(string $suggestion, float $score, bool $increment = false, ?string $payload = null): void
