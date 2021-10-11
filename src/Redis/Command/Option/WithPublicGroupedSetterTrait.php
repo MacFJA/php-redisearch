@@ -58,7 +58,7 @@ trait WithPublicGroupedSetterTrait
             return $this->setDataOfOption($snakeCase, $arguments[0]);
         }
 
-        throw new BadMethodCallException(sprintf('Call undefined method %s is not callable in %s', $name, get_class($this)));
+        throw new BadMethodCallException(sprintf('Call undefined method %s in %s', $name, get_class($this)));
     }
 
     /**
