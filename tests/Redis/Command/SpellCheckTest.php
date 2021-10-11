@@ -21,7 +21,9 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\tests\Redis\Command;
 
+use Closure;
 use MacFJA\RediSearch\Redis\Command\SpellCheck;
+use MacFJA\RediSearch\Redis\Response\SpellCheckResponseItem;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -63,5 +65,25 @@ class SpellCheckTest extends TestCase
             'TERMS', 'EXCLUDE', 'badword',
             'TERMS', 'INCLUDE', 'cities',
         ], $command->getArguments());
+    }
+
+    public function testResponseTransformation(): void
+    {
+        $command = new SpellCheck();
+        $expected = [
+            new SpellCheckResponseItem('hell', ['hello' => 0.7, 'hola' => 0.4]),
+            new SpellCheckResponseItem('worl', ['world' => 0.9, 'work' => 0.56]),
+        ];
+        $rawResponse = [
+            ['TERM', 'hell', [[0.7, 'hello'], [0.4, 'hola']]],
+            ['TERM', 'worl', [[0.9, 'world'], [0.56, 'work']]],
+        ];
+        $transformer = function ($data) {
+            // @phpstan-ignore-next-line
+            return $this->transformParsedResponse($data);
+        };
+        $actual = Closure::fromCallable($transformer)->call($command, $rawResponse);
+
+        static::assertEquals($expected, $actual);
     }
 }

@@ -52,6 +52,8 @@ class SortByOption extends AbstractCommandOption
     }
 
     /**
+     * @codeCoverageIgnore Simple getter
+     *
      * @return array<string,null|array<string,null|string>|int>
      */
     public function getOptionData()

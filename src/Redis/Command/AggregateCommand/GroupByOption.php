@@ -58,6 +58,8 @@ class GroupByOption extends AbstractCommandOption
     }
 
     /**
+     * @codeCoverageIgnore Simple getter
+     *
      * @return array<string,mixed>
      */
     public function getOptionData()
