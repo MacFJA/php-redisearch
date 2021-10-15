@@ -136,7 +136,7 @@ class IndexBuilder
      */
     public function __call(string $name, array $arguments): self
     {
-        $calls = ['set' => true, 'add' => false, 'withAdded' => false, 'with' => false];
+        $calls = ['set' => true, 'add' => false, 'withAdded' => false, 'with' => true];
         foreach ($calls as $type => $singleArgument) {
             $result = $this->doCall($type, $name, true === $singleArgument ? $arguments[0] ?? null : $arguments);
             if ($result instanceof IndexBuilder) {
@@ -262,7 +262,7 @@ class IndexBuilder
     {
         $newInstance = clone $this;
 
-        return $newInstance->{'set'.$name}($name, $argument);
+        return $newInstance->{'set'.$name}($argument);
     }
 
     /**
@@ -276,7 +276,7 @@ class IndexBuilder
     {
         $newInstance = clone $this;
 
-        return $newInstance->{'add'.$name}($name, $arguments);
+        return $newInstance->{'add'.$name}($arguments);
     }
 
     /**
