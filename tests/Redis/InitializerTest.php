@@ -22,8 +22,8 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\tests\Redis;
 
 use Generator;
+use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Initializer;
-use Predis\Client;
 
 /**
  * @covers \MacFJA\RediSearch\Redis\Initializer
@@ -38,11 +38,8 @@ class InitializerTest extends \PHPUnit\Framework\TestCase
      */
     public function testRediSearchVersion(array $input, ?string $expected): void
     {
-        $client = $this->getMockBuilder(Client::class)
-            ->addMethods(['info'])
-            ->getMock()
-        ;
-        $client->method('info')->with('Modules')->willReturn(['Modules' => $input]);
+        $client = $this->createMock(Client::class);
+        $client->method('executeRaw')->with('info', 'Modules')->willReturn(['Modules' => $input]);
 
         static::assertSame($expected, Initializer::getRediSearchVersion($client));
     }

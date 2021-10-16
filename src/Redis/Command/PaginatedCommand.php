@@ -21,9 +21,9 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Command;
 
-use Predis\Command\CommandInterface;
+use MacFJA\RediSearch\Redis\Command;
 
-interface PaginatedCommand extends CommandInterface
+interface PaginatedCommand extends Command
 {
     public function getOffset(): ?int;
 

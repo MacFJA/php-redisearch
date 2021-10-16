@@ -3,6 +3,9 @@ parameters:
     paths:
         - src
         - tests
+    excludePaths:
+        analyse:
+            - tests/psalm/stubs/phpiredis.php
     ignoreErrors:
         - '#Method MacFJA\\RediSearch\\Redis\\Command\\\w+::getLanguageOptions\(\) should return#'
         - '#uses generic trait MacFJA\\RediSearch\\Redis\\Command\\Option\\DecoratedOptionTrait but does not specify its types: T#'

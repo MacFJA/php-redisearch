@@ -28,6 +28,7 @@ return [
         'enlightn/security-checker', // QA tool
         'php-parallel-lint/php-parallel-lint', // QA tool
         'sebastian/phpcpd', // QA tool
+        'ukko/phpredis-phpdoc' // Stubs
     ],
     'excludeDirectories' => [],
     'scanFiles' => [],

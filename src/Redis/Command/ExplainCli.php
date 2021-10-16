@@ -26,7 +26,7 @@ namespace MacFJA\RediSearch\Redis\Command;
  */
 class ExplainCli extends Explain
 {
-    public function getId()
+    public function getId(): string
     {
         return 'FT.EXPLAINCLI';
     }

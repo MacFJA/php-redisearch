@@ -23,21 +23,21 @@ namespace MacFJA\RediSearch\Redis\Response;
 
 use function count;
 use Iterator;
+use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\CursorRead;
-use Predis\ClientInterface;
-use Predis\Response\ResponseInterface;
+use MacFJA\RediSearch\Redis\Response;
 
 /**
  * @implements Iterator<int,AggregateResponseItem[]>
  */
-class CursorResponse implements ResponseInterface, Iterator
+class CursorResponse implements Response, Iterator
 {
     /** @var array<AggregateResponseItem> */
     private $items;
     /** @var int */
     private $totalCount;
-    /** @var ClientInterface */
+    /** @var Client */
     private $client;
     /** @var bool */
     private $doNext = false;
@@ -65,7 +65,7 @@ class CursorResponse implements ResponseInterface, Iterator
         $this->cursorId = $cursorId;
     }
 
-    public function setClient(ClientInterface $client): self
+    public function setClient(Client $client): self
     {
         $this->client = $client;
 
@@ -83,7 +83,7 @@ class CursorResponse implements ResponseInterface, Iterator
             $cursorRead->setCursorId($this->cursorId);
             $cursorRead->setCount($this->getPageSize());
             /** @var CursorResponse $next */
-            $next = $this->client->executeCommand($cursorRead);
+            $next = $this->client->execute($cursorRead);
             $this->cursorId = $next->cursorId;
             $this->offset += count($this->items);
             $this->items = $next->items;

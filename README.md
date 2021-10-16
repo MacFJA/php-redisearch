@@ -12,10 +12,38 @@ composer require macfja/redisearch
 
 ## Usage
 
+### Get a Redis client
+
+This lib can use several connector for Redis:
+ - [Predis](https://github.com/predis/predis/wiki) - Pure PHP implementation
+ - [Phpredis](https://github.com/phpredis/phpredis) - PHP extension
+ - [Phpiredis](https://github.com/nrk/phpiredis) - PHP extension depending on [hiredis](https://github.com/redis/hiredis)
+
+You can pick the connector depending of your need.
+
+```php
+$clientFacade = new \MacFJA\RediSearch\Redis\Client\ClientFacade();
+
+// With Predis
+$client = $clientFacade->getClient(new \Predis\Client(/* ... */));
+
+// With Phpredis extension
+$client = $clientFacade->getClient(new Redis([/* ... */]));
+
+// With Phpiredis extension
+$client = $clientFacade->getClient(phpiredis_connect($host));
+```
+
+You can add your own implementation, all you need is to implement the interface `\MacFJA\RediSearch\Redis\Client` and add it to the client facace with:
+```php
+$clientFacade = new \MacFJA\RediSearch\Redis\Client\ClientFacade();
+$clientFacade->addFactory(\MyVendor\MyPackage\MyRedisClient::class);
+```
+
 ### Create a new index
 
 ```php
-$client = new \Predis\Client(/* ... */);
+$client = /* ... */;
 $builder = new \MacFJA\RediSearch\IndexBuilder();
 
 // Field can be create in advance
@@ -38,9 +66,9 @@ This will give you a new instance of the builder with the configured data.
 ### Add a document
 
 ```php
-$client = new \Predis\Client(/* ... */);
+$client = /* ... */;
 $index = new \MacFJA\RediSearch\Index('person', $client);
-$index->addFromArray([
+$index->addDocumentFromArray([
     'firstname' => 'Joe',
     'lastname' => 'Doe',
     'age' => 30,
@@ -51,7 +79,7 @@ $index->addFromArray([
 ### Search
 
 ```php
-$client = new \Predis\Client(/* ... */);
+$client = /* ... */;
 $search = new \MacFJA\RediSearch\Redis\Command\Search();
 
 $search
@@ -59,7 +87,7 @@ $search
     ->setQuery('Doe')
     ->setHighlight(['lastname'])
     ->setWithScores();
-$results = $client->executeCommand($search);
+$results = $client->execute($search);
 ```
 
 #### Create a search query
@@ -96,9 +124,8 @@ use MacFJA\RediSearch\Redis\Command\AggregateCommand\GroupByOption;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\ReduceOption;
 use MacFJA\RediSearch\Redis\Command\Search;
 use MacFJA\RediSearch\Redis\Command\SugGet;
-use Predis\Client;
 
-$client = new Client(/* ... */);
+$client = /* ... */;
 
 $query = '@age:[(17 +inf] %john%';
 $search = new Search();
@@ -123,13 +150,7 @@ $suggestion->setDictionary('names')
     ->setPrefix('john')
     ->setFuzzy();
 
-$result = $client->pipeline()
-    ->executeCommand($search)
-    ->executeCommand($stats)
-    ->executeCommand($aggregate)
-    ->executeCommand($suggestion)
-    ->execute()
-;
+$result = $client->pipeline($search, $stats, $aggregate, $suggestion);
 
 // $result[0] is the search result
 // $result[1] is the first aggregation result

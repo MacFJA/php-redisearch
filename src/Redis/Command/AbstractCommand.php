@@ -24,13 +24,13 @@ namespace MacFJA\RediSearch\Redis\Command;
 use function count;
 use InvalidArgumentException;
 use function is_array;
+use MacFJA\RediSearch\Redis\Command;
 use MacFJA\RediSearch\Redis\Command\Option\CommandOption;
-use Predis\Command\Command;
 
 /**
  * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
-abstract class AbstractCommand extends Command
+abstract class AbstractCommand implements Command
 {
     public const MAX_IMPLEMENTED_VERSION = '2.0.12';
     public const MIN_IMPLEMENTED_VERSION = '2.0.0';
@@ -40,8 +40,6 @@ abstract class AbstractCommand extends Command
     protected $options;
     /** @var string */
     private $rediSearchVersion;
-    /** @var bool */
-    private $rebuild = true;
 
     /**
      * @param array<array<CommandOption>|CommandOption|mixed> $options
@@ -58,55 +56,11 @@ abstract class AbstractCommand extends Command
         return $this->rediSearchVersion;
     }
 
-    public function setRediSearchVersion(string $rediSearchVersion): self
+    public function setRediSearchVersion(string $rediSearchVersion): Command
     {
         $this->rediSearchVersion = $rediSearchVersion;
 
         return $this;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param mixed $index
-     */
-    public function getArgument($index)
-    {
-        if ($this->rebuild) {
-            $this->buildArguments();
-        }
-
-        return parent::getArgument($index);
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function getArguments()
-    {
-        if ($this->rebuild) {
-            $this->buildArguments();
-        }
-
-        return parent::getArguments();
-    }
-
-    /**
-     * @param array<mixed> $arguments
-     */
-    public function setArguments(array $arguments): void
-    {
-        $this->rebuild = false;
-        parent::setArguments($arguments);
-    }
-
-    /**
-     * @param array<mixed> $arguments
-     */
-    public function setRawArguments(array $arguments): void
-    {
-        $this->rebuild = true;
-        parent::setRawArguments($arguments);
     }
 
     /**
@@ -116,29 +70,13 @@ abstract class AbstractCommand extends Command
      */
     public function parseResponse($data)
     {
-        if ($this->rebuild) {
-            return $this->transformParsedResponse(parent::parseResponse($data));
-        }
-
-        return parent::parseResponse($data);
+        return $this->transformParsedResponse($data);
     }
 
     /**
-     * @return array<string>
+     * @return array<float|int|string>
      */
-    abstract protected function getRequiredOptions(): array;
-
-    /**
-     * @param mixed $data
-     *
-     * @return mixed
-     */
-    protected function transformParsedResponse($data)
-    {
-        return $data;
-    }
-
-    private function buildArguments(): void
+    public function getArguments(): array
     {
         if (count($missing = $this->validateRequirements()) > 0) {
             throw new InvalidArgumentException('Missing command option: '.implode(', ', $missing));
@@ -155,10 +93,24 @@ abstract class AbstractCommand extends Command
             return $option->isCompatible($this->rediSearchVersion) && $option->isValid();
         });
 
-        $arguments = array_reduce($arguments, function ($carry, CommandOption $option) {
+        return array_reduce($arguments, function ($carry, CommandOption $option) {
             return array_merge($carry, $option->render($this->rediSearchVersion));
         }, []);
-        $this->setRawArguments($arguments);
+    }
+
+    /**
+     * @return array<string>
+     */
+    abstract protected function getRequiredOptions(): array;
+
+    /**
+     * @param mixed $data
+     *
+     * @return mixed
+     */
+    protected function transformParsedResponse($data)
+    {
+        return $data;
     }
 
     /**

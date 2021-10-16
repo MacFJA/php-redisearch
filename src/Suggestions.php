@@ -23,6 +23,7 @@ namespace MacFJA\RediSearch;
 
 use function is_int;
 use function is_string;
+use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\SugAdd;
 use MacFJA\RediSearch\Redis\Command\SugDel;
@@ -30,7 +31,6 @@ use MacFJA\RediSearch\Redis\Command\SugGet;
 use MacFJA\RediSearch\Redis\Command\SugLen;
 use MacFJA\RediSearch\Redis\Initializer;
 use MacFJA\RediSearch\Redis\Response\SuggestionResponseItem;
-use Predis\ClientInterface;
 
 /**
  * @codeCoverageIgnore
@@ -39,18 +39,18 @@ class Suggestions
 {
     /** @var string */
     private $dictionary;
-    /** @var ClientInterface */
+    /** @var Client */
     private $client;
     /** @var int */
     private $length;
     /** @var string */
     private $version;
 
-    public function __construct(string $dictionary, ClientInterface $client)
+    public function __construct(string $dictionary, Client $client)
     {
         $this->dictionary = $dictionary;
         $this->client = $client;
-        $this->length = $client->executeCommand((new SugLen())->setDictionary($dictionary));
+        $this->length = (int) $client->execute((new SugLen())->setDictionary($dictionary));
         $this->version = Initializer::getRediSearchVersion($client) ?? AbstractCommand::MIN_IMPLEMENTED_VERSION;
     }
 
@@ -67,7 +67,7 @@ class Suggestions
             $command->setPayload($payload);
         }
 
-        $response = $this->client->executeCommand($command);
+        $response = $this->client->execute($command);
 
         if (is_int($response)) {
             $this->length = $response;
@@ -90,7 +90,7 @@ class Suggestions
             $command->setMax($max);
         }
 
-        return $this->client->executeCommand($command);
+        return $this->client->execute($command) ?? [];
     }
 
     public function delete(string $suggestion): bool
@@ -100,7 +100,7 @@ class Suggestions
             ->setDictionary($this->dictionary)
             ->setSuggestion($suggestion)
         ;
-        $removed = (int) $this->client->executeCommand($command);
+        $removed = (int) $this->client->execute($command);
         $this->length -= $removed;
 
         return 1 === $removed;

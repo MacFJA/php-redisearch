@@ -24,14 +24,14 @@ namespace MacFJA\RediSearch\Redis\Response;
 use function count;
 use function is_int;
 use Iterator;
+use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command\PaginatedCommand;
-use Predis\ClientInterface;
-use Predis\Response\ResponseInterface;
+use MacFJA\RediSearch\Redis\Response;
 
 /**
  * @implements Iterator<int,AggregateResponseItem[]|SearchResponseItem[]>
  */
-class PaginatedResponse implements ResponseInterface, Iterator
+class PaginatedResponse implements Response, Iterator
 {
     /** @var array<AggregateResponseItem>|array<SearchResponseItem> */
     private $items;
@@ -39,7 +39,7 @@ class PaginatedResponse implements ResponseInterface, Iterator
     private $lastCommand;
     /** @var int */
     private $totalCount;
-    /** @var ClientInterface */
+    /** @var Client */
     private $client;
 
     /** @var null|int */
@@ -57,7 +57,7 @@ class PaginatedResponse implements ResponseInterface, Iterator
         $this->lastCommand = $command;
     }
 
-    public function setClient(ClientInterface $client): PaginatedResponse
+    public function setClient(Client $client): PaginatedResponse
     {
         $this->client = $client;
 
@@ -132,7 +132,7 @@ class PaginatedResponse implements ResponseInterface, Iterator
         $nextCommand->setLimit($offset, $size);
 
         /** @var PaginatedResponse $paginated */
-        $paginated = $this->client->executeCommand($nextCommand);
+        $paginated = $this->client->execute($nextCommand);
         $this->lastCommand = $nextCommand;
         $this->totalCount = $paginated->totalCount;
         $this->items = $paginated->items;

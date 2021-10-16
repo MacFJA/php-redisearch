@@ -19,42 +19,46 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RediSearch\Redis\Command;
+namespace MacFJA\RediSearch\Redis\Client;
 
-use MacFJA\RediSearch\Redis\Command;
+use MacFJA\RediSearch\Redis\Client;
+use Predis\ClientInterface;
+use Redis;
+use RuntimeException;
 
-class IndexList implements Command
+/**
+ * @codeCoverageIgnore
+ */
+class ClientFacade
 {
-    /** @var string */
-    private $rediSearchVersion = AbstractCommand::MIN_IMPLEMENTED_VERSION;
-
-    public function getId(): string
-    {
-        return 'FT._LIST';
-    }
-
-    public function getRediSearchVersion(): string
-    {
-        return $this->rediSearchVersion;
-    }
+    /** @var array<string> */
+    private $factories = [PhpiredisClient::class, PhpredisClient::class, PredisClient::class];
 
     /**
-     * @return IndexList
+     * @param ClientInterface|mixed|Redis|resource $redis
      */
-    public function setRediSearchVersion(string $rediSearchVersion): Command
+    public function getClient($redis): Client
     {
-        $this->rediSearchVersion = $rediSearchVersion;
+        /** @var Client $factory */
+        foreach ($this->factories as $factory) {
+            if (!is_subclass_of($factory, Client::class)) {
+                continue;
+            }
+            if ($factory::supports($redis)) {
+                return $factory::make($redis);
+            }
+        }
 
-        return $this;
+        throw new RuntimeException('Unable to handle the Redis connection');
     }
 
-    public function getArguments(): array
+    public function addFactory(string $classname): bool
     {
-        return [];
-    }
+        if (!is_subclass_of($classname, Client::class)) {
+            return false;
+        }
+        $this->factories[] = $classname;
 
-    public function parseResponse($data)
-    {
-        return $data;
+        return true;
     }
 }

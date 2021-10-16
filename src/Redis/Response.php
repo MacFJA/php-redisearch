@@ -19,42 +19,8 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RediSearch\Redis\Command;
+namespace MacFJA\RediSearch\Redis;
 
-use MacFJA\RediSearch\Redis\Command;
-
-class IndexList implements Command
+interface Response
 {
-    /** @var string */
-    private $rediSearchVersion = AbstractCommand::MIN_IMPLEMENTED_VERSION;
-
-    public function getId(): string
-    {
-        return 'FT._LIST';
-    }
-
-    public function getRediSearchVersion(): string
-    {
-        return $this->rediSearchVersion;
-    }
-
-    /**
-     * @return IndexList
-     */
-    public function setRediSearchVersion(string $rediSearchVersion): Command
-    {
-        $this->rediSearchVersion = $rediSearchVersion;
-
-        return $this;
-    }
-
-    public function getArguments(): array
-    {
-        return [];
-    }
-
-    public function parseResponse($data)
-    {
-        return $data;
-    }
 }

@@ -48,7 +48,6 @@ use MacFJA\RediSearch\Redis\Command\SugLen;
 use MacFJA\RediSearch\Redis\Command\SynDump;
 use MacFJA\RediSearch\Redis\Command\SynUpdate;
 use MacFJA\RediSearch\Redis\Command\TagVals;
-use Predis\ClientInterface;
 use Predis\Profile\RedisProfile;
 
 /**
@@ -90,9 +89,9 @@ class Initializer
         $profile->defineCommand('fttagvals', TagVals::class);
     }
 
-    public static function getRediSearchVersion(ClientInterface $client): ?string
+    public static function getRediSearchVersion(Client $client): ?string
     {
-        $modules = $client->info('Modules')['Modules'] ?? [];
+        $modules = $client->executeRaw('info', 'Modules')['Modules'] ?? [];
 
         foreach ($modules as $module) {
             $data = array_column(

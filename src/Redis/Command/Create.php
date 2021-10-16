@@ -27,11 +27,7 @@ use MacFJA\RediSearch\Redis\Command\Option\NamedOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
 use MacFJA\RediSearch\Redis\Command\Option\NotEmptyOption;
 use MacFJA\RediSearch\Redis\Command\Option\NumberedOption;
-use Predis\Response\Status;
 
-/**
- * @method Status parseResponse(mixed $data)
- */
 class Create extends AbstractCommand
 {
     use LanguageOptionTrait;
@@ -190,7 +186,7 @@ class Create extends AbstractCommand
         return $this;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return 'FT.CREATE';
     }

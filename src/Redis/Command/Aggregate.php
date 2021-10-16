@@ -160,7 +160,7 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
         return $this;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return 'FT.AGGREGATE';
     }

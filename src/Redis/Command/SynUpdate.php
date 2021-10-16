@@ -66,7 +66,7 @@ class SynUpdate extends AbstractCommand
         return $this;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return 'FT.SYNUPDATE';
     }
