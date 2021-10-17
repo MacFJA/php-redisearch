@@ -39,7 +39,7 @@ class InitializerTest extends \PHPUnit\Framework\TestCase
     public function testRediSearchVersion(array $input, ?string $expected): void
     {
         $client = $this->createMock(Client::class);
-        $client->method('executeRaw')->with('info', 'Modules')->willReturn(['Modules' => $input]);
+        $client->method('executeRaw')->with('module', 'list')->willReturn($input);
 
         static::assertSame($expected, Initializer::getRediSearchVersion($client));
     }
@@ -50,13 +50,13 @@ class InitializerTest extends \PHPUnit\Framework\TestCase
     public function dataProvider(string $testName): Generator
     {
         if ('testRediSearchVersion' === $testName) {
-            yield [['name=search,ver=20005,api=1,filters=0,usedby=[],using=[],options=[]'], '2.0.5'];
-            yield [['name=search,ver=20000,api=1,filters=0,usedby=[],using=[],options=[]'], '2.0.0'];
-            yield [['name=search,ver=26512,api=1,filters=0,usedby=[],using=[],options=[]'], '2.65.12'];
-            yield [['name=search,ver=120569,api=1,filters=0,usedby=[],using=[],options=[]'], '12.5.69'];
-            yield [['name=search,ver=99999,api=1,filters=0,usedby=[],using=[],options=[]'], '9.99.99'];
-            yield [['name=json,ver=99999,api=1,filters=0,usedby=[],using=[],options=[]'], null];
-            yield [['name=json,ver=99999,api=1,filters=0,usedby=[],using=[],options=[]', 'name=search,ver=20005,api=1,filters=0,usedby=[],using=[],options=[]'], '2.0.5'];
+            yield [[['name', 'search', 'ver', '20005']], '2.0.5'];
+            yield [[['name', 'search', 'ver', '20000']], '2.0.0'];
+            yield [[['name', 'search', 'ver', '26512']], '2.65.12'];
+            yield [[['name', 'search', 'ver', '120569']], '12.5.69'];
+            yield [[['name', 'search', 'ver', '99999']], '9.99.99'];
+            yield [[['name', 'json', 'ver', '99999']], null];
+            yield [[['name', 'json', 'ver', '99999'], ['name', 'search', 'ver', '20005']], '2.0.5'];
         }
     }
 }

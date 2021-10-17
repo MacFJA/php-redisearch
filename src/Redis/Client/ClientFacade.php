@@ -21,9 +21,14 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Client;
 
+use Amp\Redis\Redis as AmpRedis;
+use Credis_Client as CredisRedis;
 use MacFJA\RediSearch\Redis\Client;
-use Predis\ClientInterface;
-use Redis;
+use Predis\ClientInterface as PredisRedis;
+use Redis as PhpredisRedis;
+use RedisClient\Client\AbstractRedisClient as CheprasovRedis;
+use redisent\Redis as RedisentRedis;
+use Rediska as RediskaRedis;
 use RuntimeException;
 
 /**
@@ -32,10 +37,19 @@ use RuntimeException;
 class ClientFacade
 {
     /** @var array<string> */
-    private $factories = [PhpiredisClient::class, PhpredisClient::class, PredisClient::class];
+    private $factories = [
+        PredisClient::class,
+        CredisClient::class,
+        PhpredisClient::class,
+        PhpiredisClient::class,
+        CheprasovRedisClient::class,
+        RedisentClient::class,
+        RediskaClient::class,
+        AmpRedisClient::class,
+    ];
 
     /**
-     * @param ClientInterface|mixed|Redis|resource $redis
+     * @param AmpRedis|CheprasovRedis|CredisRedis|mixed|PhpredisRedis|PredisRedis|RedisentRedis|RediskaRedis|resource $redis
      */
     public function getClient($redis): Client
     {

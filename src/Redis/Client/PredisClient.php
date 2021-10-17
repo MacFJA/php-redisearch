@@ -32,27 +32,19 @@ use RuntimeException;
 /**
  * @codeCoverageIgnore
  */
-class PredisClient implements Client
+class PredisClient extends AbstractClient
 {
     /** @var ClientInterface */
     private $redis;
 
     private function __construct(ClientInterface $redis)
     {
-        if (
-            !static::fcqnExists(\Predis\Command\Command::class)
-            || !static::fcqnExists(ClientContextInterface::class)
-            || !method_exists(ClientInterface::class, 'executeCommand')
-            || !method_exists($redis, 'pipeline')
-            || !method_exists(ClientContextInterface::class, 'executeCommand')
-        ) {
-            throw new RuntimeException(
-                'Dependency Predis is missing.'.PHP_EOL.
-                'Install the dependency or use a polyfill that provide the classes'.
-                ' "\\Predis\\Command\\Command" and "\\Predis\\ClientInterface" and "\\Predis\\ClientContextInterface"'.
-                ' and functions "\\Predis\\ClientInterface::executeCommand" and "\\Predis\\ClientInterface::pipeline"'.
-                ' and "\\Predis\\ClientContextInterface::executeCommand"'
-            );
+        if (!static::supports($redis)) {
+            throw new RuntimeException($this->getMissingMessage('Predis', false, [
+                RawCommand::class => [],
+                ClientInterface::class => ['executeCommand', 'pipeline'],
+                ClientContextInterface::class => ['executeCommand'],
+            ]));
         }
         $this->redis = $redis;
     }
@@ -69,13 +61,15 @@ class PredisClient implements Client
         if (
             !static::fcqnExists(ClientInterface::class)
             || !static::fcqnExists(RawCommand::class)
+            || !static::fcqnExists(ClientContextInterface::class)
         ) {
             return false;
         }
 
         return $redis instanceof ClientInterface
             && method_exists($redis, 'executeCommand')
-            && method_exists($redis, 'pipeline');
+            && method_exists($redis, 'pipeline')
+            && method_exists(ClientContextInterface::class, 'executeCommand');
     }
 
     public static function make($redis): Client
@@ -91,22 +85,14 @@ class PredisClient implements Client
         return $this->redis->executeCommand(new RawCommand($args));
     }
 
-    public function pipeline(Command ...$commands): array
+    protected function doPipeline(Command ...$commands): array
     {
         assert(method_exists($this->redis, 'pipeline'));
-        $results = $this->redis->pipeline(static function (ClientContextInterface $pipeline) use ($commands): void {
+
+        return $this->redis->pipeline(static function (ClientContextInterface $pipeline) use ($commands): void {
             foreach ($commands as $command) {
                 $pipeline->executeCommand(new RawCommand(array_merge([$command->getId()], $command->getArguments())));
             }
         });
-
-        return array_map(static function ($result, $index) use ($commands) {
-            return $commands[$index]->parseResponse($result);
-        }, $results, array_keys($results));
-    }
-
-    private static function fcqnExists(string $fcqn): bool
-    {
-        return class_exists($fcqn) || interface_exists($fcqn);
     }
 }

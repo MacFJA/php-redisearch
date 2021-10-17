@@ -21,47 +21,27 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Client;
 
-use function count;
+use Credis_Client;
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command;
-use Redis;
 use RuntimeException;
 
 /**
  * @codeCoverageIgnore
  */
-class PhpredisClient extends AbstractClient
+class CredisClient extends AbstractClient
 {
-    /** @var Redis */
+    /** @var Credis_Client */
     private $redis;
 
-    private function __construct(Redis $redis)
+    private function __construct(Credis_Client $redis)
     {
-        if (!static::supports($redis)) {
-            throw new RuntimeException($this->getMissingMessage('phpredis', true, [
-                Redis::class => ['rawCommand', 'multi', 'exec'],
+        if (!self::supports($redis)) {
+            throw new RuntimeException($this->getMissingMessage('Credis', false, [
+                Credis_Client::class => ['__call', 'pipeline', 'exec'],
             ]));
         }
         $this->redis = $redis;
-    }
-
-    public function execute(Command $command)
-    {
-        $arguments = $command->getArguments();
-        if (0 === count($arguments)) {
-            $arguments = [null];
-        }
-        $rawResponse = $this->redis->rawCommand($command->getId(), ...$arguments);
-
-        return $command->parseResponse($rawResponse);
-    }
-
-    public static function supports($redis): bool
-    {
-        return $redis instanceof Redis
-            && method_exists($redis, 'rawCommand')
-            && method_exists($redis, 'multi')
-            && method_exists($redis, 'exec');
     }
 
     public static function make($redis): Client
@@ -69,27 +49,33 @@ class PhpredisClient extends AbstractClient
         return new self($redis);
     }
 
+    public function execute(Command $command)
+    {
+        $result = $this->redis->__call($command->getId(), $command->getArguments());
+
+        return $command->parseResponse($result);
+    }
+
     public function executeRaw(...$args)
     {
-        if (count($args) < 1) {
-            return null;
-        }
-        if (count($args) < 2) {
-            $args[] = null;
-        }
-        // @phpstan-ignore-next-line
-        return $this->redis->rawCommand(...$args);
+        $command = array_shift($args);
+
+        return $this->redis->__call($command, $args);
+    }
+
+    public static function supports($redis): bool
+    {
+        return $redis instanceof Credis_Client
+            && method_exists($redis, '__call')
+            && method_exists($redis, 'pipeline')
+            && method_exists($redis, 'exec');
     }
 
     protected function doPipeline(Command ...$commands): array
     {
-        $pipeline = $this->redis->multi();
+        $pipeline = $this->redis->pipeline();
         foreach ($commands as $command) {
-            $arguments = $command->getArguments();
-            if (0 === count($arguments)) {
-                $arguments = [null];
-            }
-            $pipeline = $pipeline->rawCommand($command->getId(), ...$arguments);
+            $pipeline = $pipeline->__call($command->getId(), $command->getArguments());
         }
 
         return $pipeline->exec();

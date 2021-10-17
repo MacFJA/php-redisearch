@@ -79,7 +79,7 @@ class InfoResponse implements Response
     /**
      * @param array<array<mixed>|float|int|string> $rawLines
      */
-    public function __construct($rawLines)
+    public function __construct(array $rawLines)
     {
         $this->rawLines = $rawLines;
     }
@@ -233,7 +233,7 @@ class InfoResponse implements Response
      */
     private static function setOptionFlag(CreateCommandFieldOption $commandOption, array $fields, string $key, string $optionName): CreateCommandFieldOption
     {
-        assert($commandOption instanceof TextFieldOption || $commandOption instanceof TagFieldOption);
+        assert($commandOption instanceof GroupedOption);
         if (in_array($key, $fields, true)) {
             $commandOption->setDataOfOption($optionName, true);
         }

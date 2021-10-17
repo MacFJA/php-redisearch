@@ -31,23 +31,26 @@ use RuntimeException;
 /**
  * @codeCoverageIgnore
  */
-class PhpiredisClient implements Client
+class PhpiredisClient extends AbstractClient
 {
     /** @var resource */
     private $redis;
 
     /**
      * @param resource $redis
+     * @psalm-assert function_exists('phpiredis_command_bs')
+     * @psalm-assert function_exists('phpiredis_multi_command_bs')
      */
     private function __construct($redis)
     {
-        $this->validateEnvironment();
+        if (!static::supports($redis)) {
+            throw new RuntimeException($this->getMissingMessage('phpiredis', true, [], ['phpiredis_command_bs', 'phpiredis_multi_command_bs']));
+        }
         $this->redis = $redis;
     }
 
     public function execute(Command $command)
     {
-        $this->validateEnvironment();
         $rawResponse = phpiredis_command_bs($this->redis, array_merge([$command->getId()], $command->getArguments()));
 
         return $command->parseResponse($rawResponse);
@@ -78,34 +81,15 @@ class PhpiredisClient implements Client
 
     public function executeRaw(...$args)
     {
-        $this->validateEnvironment();
-
         $args = array_map('strval', $args);
 
         return phpiredis_command_bs($this->redis, $args);
     }
 
-    public function pipeline(Command ...$commands): array
+    protected function doPipeline(Command ...$commands): array
     {
-        $results = phpiredis_multi_command_bs($this->redis, array_map(static function (Command $command) {
+        return phpiredis_multi_command_bs($this->redis, array_map(static function (Command $command) {
             return array_merge([$command->getId()], $command->getArguments());
         }, $commands));
-
-        return array_map(static function ($result, $index) use ($commands) {
-            return $commands[$index]->parseResponse($result);
-        }, $results, array_keys($results));
-    }
-
-    /**
-     * @psalm-assert function_exists('phpiredis_command')
-     */
-    private function validateEnvironment(): void
-    {
-        if (!function_exists('phpiredis_command_bs') || !function_exists('phpiredis_multi_command_bs')) {
-            throw new RuntimeException(
-                'The extension phpiredis is missing.'.PHP_EOL.
-                'Install the extension or use a polyfill that provide the functions "phpiredis_command_bs" and "phpiredis_multi_command_bs"'
-            );
-        }
     }
 }
