@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6fe468a3d47a4506b963d1d03e7c38af",
+    "content-hash": "7bb89cff485836217af5df89eec3ad68",
     "packages": [
         {
             "name": "composer/semver",
@@ -4219,6 +4219,49 @@
                 "source": "https://github.com/php-fig/log/tree/1.1.4"
             },
             "time": "2021-05-03T11:20:27+00:00"
+        },
+        {
+            "name": "ptrofimov/tinyredisclient",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ptrofimov/tinyredisclient.git",
+                "reference": "7b8d487afa41b74e30d1a68400d89c12d9b82b6f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ptrofimov/tinyredisclient/zipball/7b8d487afa41b74e30d1a68400d89c12d9b82b6f",
+                "reference": "7b8d487afa41b74e30d1a68400d89c12d9b82b6f",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Petr Trofimov",
+                    "email": "petrofimov@yandex.ru",
+                    "homepage": "https://github.com/ptrofimov"
+                }
+            ],
+            "description": "The most lightweight Redis client written in PHP",
+            "homepage": "https://github.com/ptrofimov/tinyredisclient",
+            "keywords": [
+                "client",
+                "redis"
+            ],
+            "support": {
+                "issues": "https://github.com/ptrofimov/tinyredisclient/issues",
+                "source": "https://github.com/ptrofimov/tinyredisclient/tree/master"
+            },
+            "time": "2013-04-09T19:16:58+00:00"
         },
         {
             "name": "ralouphie/getallheaders",

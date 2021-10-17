@@ -24,6 +24,7 @@ namespace MacFJA\RediSearch\tests\integration;
 use Amp\Redis\Config;
 use Amp\Redis\RemoteExecutor;
 use Closure;
+use Credis_Client;
 use MacFJA\RediSearch\Index;
 use MacFJA\RediSearch\IndexBuilder;
 use MacFJA\RediSearch\Query\Builder;
@@ -39,8 +40,8 @@ use MacFJA\RediSearch\Redis\Command\SynDump;
 use MacFJA\RediSearch\Redis\Command\SynUpdate;
 use MacFJA\RediSearch\Redis\Response\PaginatedResponse;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\TestResult;
 use Rediska;
+use TinyRedisClient;
 
 /**
  * @covers \MacFJA\RediSearch\Index
@@ -104,6 +105,7 @@ class DockerTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
+        Client\AbstractClient::$disableNotice = true;
         exec('which docker', $output, $code);
         if ($code > 0) {
             static::markTestSkipped('Docker is missing');
@@ -118,6 +120,7 @@ class DockerTest extends TestCase
         foreach ($output as $container) {
             exec('docker stop '.escapeshellarg($container), $output);
         }
+        Client\AbstractClient::$disableNotice = false;
     }
 
     /**
@@ -129,11 +132,6 @@ class DockerTest extends TestCase
     public function testIntegration($clientBuilder): void
     {
         $client = $clientBuilder();
-        $resultObject = $this->getTestResultObject();
-        if ($resultObject instanceof TestResult) {
-            $resultObject->beStrictAboutOutputDuringTests(false);
-            $resultObject->convertNoticesToExceptions(false);
-        }
 
         $list = $client->execute(new IndexList());
         static::assertEmpty($list);
@@ -223,6 +221,8 @@ class DockerTest extends TestCase
             [static function () { return Client\RedisentClient::make(new \redisent\Redis('redis://localhost:16379')); }],
             [static function () { return Client\CheprasovRedisClient::make(new \RedisClient\Client\Version\RedisClient6x0(['server' => 'localhost:16379', 'database' => 0])); }],
             [static function () { return Client\AmpRedisClient::make(new \Amp\Redis\Redis(new RemoteExecutor(Config::fromUri('redis://localhost:16379')))); }],
+            [static function () { return Client\TinyRedisClient::make(new TinyRedisClient('localhost:16379')); }],
+            [static function () { return Client\CredisClient::make(new Credis_Client('localhost', 16379, null, '', 0)); }],
         ];
     }
 }

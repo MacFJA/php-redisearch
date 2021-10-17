@@ -74,7 +74,8 @@ class CheprasovRedisClient extends AbstractClient
 
     protected function doPipeline(Command ...$commands): array
     {
-        trigger_error('Warning, a workaround is used to enable custom command in pipeline for \\RedisClient\\Pipeline\\PipelineInterface', E_USER_NOTICE);
+        false === static::$disableNotice
+            && trigger_error('Warning, a workaround is used to enable custom command in pipeline for \\RedisClient\\Pipeline\\PipelineInterface', E_USER_NOTICE);
 
         return $this->redis->pipeline(function (PipelineInterface $pipeline) use ($commands): void {
             foreach ($commands as $command) {

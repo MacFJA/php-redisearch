@@ -35,6 +35,7 @@
         "phpstan/phpstan": "^0.12.92",
         "phpunit/phpunit": "^8.5",
         "predis/predis": "^1.1",
+        "ptrofimov/tinyredisclient": "^1.1",
         "redisent/redisent": "dev-master",
         "roave/security-advisories": "dev-latest",
         "rskuipers/php-assumptions": "^0.8.0",
@@ -44,12 +45,13 @@
     },
     "suggest": {
         "ext-phpiredis": "To use Phpiredis extension implementation",
-        "ext-phpredis": "To use Phpredis extension implementation",
+        "ext-redis": "To use Phpredis extension implementation",
         "amphp/redis": "To use AmpPhp implementation",
         "cheprasov/php-redis-client": "To use Cheprasov implementation",
         "colinmollenhour/credis": "To use Credis implementation",
         "geometria-lab/rediska": "To use Rediska implementation",
         "predis/predis": "To use Predis implementation",
+        "ptrofimov/tinyredisclient": "To use TinyRedisClient implementation",
         "redisent/redisent": "To use Redisent implementation"
     },
     "config": {

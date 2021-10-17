@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Client;
 
 use Credis_Client;
+use function is_array;
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command;
 use RuntimeException;
@@ -38,7 +39,7 @@ class CredisClient extends AbstractClient
     {
         if (!self::supports($redis)) {
             throw new RuntimeException($this->getMissingMessage('Credis', false, [
-                Credis_Client::class => ['__call', 'pipeline', 'exec'],
+                Credis_Client::class => ['__call'],
             ]));
         }
         $this->redis = $redis;
@@ -53,22 +54,20 @@ class CredisClient extends AbstractClient
     {
         $result = $this->redis->__call($command->getId(), $command->getArguments());
 
-        return $command->parseResponse($result);
+        return $command->parseResponse($this->fixFalseToNull($result));
     }
 
     public function executeRaw(...$args)
     {
         $command = array_shift($args);
 
-        return $this->redis->__call($command, $args);
+        return $this->fixFalseToNull($this->redis->__call($command, $args));
     }
 
     public static function supports($redis): bool
     {
         return $redis instanceof Credis_Client
-            && method_exists($redis, '__call')
-            && method_exists($redis, 'pipeline')
-            && method_exists($redis, 'exec');
+            && method_exists($redis, '__call');
     }
 
     protected function doPipeline(Command ...$commands): array
@@ -78,6 +77,25 @@ class CredisClient extends AbstractClient
             $pipeline = $pipeline->__call($command->getId(), $command->getArguments());
         }
 
-        return $pipeline->exec();
+        return $this->fixFalseToNull($pipeline->exec());
+    }
+
+    /**
+     * @param false|mixed $response
+     *
+     * @return null|mixed
+     */
+    private function fixFalseToNull($response)
+    {
+        if (false === $response) {
+            return null;
+        }
+        if (is_array($response)) {
+            foreach ($response as &$item) {
+                $item = $this->fixFalseToNull($item);
+            }
+        }
+
+        return $response;
     }
 }

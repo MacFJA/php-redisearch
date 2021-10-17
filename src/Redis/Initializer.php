@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis;
 
 use function count;
+use MacFJA\RediSearch\Redis\Client\AbstractClient;
 use MacFJA\RediSearch\Redis\Command\Aggregate;
 use MacFJA\RediSearch\Redis\Command\AliasAdd;
 use MacFJA\RediSearch\Redis\Command\AliasDel;
@@ -64,7 +65,7 @@ if (class_exists(Rediska_Command_Abstract::class) && class_exists(Rediska_Connec
         {
             $connections = $this->_rediska->getConnections();
 
-            if (count($connections) > 1) {
+            if (false === AbstractClient::$disableNotice && count($connections) > 1) {
                 trigger_error('Warning, Multiple redis connections exists, only the first connection will be used', E_USER_NOTICE);
             }
             $connection = reset($connections);

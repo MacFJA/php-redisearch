@@ -27,6 +27,9 @@ use MacFJA\RediSearch\Redis\Command;
 
 abstract class AbstractClient implements Client
 {
+    /** @var bool */
+    public static $disableNotice = false;
+
     public function pipeline(Command ...$commands): array
     {
         $results = $this->doPipeline(...$commands);
@@ -68,28 +71,29 @@ abstract class AbstractClient implements Client
         if (true === $isExtension) {
             $message = 'The extension '.$name.' is missing.'.PHP_EOL.'Install the extension';
         }
-        $message .= ' or use a polyfill that provide';
+        $message .= ' or use a polyfill that provide ';
 
         $classesMessage = null;
         if (1 === count($classes)) {
-            $classesMessage = ' the class "'.reset($classes).'"';
+            $classesMessage = 'the class "'.reset($classes).'"';
         } elseif (count($classes) > 1) {
-            $classesMessage = ' the classes "'.implode('", "', $classes).'"';
+            $classesMessage = 'the classes "'.implode('", "', $classes).'"';
         }
         $methodsMessage = null;
         if (1 === count($methods)) {
-            $methodsMessage = ' the method "'.reset($methods).'"';
+            $methodsMessage = 'the method "'.reset($methods).'"';
         } elseif (count($methods) > 1) {
-            $methodsMessage = ' the methods "'.implode('", "', $methods).'"';
+            $methodsMessage = 'the methods "'.implode('", "', $methods).'"';
         }
         $functionsMessage = null;
         if (1 === count($functions)) {
-            $functionsMessage = ' the function "'.reset($functions).'"';
+            $functionsMessage = 'the function "'.reset($functions).'"';
         } elseif (count($functions) > 1) {
-            $functionsMessage = ' the functions "'.implode('", "', $functions).'"';
+            $functionsMessage = 'the functions "'.implode('", "', $functions).'"';
         }
 
         $message .= implode(' and ', array_filter([$classesMessage, $methodsMessage, $functionsMessage]));
+        $message .= '.';
 
         return $message;
     }

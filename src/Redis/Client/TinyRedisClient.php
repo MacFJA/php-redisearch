@@ -21,10 +21,6 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Client;
 
-use function Amp\Promise\all;
-use function Amp\Promise\wait;
-use Amp\Redis\Redis;
-use function function_exists;
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command;
 use RuntimeException;
@@ -32,19 +28,51 @@ use RuntimeException;
 /**
  * @codeCoverageIgnore
  */
-class AmpRedisClient extends AbstractClient
+class TinyRedisClient extends AbstractClient
 {
-    /** @var Redis */
+    /** @var \TinyRedisClient */
     private $redis;
 
-    private function __construct(Redis $redis)
+    public function __construct(\TinyRedisClient $redis)
     {
-        if (!static::supports($redis)) {
-            throw new RuntimeException($this->getMissingMessage('Amp\Redis', false, [
-                Redis::class => ['query'],
-            ], ['\\Amp\\Promise\\wait', '\\Amp\\Promise\\all']));
+        if (!self::supports($redis)) {
+            throw new RuntimeException($this->getMissingMessage(
+                'TinyRedis',
+                false,
+                [\TinyRedisClient::class => ['__call']]
+            ));
         }
         $this->redis = $redis;
+    }
+
+    public function pipeline(Command ...$commands): array
+    {
+        false === static::$disableNotice
+            && trigger_error('Warning, \\TinyRedisClient don\'t use a real Redis Pipeline', E_USER_NOTICE);
+
+        return array_map(function (Command $command) {
+            return $this->execute($command);
+        }, $commands);
+    }
+
+    public function execute(Command $command)
+    {
+        $result = $this->redis->__call($command->getId(), $command->getArguments());
+
+        return $command->parseResponse($result);
+    }
+
+    public function executeRaw(...$args)
+    {
+        $command = array_shift($args);
+
+        return $this->redis->__call($command, $args);
+    }
+
+    public static function supports($redis): bool
+    {
+        return $redis instanceof \TinyRedisClient
+            && method_exists($redis, '__call');
     }
 
     public static function make($redis): Client
@@ -52,35 +80,8 @@ class AmpRedisClient extends AbstractClient
         return new self($redis);
     }
 
-    public function execute(Command $command)
-    {
-        $result = wait($this->redis->query($command->getId(), ...array_map('strval', $command->getArguments())));
-
-        return $command->parseResponse($result);
-    }
-
-    public function executeRaw(...$args)
-    {
-        return wait($this->redis->query(...array_map('strval', $args)));
-    }
-
-    public static function supports($redis): bool
-    {
-        return $redis instanceof Redis
-            && method_exists($redis, 'query')
-            && function_exists('\\Amp\\Promise\\wait')
-            && function_exists('\\Amp\\Promise\\all');
-    }
-
     protected function doPipeline(Command ...$commands): array
     {
-        false === static::$disableNotice
-            && trigger_error('Warning, \\Amp\\Redis\\Redis don\'t use a real Redis Pipeline', E_USER_NOTICE);
-
-        return wait(all(
-            array_map(function (Command $command) {
-                return $this->redis->query($command->getId(), ...array_map('strval', $command->getArguments()));
-            }, $commands)
-        ));
+        return [];
     }
 }
