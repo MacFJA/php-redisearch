@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Response;
 
 use function count;
+use Countable;
 use function is_int;
 use Iterator;
 use MacFJA\RediSearch\Redis\Client;
@@ -31,7 +32,7 @@ use MacFJA\RediSearch\Redis\Response;
 /**
  * @implements Iterator<int,AggregateResponseItem[]|SearchResponseItem[]>
  */
-class PaginatedResponse implements Response, Iterator
+class PaginatedResponse implements Response, Iterator, Countable
 {
     /** @var array<AggregateResponseItem>|array<SearchResponseItem> */
     private $items;
@@ -121,6 +122,11 @@ class PaginatedResponse implements Response, Iterator
     }
 
     public function getTotalCount(): int
+    {
+        return $this->totalCount;
+    }
+
+    public function count()
     {
         return $this->totalCount;
     }

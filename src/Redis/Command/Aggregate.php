@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Command;
 
 use function assert;
-use function is_int;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\ApplyOption;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\GroupByOption;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\LimitOption;
@@ -198,7 +197,8 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
         }
 
         $totalCount = array_shift($data);
-        assert(is_int($totalCount));
+        assert(is_numeric($totalCount));
+        $totalCount = (int) $totalCount;
 
         $items = array_map(static function (array $document) {
             return new AggregateResponseItem(self::getPairs($document));

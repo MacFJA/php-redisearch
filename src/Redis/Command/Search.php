@@ -25,7 +25,6 @@ use function assert;
 use function count;
 use InvalidArgumentException;
 use function is_array;
-use function is_int;
 use MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption as CV;
 use MacFJA\RediSearch\Redis\Command\Option\FlagOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamedOption;
@@ -315,7 +314,8 @@ class Search extends AbstractCommand implements PaginatedCommand
         }
 
         $totalCount = array_shift($data);
-        assert(is_int($totalCount));
+        assert(is_numeric($totalCount));
+        $totalCount = (int) $totalCount;
 
         $useScores = $this->options['withscores']->isActive();
         $usePayloads = $this->options['withpayloads']->isActive();

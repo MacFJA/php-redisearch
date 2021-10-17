@@ -11,8 +11,18 @@
     <testsuites>
         <testsuite name="default">
             <directory suffix="Test.php">tests</directory>
+            <exclude>tests/integration</exclude>
+        </testsuite>
+        <testsuite name="integration">
+            <directory suffix="Test.php">tests/integration</directory>
         </testsuite>
     </testsuites>
+
+    <groups>
+        <exclude>
+            <group>integration</group>
+        </exclude>
+    </groups>
 
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true" processUncoveredFilesFromWhitelist="true">
