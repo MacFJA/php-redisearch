@@ -21,12 +21,15 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\tests\Redis\Command;
 
+use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\SugGet;
+use MacFJA\RediSearch\Redis\Response\SuggestionResponseItem;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \MacFJA\RediSearch\Redis\Command\AbstractCommand
+ * @covers \MacFJA\RediSearch\Exception\UnexpectedServerResponseException
  *
+ * @covers \MacFJA\RediSearch\Redis\Command\AbstractCommand
  * @covers \MacFJA\RediSearch\Redis\Command\SugGet
  *
  * @uses \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption
@@ -60,5 +63,39 @@ class SugGetTest extends TestCase
         static::assertSame([
             'ac', 'hell', 'FUZZY', 'WITHSCORES', 'WITHPAYLOADS', 'MAX', 10,
         ], $command->getArguments());
+    }
+
+    public function testParseResponse(): void
+    {
+        $expected = [
+            new SuggestionResponseItem('hello', 0.4024922251701355, 'greeting'),
+            new SuggestionResponseItem('hola', 0.40000000596046448, 'greeting'),
+        ];
+
+        $rawResult = [
+            'hello',  '0.4024922251701355', 'greeting',
+            'hola', '0.40000000596046448', 'greeting',
+        ];
+
+        $command = new SugGet();
+        $command->setWithPayloads()->setWithScores();
+
+        static::assertEquals($expected, $command->parseResponse($rawResult));
+    }
+
+    public function testInvalidServerResponse1(): void
+    {
+        $this->expectException(UnexpectedServerResponseException::class);
+        $command = new SugGet();
+        $command->parseResponse('foobar');
+    }
+
+    public function testInvalidServerResponse2(): void
+    {
+        $this->expectException(UnexpectedServerResponseException::class);
+        $this->expectExceptionMessage('Unexpected response from the Redis server: Incomplete response');
+        $command = new SugGet();
+        $command->setWithPayloads();
+        $command->parseResponse(['foobar']);
     }
 }

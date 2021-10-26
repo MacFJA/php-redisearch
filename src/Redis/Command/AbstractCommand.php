@@ -64,16 +64,6 @@ abstract class AbstractCommand implements Command
     }
 
     /**
-     * @param array<mixed>|float|int|mixed|string $data
-     *
-     * @return mixed|string
-     */
-    public function parseResponse($data)
-    {
-        return $this->transformParsedResponse($data);
-    }
-
-    /**
      * @return array<float|int|string>
      */
     public function getArguments(): array
@@ -99,19 +89,21 @@ abstract class AbstractCommand implements Command
     }
 
     /**
-     * @return array<string>
-     */
-    abstract protected function getRequiredOptions(): array;
-
-    /**
-     * @param mixed $data
+     * @codeCoverageIgnore
+     *
+     * @param array<mixed>|float|int|mixed|string $data
      *
      * @return mixed
      */
-    protected function transformParsedResponse($data)
+    public function parseResponse($data)
     {
         return $data;
     }
+
+    /**
+     * @return array<string>
+     */
+    abstract protected function getRequiredOptions(): array;
 
     /**
      * @return array<string>

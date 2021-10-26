@@ -73,7 +73,7 @@ class CursorResponse implements Response, Iterator
     }
 
     /**
-     * @return array<AggregateResponseItem>|array<SearchResponseItem>
+     * @return array<AggregateResponseItem>
      */
     public function current()
     {

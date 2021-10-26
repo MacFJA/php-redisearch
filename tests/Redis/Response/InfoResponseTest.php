@@ -30,7 +30,6 @@ use Predis\Response\Status;
 
 /**
  * @covers \MacFJA\RediSearch\Redis\Command\AbstractCommand::parseResponse
- * @covers \MacFJA\RediSearch\Redis\Command\AbstractCommand::transformParsedResponse
  * @covers \MacFJA\RediSearch\Redis\Command\Info
  * @covers \MacFJA\RediSearch\Redis\Response\InfoResponse
  *

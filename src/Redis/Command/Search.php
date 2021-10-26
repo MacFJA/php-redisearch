@@ -23,8 +23,8 @@ namespace MacFJA\RediSearch\Redis\Command;
 
 use function assert;
 use function count;
-use InvalidArgumentException;
 use function is_array;
+use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption as CV;
 use MacFJA\RediSearch\Redis\Command\Option\FlagOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamedOption;
@@ -302,15 +302,15 @@ class Search extends AbstractCommand implements PaginatedCommand
     /**
      * @param mixed $data
      *
-     * @return mixed|PaginatedResponse
+     * @return PaginatedResponse
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function transformParsedResponse($data)
+    public function parseResponse($data)
     {
         if (!is_array($data)) {
-            return $data;
+            throw new UnexpectedServerResponseException($data);
         }
 
         $totalCount = array_shift($data);
@@ -329,7 +329,7 @@ class Search extends AbstractCommand implements PaginatedCommand
 
         $documents = array_chunk($data, $chunkSize);
 
-        $items = array_map(static function ($document) use ($useSortKeys, $usePayloads, $useScores, $noContent) {
+        $items = array_map(static function ($document) use ($data, $useSortKeys, $usePayloads, $useScores, $noContent) {
             $hash = array_shift($document) ?? '';
             $score = true === $useScores ? (float) array_shift($document) : null;
             $payload = true === $usePayloads ? array_shift($document) : null;
@@ -338,7 +338,7 @@ class Search extends AbstractCommand implements PaginatedCommand
             $fields = [];
             if (false === $noContent) {
                 if (!(1 === count($document))) {
-                    throw new InvalidArgumentException();
+                    throw new UnexpectedServerResponseException($data, 'Incomplete response');
                 }
                 $rawData = reset($document);
                 assert(is_array($rawData));

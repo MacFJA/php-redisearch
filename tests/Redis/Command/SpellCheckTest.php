@@ -21,12 +21,14 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\tests\Redis\Command;
 
-use Closure;
+use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\SpellCheck;
 use MacFJA\RediSearch\Redis\Response\SpellCheckResponseItem;
 use PHPUnit\Framework\TestCase;
 
 /**
+ * @covers  \MacFJA\RediSearch\Exception\UnexpectedServerResponseException
+ *
  * @covers  \MacFJA\RediSearch\Redis\Command\AbstractCommand
  *
  * @covers \MacFJA\RediSearch\Redis\Command\SpellCheck
@@ -67,7 +69,7 @@ class SpellCheckTest extends TestCase
         ], $command->getArguments());
     }
 
-    public function testResponseTransformation(): void
+    public function testParseResponse(): void
     {
         $command = new SpellCheck();
         $expected = [
@@ -78,11 +80,32 @@ class SpellCheckTest extends TestCase
             ['TERM', 'hell', [[0.7, 'hello'], [0.4, 'hola']]],
             ['TERM', 'worl', [[0.9, 'world'], [0.56, 'work']]],
         ];
-        $transformer = function ($data) {
-            // @phpstan-ignore-next-line
-            return $this->transformParsedResponse($data);
-        };
-        $actual = Closure::fromCallable($transformer)->call($command, $rawResponse);
+
+        $actual = $command->parseResponse($rawResponse);
+
+        static::assertEquals($expected, $actual);
+    }
+
+    public function testParseResponseInvalid(): void
+    {
+        $this->expectException(UnexpectedServerResponseException::class);
+        $command = new SpellCheck();
+
+        $command->parseResponse('foobar');
+    }
+
+    public function testParseResponsePartialInvalid(): void
+    {
+        $command = new SpellCheck();
+        $expected = [
+            new SpellCheckResponseItem('hell', ['hello' => 0.7, 'hola' => 0.4]),
+        ];
+        $rawResponse = [
+            ['TERM', 'hell', [[0.7, 'hello'], [0.4, 'hola']]],
+            ['TERMbar', 'worl', [[0.9, 'world'], [0.56, 'work']]],
+        ];
+
+        $actual = $command->parseResponse($rawResponse);
 
         static::assertEquals($expected, $actual);
     }

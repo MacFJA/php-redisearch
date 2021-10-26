@@ -19,50 +19,36 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RediSearch\Redis\Command;
+namespace MacFJA\RediSearch\Exception;
 
-use function is_array;
-use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
-use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
-use MacFJA\RediSearch\Redis\Response\InfoResponse;
+use function is_string;
+use UnexpectedValueException;
 
-class Info extends AbstractCommand
+class UnexpectedServerResponseException extends UnexpectedValueException
 {
-    public function __construct(string $rediSearchVersion = self::MIN_IMPLEMENTED_VERSION)
-    {
-        parent::__construct([
-            'index' => new NamelessOption(null, '>=2.0.0'),
-        ], $rediSearchVersion);
-    }
+    /** @var mixed */
+    private $response;
 
-    public function setIndex(string $name): self
+    /**
+     * @param mixed $response
+     */
+    public function __construct($response, ?string $message = null)
     {
-        $this->options['index']->setValue($name);
-
-        return $this;
-    }
-
-    public function getId(): string
-    {
-        return 'FT.INFO';
+        $this->response = $response;
+        $additional = '';
+        if (is_string($message)) {
+            $additional = ': '.$message;
+        }
+        parent::__construct('Unexpected response from the Redis server'.$additional);
     }
 
     /**
-     * @param array|mixed $data
+     * @codeCoverageIgnore
      *
-     * @return InfoResponse
+     * @return mixed
      */
-    public function parseResponse($data)
+    public function getResponse()
     {
-        if (!is_array($data)) {
-            throw new UnexpectedServerResponseException($data);
-        }
-
-        return new InfoResponse($data);
-    }
-
-    protected function getRequiredOptions(): array
-    {
-        return ['index'];
+        return $this->response;
     }
 }

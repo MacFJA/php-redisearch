@@ -22,17 +22,14 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Command;
 
 use function count;
-use InvalidArgumentException;
 use function is_array;
+use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption as CV;
 use MacFJA\RediSearch\Redis\Command\Option\FlagOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamedOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
 use MacFJA\RediSearch\Redis\Response\SuggestionResponseItem;
 
-/**
- * @method array<SuggestionResponseItem> parseResponse(mixed $data)
- */
 class SugGet extends AbstractCommand
 {
     public function __construct(string $rediSearchVersion = self::MIN_IMPLEMENTED_VERSION)
@@ -100,12 +97,12 @@ class SugGet extends AbstractCommand
     /**
      * @param mixed $data
      *
-     * @return mixed|SuggestionResponseItem[]
+     * @return SuggestionResponseItem[]
      */
-    public function transformParsedResponse($data)
+    public function parseResponse($data)
     {
         if (!is_array($data)) {
-            return $data;
+            throw new UnexpectedServerResponseException($data);
         }
 
         $useScores = $this->options['scores']->isActive();
@@ -117,12 +114,12 @@ class SugGet extends AbstractCommand
 
         $documents = array_chunk($data, $chunkSize);
 
-        return array_map(static function ($document) use ($usePayloads, $useScores) {
+        return array_map(static function ($document) use ($data, $usePayloads, $useScores) {
             $payload = true === $usePayloads ? array_pop($document) : null;
             $score = true === $useScores ? (float) array_pop($document) : null;
 
             if (!(1 === count($document))) {
-                throw new InvalidArgumentException();
+                throw new UnexpectedServerResponseException($data, 'Incomplete response');
             }
             $value = reset($document);
 

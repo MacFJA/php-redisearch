@@ -22,6 +22,8 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Command;
 
 use function assert;
+use function is_array;
+use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\ApplyOption;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\GroupByOption;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\LimitOption;
@@ -33,10 +35,11 @@ use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
 use MacFJA\RediSearch\Redis\Command\Option\NumberedOption;
 use MacFJA\RediSearch\Redis\Response\AggregateResponseItem;
 use MacFJA\RediSearch\Redis\Response\ArrayResponseTrait;
+use MacFJA\RediSearch\Redis\Response\CursorResponse;
 use MacFJA\RediSearch\Redis\Response\PaginatedResponse;
 
 /**
- * @method CursorResponse|PaginatedResponse<AggregateResponseItem> parseResponse(mixed $data)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Aggregate extends AbstractCommand implements PaginatedCommand
 {
@@ -180,13 +183,18 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
         return $limit->getSize();
     }
 
-    protected function getRequiredOptions(): array
+    /**
+     * @param array|mixed|string $data
+     *
+     * @return CursorResponse|PaginatedResponse<AggregateResponseItem>
+     * @phpstan-return CursorResponse|PaginatedResponse
+     */
+    public function parseResponse($data)
     {
-        return ['index', 'query'];
-    }
+        if (!is_array($data)) {
+            throw new UnexpectedServerResponseException($data);
+        }
 
-    protected function transformParsedResponse($data)
-    {
         if (true === $this->options['cursor']->getDataOfOption('enabled')) {
             return CursorRead::transformResponse(
                 $data,
@@ -205,5 +213,10 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
         }, $data);
 
         return new PaginatedResponse($this, $totalCount, $items);
+    }
+
+    protected function getRequiredOptions(): array
+    {
+        return ['index', 'query'];
     }
 }
