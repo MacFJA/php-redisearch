@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased v2.x]
 
+### Added
+
+- Allow multiple connector for Redis ([PR#17])
+- Allow specific feature of RediSearch depending of its version ([Issue#6])
+- Add more language ([Issue#5])
+- Add more language ([Issue#5])
+- Add `SORTABLE` flag on `GEO` field ([Issue#5])
+- Add `CASESENSITIVE` flag on fields ([Issue#5])
+- Add `UNF` flag on fields ([Issue#5])
+
+### Changed
+
+- Remove hard dependency on Predis ([Issue#16])
+- Full rework of the library
+
 ## [Unreleased v1.x]
 
 ## [1.4.0]
@@ -106,7 +121,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First version
 
-[Unreleased v2.x]: https://github.com/MacFJA/php-redisearch/compare/2.0.x...HEAD
+[Unreleased v2.x]: https://github.com/MacFJA/php-redisearch/compare/main...HEAD
 [Unreleased v1.x]: https://github.com/MacFJA/php-redisearch/compare/1.4.0...HEAD
 [1.4.0]: https://github.com/MacFJA/php-redisearch/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/MacFJA/php-redisearch/compare/1.2.0...1.3.0
@@ -115,13 +130,17 @@ First version
 [1.0.0]: https://github.com/MacFJA/php-redisearch/releases/tag/1.0.0
 
 [Issue#2]: https://github.com/MacFJA/php-redisearch/issues/2
+[Issue#5]: https://github.com/MacFJA/php-redisearch/issues/5
+[Issue#6]: https://github.com/MacFJA/php-redisearch/issues/6
 [Issue#9]: https://github.com/MacFJA/php-redisearch/issues/9
 [Issue#10]: https://github.com/MacFJA/php-redisearch/issues/10
 [Issue#11]: https://github.com/MacFJA/php-redisearch/issues/11
 [Issue#12]: https://github.com/MacFJA/php-redisearch/issues/12
+[Issue#16]: https://github.com/MacFJA/php-redisearch/issues/16
 [PR#1]: https://github.com/MacFJA/php-redisearch/pull/1
 [PR#3]: https://github.com/MacFJA/php-redisearch/pull/3
 [PR#8]: https://github.com/MacFJA/php-redisearch/pull/8
 [PR#13]: https://github.com/MacFJA/php-redisearch/pull/13
 [PR#14]: https://github.com/MacFJA/php-redisearch/pull/14
 [PR#15]: https://github.com/MacFJA/php-redisearch/pull/15
+[PR#17]: https://github.com/MacFJA/php-redisearch/pull/17
