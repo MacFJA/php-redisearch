@@ -29,7 +29,7 @@ class FakeAbstractCommand extends \MacFJA\RediSearch\Redis\Command\AbstractComma
     /** @var array<string> */
     private $requiredOptions;
 
-    public function getId()
+    public function getId(): string
     {
         return '';
     }

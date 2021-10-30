@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis;
 
+use function count;
+use MacFJA\RediSearch\Redis\Client\AbstractClient;
 use MacFJA\RediSearch\Redis\Command\Aggregate;
 use MacFJA\RediSearch\Redis\Command\AliasAdd;
 use MacFJA\RediSearch\Redis\Command\AliasDel;
@@ -48,8 +50,35 @@ use MacFJA\RediSearch\Redis\Command\SugLen;
 use MacFJA\RediSearch\Redis\Command\SynDump;
 use MacFJA\RediSearch\Redis\Command\SynUpdate;
 use MacFJA\RediSearch\Redis\Command\TagVals;
-use Predis\ClientInterface;
 use Predis\Profile\RedisProfile;
+use Rediska_Command_Abstract;
+use Rediska_Commands;
+use Rediska_Connection_Exec;
+
+if (class_exists(Rediska_Command_Abstract::class) && class_exists(Rediska_Connection_Exec::class)) {
+    /**
+     * @codeCoverageIgnore
+     */
+    class RediskaRediSearch extends Rediska_Command_Abstract
+    {
+        public function create(): Rediska_Connection_Exec
+        {
+            $connections = $this->_rediska->getConnections();
+
+            if (false === AbstractClient::$disableNotice && count($connections) > 1) {
+                trigger_error('Warning, Multiple redis connections exists, only the first connection will be used', E_USER_NOTICE);
+            }
+            $connection = reset($connections);
+
+            $commands = $this->_arguments;
+            if (!('__redisearch' === $this->_name)) {
+                array_unshift($commands, $this->_name);
+            }
+
+            return new Rediska_Connection_Exec($connection, $commands);
+        }
+    }
+}
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -59,7 +88,7 @@ class Initializer
     /**
      * @codeCoverageIgnore
      */
-    public static function registerCommands(RedisProfile $profile): void
+    public static function registerCommandsPredis(RedisProfile $profile): void
     {
         $profile->defineCommand('ftaggregate', Aggregate::class);
         $profile->defineCommand('ftaliasadd', AliasAdd::class);
@@ -90,15 +119,50 @@ class Initializer
         $profile->defineCommand('fttagvals', TagVals::class);
     }
 
-    public static function getRediSearchVersion(ClientInterface $client): ?string
+    /**
+     * @codeCoverageIgnore
+     */
+    public static function registerCommandsRediska(): void
     {
-        $modules = $client->info('Modules')['Modules'] ?? [];
+        Rediska_Commands::add('ftaggregate', RediskaRediSearch::class);
+        Rediska_Commands::add('ftaliasadd', RediskaRediSearch::class);
+        Rediska_Commands::add('ftaliasdel', RediskaRediSearch::class);
+        Rediska_Commands::add('ftaliasupdate', RediskaRediSearch::class);
+        Rediska_Commands::add('ftalter', RediskaRediSearch::class);
+        Rediska_Commands::add('ftconfig', RediskaRediSearch::class);
+        Rediska_Commands::add('ftconfigset', RediskaRediSearch::class);
+        Rediska_Commands::add('ftcreate', RediskaRediSearch::class);
+        Rediska_Commands::add('ftcursordel', RediskaRediSearch::class);
+        Rediska_Commands::add('ftcursorread', RediskaRediSearch::class);
+        Rediska_Commands::add('ftdictadd', RediskaRediSearch::class);
+        Rediska_Commands::add('ftdictdel', RediskaRediSearch::class);
+        Rediska_Commands::add('ftdictdump', RediskaRediSearch::class);
+        Rediska_Commands::add('ftdropindex', RediskaRediSearch::class);
+        Rediska_Commands::add('ftexplain', RediskaRediSearch::class);
+        Rediska_Commands::add('ftexplaincli', RediskaRediSearch::class);
+        Rediska_Commands::add('ftlist', RediskaRediSearch::class);
+        Rediska_Commands::add('ftinfo', RediskaRediSearch::class);
+        Rediska_Commands::add('ftsearch', RediskaRediSearch::class);
+        Rediska_Commands::add('ftspellcheck', RediskaRediSearch::class);
+        Rediska_Commands::add('ftsugadd', RediskaRediSearch::class);
+        Rediska_Commands::add('ftsugdel', RediskaRediSearch::class);
+        Rediska_Commands::add('ftsugget', RediskaRediSearch::class);
+        Rediska_Commands::add('ftsuglen', RediskaRediSearch::class);
+        Rediska_Commands::add('ftsyndump', RediskaRediSearch::class);
+        Rediska_Commands::add('ftsynupdate', RediskaRediSearch::class);
+        Rediska_Commands::add('fttagvals', RediskaRediSearch::class);
+        Rediska_Commands::add('__redisearch', RediskaRediSearch::class);
+    }
+
+    public static function getRediSearchVersion(Client $client): ?string
+    {
+        $modules = $client->executeRaw('module', 'list') ?? [];
 
         foreach ($modules as $module) {
             $data = array_column(
-                array_map(
-                    static function ($line) { return explode('=', $line); },
-                    explode(',', $module)
+                array_chunk(
+                    $module,
+                    2
                 ),
                 1,
                 0

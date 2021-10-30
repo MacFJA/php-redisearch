@@ -24,6 +24,7 @@ namespace MacFJA\RediSearch;
 use function count;
 use function is_array;
 use function is_string;
+use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\AliasAdd;
 use MacFJA\RediSearch\Redis\Command\AliasDel;
@@ -35,14 +36,13 @@ use MacFJA\RediSearch\Redis\Command\Info;
 use MacFJA\RediSearch\Redis\Command\TagVals;
 use MacFJA\RediSearch\Redis\Initializer;
 use MacFJA\RediSearch\Redis\Response\InfoResponse;
-use Predis\ClientInterface;
 
 /**
  * @codeCoverageIgnore
  */
 class Index
 {
-    /** @var ClientInterface */
+    /** @var Client */
     private $client;
     /** @var InfoResponse */
     private $info;
@@ -51,7 +51,7 @@ class Index
     /** @var string */
     private $version;
 
-    public function __construct(string $index, ClientInterface $client)
+    public function __construct(string $index, Client $client)
     {
         $this->client = $client;
         $this->index = $index;
@@ -76,14 +76,14 @@ class Index
             $query[] = $value;
         }
 
-        $this->client->hset(...$query);
+        $this->client->executeRaw('hset', ...$query);
 
         return $documentId;
     }
 
     public function deleteDocument(string $hash): bool
     {
-        $count = $this->client->del($hash);
+        $count = $this->client->executeRaw('del', $hash);
 
         return 1 === $count;
     }
@@ -96,7 +96,7 @@ class Index
             ->addField($field)
         ;
 
-        return 'OK' === (string) $this->client->executeCommand($command);
+        return 'OK' === (string) $this->client->execute($command);
     }
 
     public function delete(bool $withDocuments = false): bool
@@ -106,12 +106,12 @@ class Index
             ->setDeleteDocument($withDocuments)
         ;
 
-        return 'OK' === (string) $this->client->executeCommand($command);
+        return 'OK' === (string) $this->client->execute($command);
     }
 
     public function addAlias(string $alias): bool
     {
-        return 'OK' === (string) $this->client->executeCommand(
+        return 'OK' === (string) $this->client->execute(
             (new AliasAdd($this->version))
                 ->setIndex($this->index)
                 ->setAlias($alias)
@@ -120,12 +120,12 @@ class Index
 
     public function updateAlias(string $alias): bool
     {
-        return 'OK' === (string) $this->client->executeCommand((new AliasUpdate($this->version))->setIndex($this->index)->setAlias($alias));
+        return 'OK' === (string) $this->client->execute((new AliasUpdate($this->version))->setIndex($this->index)->setAlias($alias));
     }
 
     public function deleteAlias(string $alias): bool
     {
-        return 'OK' === (string) $this->client->executeCommand((new AliasDel($this->version))->setAlias($alias));
+        return 'OK' === (string) $this->client->execute((new AliasDel($this->version))->setAlias($alias));
     }
 
     /**
@@ -133,12 +133,12 @@ class Index
      */
     public function getTagValues(string $fieldName): array
     {
-        return $this->client->executeCommand((new TagVals($this->version))->setIndex($this->index)->setField($fieldName));
+        return $this->client->execute((new TagVals($this->version))->setIndex($this->index)->setField($fieldName));
     }
 
     public function getInfo(): InfoResponse
     {
-        $this->info = $this->client->executeCommand((new Info($this->version))->setIndex($this->index));
+        $this->info = $this->client->execute((new Info($this->version))->setIndex($this->index));
 
         return $this->info;
     }

@@ -26,6 +26,7 @@ use BadMethodCallException;
 use function in_array;
 use InvalidArgumentException;
 use function is_array;
+use function is_object;
 use function is_string;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\CreateCommandFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\GeoFieldOption;
@@ -33,8 +34,8 @@ use MacFJA\RediSearch\Redis\Command\CreateCommand\NumericFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\TagFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\TextFieldOption;
 use MacFJA\RediSearch\Redis\Command\Option\GroupedOption;
-use Predis\Response\ResponseInterface;
-use Predis\Response\Status;
+use MacFJA\RediSearch\Redis\Response;
+use Stringable;
 
 /**
  * @method string     getIndexName()
@@ -61,7 +62,7 @@ use Predis\Response\Status;
  * @method array      getCursorStats()
  * @method array      getStopwordsList()
  */
-class InfoResponse implements ResponseInterface
+class InfoResponse implements Response
 {
     use ArrayResponseTrait;
 
@@ -71,14 +72,14 @@ class InfoResponse implements ResponseInterface
     private const TO_BOOLEAN = ['indexing'];
 
     /**
-     * @var array<array<mixed>|float|int|Status|string>
+     * @var array<array<mixed>|float|int|string>
      */
     private $rawLines;
 
     /**
-     * @param array<array<mixed>|float|int|Status|string> $rawLines
+     * @param array<array<mixed>|float|int|string> $rawLines
      */
-    public function __construct($rawLines)
+    public function __construct(array $rawLines)
     {
         $this->rawLines = $rawLines;
     }
@@ -122,8 +123,8 @@ class InfoResponse implements ResponseInterface
         return array_map(static function (array $field): CreateCommandFieldOption {
             $fieldName = (string) array_shift($field);
             array_walk($field, static function (&$item) {
-                if ($item instanceof Status) {
-                    $item = $item->getPayload();
+                if (is_object($item) && ($item instanceof Stringable || method_exists($item, '__toString'))) {
+                    $item = (string) $item;
                 }
 
                 return $item;
@@ -232,7 +233,7 @@ class InfoResponse implements ResponseInterface
      */
     private static function setOptionFlag(CreateCommandFieldOption $commandOption, array $fields, string $key, string $optionName): CreateCommandFieldOption
     {
-        assert($commandOption instanceof TextFieldOption || $commandOption instanceof TagFieldOption);
+        assert($commandOption instanceof GroupedOption);
         if (in_array($key, $fields, true)) {
             $commandOption->setDataOfOption($optionName, true);
         }

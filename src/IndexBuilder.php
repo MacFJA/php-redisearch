@@ -29,12 +29,11 @@ use function is_array;
 use function is_float;
 use function is_int;
 use function is_string;
+use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\AddFieldOptionTrait;
 use MacFJA\RediSearch\Redis\Command\Create;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\CreateCommandFieldOption;
-use Predis\ClientInterface;
-use Predis\Response\ResponseInterface;
 use RuntimeException;
 use function strlen;
 
@@ -168,11 +167,14 @@ class IndexBuilder
         return $this;
     }
 
-    public function create(ClientInterface $client, string $rediSearchVersion = AbstractCommand::MIN_IMPLEMENTED_VERSION): ResponseInterface
+    /**
+     * @return mixed|string
+     */
+    public function create(Client $client, string $rediSearchVersion = AbstractCommand::MIN_IMPLEMENTED_VERSION)
     {
         $command = $this->getCommand($rediSearchVersion);
 
-        return $client->executeCommand($command);
+        return $client->execute($command);
     }
 
     /**

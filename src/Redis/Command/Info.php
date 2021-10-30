@@ -21,12 +21,11 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Command;
 
+use function is_array;
+use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
 use MacFJA\RediSearch\Redis\Response\InfoResponse;
 
-/**
- * @method InfoResponse parseResponse(mixed $data)
- */
 class Info extends AbstractCommand
 {
     public function __construct(string $rediSearchVersion = self::MIN_IMPLEMENTED_VERSION)
@@ -43,18 +42,27 @@ class Info extends AbstractCommand
         return $this;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return 'FT.INFO';
+    }
+
+    /**
+     * @param array|mixed $data
+     *
+     * @return InfoResponse
+     */
+    public function parseResponse($data)
+    {
+        if (!is_array($data)) {
+            throw new UnexpectedServerResponseException($data);
+        }
+
+        return new InfoResponse($data);
     }
 
     protected function getRequiredOptions(): array
     {
         return ['index'];
-    }
-
-    protected function transformParsedResponse($data)
-    {
-        return new InfoResponse($data);
     }
 }

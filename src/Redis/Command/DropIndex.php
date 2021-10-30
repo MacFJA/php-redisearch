@@ -23,11 +23,7 @@ namespace MacFJA\RediSearch\Redis\Command;
 
 use MacFJA\RediSearch\Redis\Command\Option\FlagOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
-use Predis\Response\Status;
 
-/**
- * @method Status parseResponse(mixed $data)
- */
 class DropIndex extends AbstractCommand
 {
     public function __construct(string $rediSearchVersion = self::MIN_IMPLEMENTED_VERSION)
@@ -52,7 +48,7 @@ class DropIndex extends AbstractCommand
         return $this;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return 'FT.DROPINDEX';
     }

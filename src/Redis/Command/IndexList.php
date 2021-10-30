@@ -21,15 +21,40 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Command;
 
-use Predis\Command\Command;
+use MacFJA\RediSearch\Redis\Command;
 
-/**
- * @method array<string> parseResponse(mixed $data)
- */
-class IndexList extends Command
+class IndexList implements Command
 {
-    public function getId()
+    /** @var string */
+    private $rediSearchVersion = AbstractCommand::MIN_IMPLEMENTED_VERSION;
+
+    public function getId(): string
     {
         return 'FT._LIST';
+    }
+
+    public function getRediSearchVersion(): string
+    {
+        return $this->rediSearchVersion;
+    }
+
+    /**
+     * @return IndexList
+     */
+    public function setRediSearchVersion(string $rediSearchVersion): Command
+    {
+        $this->rediSearchVersion = $rediSearchVersion;
+
+        return $this;
+    }
+
+    public function getArguments(): array
+    {
+        return [];
+    }
+
+    public function parseResponse($data)
+    {
+        return $data;
     }
 }

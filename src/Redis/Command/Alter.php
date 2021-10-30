@@ -23,11 +23,7 @@ namespace MacFJA\RediSearch\Redis\Command;
 
 use MacFJA\RediSearch\Redis\Command\Option\FlagOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
-use Predis\Response\Status;
 
-/**
- * @method Status parseResponse(mixed $data)
- */
 class Alter extends AbstractCommand
 {
     use AddFieldOptionTrait;
@@ -49,7 +45,7 @@ class Alter extends AbstractCommand
         return $this;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return 'FT.ALTER';
     }

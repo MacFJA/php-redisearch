@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Command;
 
 use function is_array;
+use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamedOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
@@ -29,9 +30,6 @@ use MacFJA\RediSearch\Redis\Command\SpellCheckCommand\TermsOption;
 use MacFJA\RediSearch\Redis\Response\SpellCheckResponseItem;
 use Respect\Validation\Validator;
 
-/**
- * @method array<SpellCheckResponseItem> parseResponse(mixed $data)
- */
 class SpellCheck extends AbstractCommand
 {
     public function __construct(string $rediSearchVersion = self::MIN_IMPLEMENTED_VERSION)
@@ -78,25 +76,20 @@ class SpellCheck extends AbstractCommand
         return $this;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return 'FT.SPELLCHECK';
-    }
-
-    protected function getRequiredOptions(): array
-    {
-        return ['index', 'query'];
     }
 
     /**
      * @param mixed $data
      *
-     * @return mixed|SpellCheckResponseItem[]
+     * @return SpellCheckResponseItem[]
      */
-    protected function transformParsedResponse($data)
+    public function parseResponse($data)
     {
         if (!is_array($data)) {
-            return $data;
+            throw new UnexpectedServerResponseException($data);
         }
 
         $items = array_map(static function (array $group) {
@@ -112,5 +105,10 @@ class SpellCheck extends AbstractCommand
         }, $data);
 
         return array_filter($items);
+    }
+
+    protected function getRequiredOptions(): array
+    {
+        return ['index', 'query'];
     }
 }

@@ -25,6 +25,7 @@ use function assert;
 use function count;
 use function is_array;
 use function is_int;
+use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\Option\FlagOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamedOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
@@ -32,9 +33,6 @@ use MacFJA\RediSearch\Redis\Response\AggregateResponseItem;
 use MacFJA\RediSearch\Redis\Response\ArrayResponseTrait;
 use MacFJA\RediSearch\Redis\Response\CursorResponse;
 
-/**
- * @method CursorResponse parseResponse(mixed $data)
- */
 class CursorRead extends AbstractCommand
 {
     use ArrayResponseTrait;
@@ -77,7 +75,7 @@ class CursorRead extends AbstractCommand
         return $this;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return 'FT.CURSOR';
     }
@@ -102,18 +100,27 @@ class CursorRead extends AbstractCommand
         return new CursorResponse($cursorId, $totalCount, $items, $size, $index, $rediSearchVersion);
     }
 
-    protected function getRequiredOptions(): array
+    /**
+     * @param array|mixed $data
+     *
+     * @return CursorResponse
+     */
+    public function parseResponse($data)
     {
-        return ['type', 'index', 'cursor'];
-    }
+        if (!is_array($data)) {
+            throw new UnexpectedServerResponseException($data);
+        }
 
-    protected function transformParsedResponse($data)
-    {
         return self::transformResponse(
             $data,
             $this->options['count']->getValue(),
             $this->options['index']->getValue(),
             $this->getRediSearchVersion()
         );
+    }
+
+    protected function getRequiredOptions(): array
+    {
+        return ['type', 'index', 'cursor'];
     }
 }

@@ -21,10 +21,13 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\tests\Redis\Command;
 
+use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\Info;
 use PHPUnit\Framework\TestCase;
 
 /**
+ * @covers \MacFJA\RediSearch\Exception\UnexpectedServerResponseException
+ *
  * @covers  \MacFJA\RediSearch\Redis\Command\AbstractCommand
  *
  * @covers \MacFJA\RediSearch\Redis\Command\Info
@@ -52,5 +55,12 @@ class InfoTest extends TestCase
         static::assertSame([
             'idx',
         ], $command->getArguments());
+    }
+
+    public function testParseResponseInvalid(): void
+    {
+        $this->expectException(UnexpectedServerResponseException::class);
+        $command = new Info();
+        $command->parseResponse('foo');
     }
 }
