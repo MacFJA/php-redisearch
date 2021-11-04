@@ -19,67 +19,42 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RediSearch\Redis\Client;
+namespace MacFJA\RediSearch\tests\fixtures\Redis\Client;
 
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command;
-use RuntimeException;
 
-class TinyRedisClient extends AbstractClient
+class FakeAbstractClient extends \MacFJA\RediSearch\Redis\Client\AbstractClient
 {
-    /** @var \TinyRedisClient */
-    private $redis;
-
-    public function __construct(\TinyRedisClient $redis)
+    public static function make($redis): Client
     {
-        if (!self::supports($redis)) {
-            throw new RuntimeException($this->getMissingMessage(
-                'TinyRedis',
-                false,
-                [\TinyRedisClient::class => ['__call']]
-            ));
-        }
-        $this->redis = $redis;
+        return new self();
     }
 
-    public function pipeline(Command ...$commands): array
+    public function execute(Command $command): void
     {
-        false === static::$disableNotice
-            && trigger_error('Warning, \\TinyRedisClient don\'t use a real Redis Pipeline', E_USER_NOTICE);
-
-        return array_map(function (Command $command) {
-            return $this->execute($command);
-        }, $commands);
+        // Do nothing
     }
 
-    public function execute(Command $command)
+    public function executeRaw(...$args): void
     {
-        $result = $this->redis->__call($command->getId(), $command->getArguments());
-
-        return $command->parseResponse($result);
-    }
-
-    public function executeRaw(...$args)
-    {
-        $command = array_shift($args);
-
-        return $this->redis->__call($command, $args);
+        // Do nothing
     }
 
     public static function supports($redis): bool
     {
-        return $redis instanceof \TinyRedisClient
-            && method_exists($redis, '__call');
-    }
-
-    public static function make($redis): Client
-    {
-        return new self($redis);
+        return false;
     }
 
     /**
-     * @codeCoverageIgnore
+     * @param array<string,array<string>> $classesMethods
+     * @param array<string>               $functions
      */
+    public function exposeGetMissingMessage(string $name, bool $isExtension, array $classesMethods, array $functions = []): string
+    {
+        return $this->getMissingMessage($name, $isExtension, $classesMethods, $functions);
+    }
+
     protected function doPipeline(Command ...$commands): array
     {
         return [];

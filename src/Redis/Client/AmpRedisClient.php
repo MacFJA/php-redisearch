@@ -29,9 +29,6 @@ use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command;
 use RuntimeException;
 
-/**
- * @codeCoverageIgnore
- */
 class AmpRedisClient extends AbstractClient
 {
     /** @var Redis */

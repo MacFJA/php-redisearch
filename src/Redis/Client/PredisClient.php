@@ -29,9 +29,6 @@ use Predis\ClientInterface;
 use Predis\Command\RawCommand;
 use RuntimeException;
 
-/**
- * @codeCoverageIgnore
- */
 class PredisClient extends AbstractClient
 {
     /** @var ClientInterface */

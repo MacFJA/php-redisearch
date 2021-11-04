@@ -31,9 +31,6 @@ use redisent\Redis as RedisentRedis;
 use Rediska as RediskaRedis;
 use RuntimeException;
 
-/**
- * @codeCoverageIgnore
- */
 class ClientFacade
 {
     /** @var array<string> */
@@ -46,6 +43,7 @@ class ClientFacade
         RedisentClient::class,
         RediskaClient::class,
         AmpRedisClient::class,
+        TinyRedisClient::class,
     ];
 
     /**

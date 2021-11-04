@@ -25,11 +25,13 @@ use Amp\Redis\Config;
 use Amp\Redis\RemoteExecutor;
 use Closure;
 use Credis_Client;
+use function get_class;
 use MacFJA\RediSearch\Index;
 use MacFJA\RediSearch\IndexBuilder;
 use MacFJA\RediSearch\Query\Builder;
 use MacFJA\RediSearch\Query\Builder\Fuzzy;
 use MacFJA\RediSearch\Redis\Client;
+use MacFJA\RediSearch\Redis\Client\ClientFacade;
 use MacFJA\RediSearch\Redis\Command\Aggregate;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\GroupByOption;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\ReduceOption;
@@ -39,6 +41,7 @@ use MacFJA\RediSearch\Redis\Command\Search;
 use MacFJA\RediSearch\Redis\Command\SynDump;
 use MacFJA\RediSearch\Redis\Command\SynUpdate;
 use MacFJA\RediSearch\Redis\Response\PaginatedResponse;
+use MacFJA\RediSearch\Redis\Response\SearchResponseItem;
 use PHPUnit\Framework\TestCase;
 use Rediska;
 use TinyRedisClient;
@@ -50,9 +53,12 @@ use TinyRedisClient;
  * @covers \MacFJA\RediSearch\Redis\Client\AbstractClient
  * @covers \MacFJA\RediSearch\Redis\Client\AmpRedisClient
  * @covers \MacFJA\RediSearch\Redis\Client\CheprasovRedisClient
+ * @covers \MacFJA\RediSearch\Redis\Client\ClientFacade
+ * @covers \MacFJA\RediSearch\Redis\Client\CredisClient
  * @covers \MacFJA\RediSearch\Redis\Client\PredisClient
  * @covers \MacFJA\RediSearch\Redis\Client\RedisentClient
  * @covers \MacFJA\RediSearch\Redis\Client\RediskaClient
+ * @covers \MacFJA\RediSearch\Redis\Client\TinyRedisClient
  * @covers \MacFJA\RediSearch\Redis\Command\Aggregate
  * @covers \MacFJA\RediSearch\Redis\Command\DropIndex
  * @covers \MacFJA\RediSearch\Redis\Command\IndexList
@@ -102,25 +108,56 @@ use TinyRedisClient;
  */
 class DockerTest extends TestCase
 {
+    /** @var bool */
+    private static $skip = false;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        Client\AbstractClient::$disableNotice = true;
         exec('which docker', $output, $code);
         if ($code > 0) {
-            static::markTestSkipped('Docker is missing');
+            static::$skip = true;
+
+            return;
         }
         exec('docker run --rm -p 16379:6379 -d redislabs/redisearch:latest');
+        Client\AbstractClient::$disableNotice = true;
     }
 
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
+        if (static::$skip) {
+            return;
+        }
         exec('docker ps --filter publish=16379 -q', $output);
         foreach ($output as $container) {
             exec('docker stop '.escapeshellarg($container), $output);
         }
         Client\AbstractClient::$disableNotice = false;
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        if (static::$skip) {
+            static::markTestSkipped('Docker is missing');
+        }
+    }
+
+    /**
+     * @param mixed $redisBuilder
+     *
+     * @medium
+     *
+     * @dataProvider dataProvider
+     */
+    public function testGetClient(string $expectedClass, $redisBuilder): void
+    {
+        $facade = new ClientFacade();
+        $client = $facade->getClient($redisBuilder());
+
+        static::assertSame($expectedClass, get_class($client));
     }
 
     /**
@@ -168,6 +205,15 @@ class DockerTest extends TestCase
         /** @var PaginatedResponse $result */
         $result = $client->execute($search);
         static::assertCount(3, $result);
+        static::assertSame(1, $result->getPageCount());
+
+        /** @var array<SearchResponseItem> $page */
+        foreach ($result as $page) {
+            foreach ($page as $item) {
+                static::assertSame(30, (int) $item->getFieldValue('age'));
+            }
+        }
+
         $client->execute((new SynUpdate())->setIndex('testDoc')->setGroupId('Joe')->setTerms('John'));
         $syns = $client->execute((new SynDump())->setIndex('testDoc'));
         static::assertEquals([
@@ -211,18 +257,30 @@ class DockerTest extends TestCase
     }
 
     /**
-     * @return Closure[][]
+     * @return array<array<Closure|string>>
      */
-    public function dataProvider(): array
+    public function dataProvider(string $testName): array
     {
+        if ('testIntegration' === $testName) {
+            return [
+                [static function () { return Client\PredisClient::make(new \Predis\Client(['scheme' => 'tcp', 'host' => 'localhost', 'port' => '16379', 'db' => 0])); }],
+                [static function () { return Client\RediskaClient::make(new Rediska(['servers' => [['host' => 'localhost', 'port' => '16379', 'db' => 0]]])); }],
+                [static function () { return Client\RedisentClient::make(new \redisent\Redis('redis://localhost:16379')); }],
+                [static function () { return Client\CheprasovRedisClient::make(new \RedisClient\Client\Version\RedisClient6x0(['server' => 'localhost:16379', 'database' => 0])); }],
+                [static function () { return Client\AmpRedisClient::make(new \Amp\Redis\Redis(new RemoteExecutor(Config::fromUri('redis://localhost:16379')))); }],
+                [static function () { return Client\TinyRedisClient::make(new TinyRedisClient('localhost:16379')); }],
+                [static function () { return Client\CredisClient::make(new Credis_Client('localhost', 16379, null, '', 0)); }],
+            ];
+        }
+
         return [
-            [static function () { return Client\PredisClient::make(new \Predis\Client(['scheme' => 'tcp', 'host' => 'localhost', 'port' => '16379', 'db' => 0])); }],
-            [static function () { return Client\RediskaClient::make(new Rediska(['servers' => [['host' => 'localhost', 'port' => '16379', 'db' => 0]]])); }],
-            [static function () { return Client\RedisentClient::make(new \redisent\Redis('redis://localhost:16379')); }],
-            [static function () { return Client\CheprasovRedisClient::make(new \RedisClient\Client\Version\RedisClient6x0(['server' => 'localhost:16379', 'database' => 0])); }],
-            [static function () { return Client\AmpRedisClient::make(new \Amp\Redis\Redis(new RemoteExecutor(Config::fromUri('redis://localhost:16379')))); }],
-            [static function () { return Client\TinyRedisClient::make(new TinyRedisClient('localhost:16379')); }],
-            [static function () { return Client\CredisClient::make(new Credis_Client('localhost', 16379, null, '', 0)); }],
+            [Client\PredisClient::class, static function () { return new \Predis\Client(['scheme' => 'tcp', 'host' => 'localhost', 'port' => '16379', 'db' => 0]); }],
+            [Client\RediskaClient::class, static function () { return new Rediska(['servers' => [['host' => 'localhost', 'port' => '16379', 'db' => 0]]]); }],
+            [Client\RedisentClient::class, static function () { return new \redisent\Redis('redis://localhost:16379'); }],
+            [Client\CheprasovRedisClient::class, static function () { return new \RedisClient\Client\Version\RedisClient6x0(['server' => 'localhost:16379', 'database' => 0]); }],
+            [Client\AmpRedisClient::class, static function () { return new \Amp\Redis\Redis(new RemoteExecutor(Config::fromUri('redis://localhost:16379'))); }],
+            [Client\TinyRedisClient::class, static function () { return new TinyRedisClient('localhost:16379'); }],
+            [Client\CredisClient::class, static function () { return new Credis_Client('localhost', 16379, null, '', 0); }],
         ];
     }
 }

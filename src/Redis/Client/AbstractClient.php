@@ -24,6 +24,7 @@ namespace MacFJA\RediSearch\Redis\Client;
 use function count;
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command;
+use function strlen;
 
 abstract class AbstractClient implements Client
 {
@@ -71,7 +72,7 @@ abstract class AbstractClient implements Client
         if (true === $isExtension) {
             $message = 'The extension '.$name.' is missing.'.PHP_EOL.'Install the extension';
         }
-        $message .= ' or use a polyfill that provide ';
+        $message .= ' or use a polyfill';
 
         $classesMessage = null;
         if (1 === count($classes)) {
@@ -92,8 +93,11 @@ abstract class AbstractClient implements Client
             $functionsMessage = 'the functions "'.implode('", "', $functions).'"';
         }
 
-        $message .= implode(' and ', array_filter([$classesMessage, $methodsMessage, $functionsMessage]));
-        $message .= '.';
+        $additional = implode(' and ', array_filter([$classesMessage, $methodsMessage, $functionsMessage]));
+        if (strlen($additional) > 0) {
+            $additional = ' that provide '.$additional;
+        }
+        $message .= $additional.'.';
 
         return $message;
     }

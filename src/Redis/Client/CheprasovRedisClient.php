@@ -28,9 +28,6 @@ use RedisClient\Client\AbstractRedisClient;
 use RedisClient\Pipeline\PipelineInterface;
 use RuntimeException;
 
-/**
- * @codeCoverageIgnore
- */
 class CheprasovRedisClient extends AbstractClient
 {
     /** @var AbstractRedisClient */

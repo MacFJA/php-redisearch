@@ -27,9 +27,6 @@ use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command;
 use RuntimeException;
 
-/**
- * @codeCoverageIgnore
- */
 class CredisClient extends AbstractClient
 {
     /** @var Credis_Client */

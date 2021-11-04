@@ -128,7 +128,7 @@ class PaginatedResponse implements Response, Iterator, Countable
 
     public function count()
     {
-        return $this->totalCount;
+        return $this->getTotalCount();
     }
 
     private function updateWithLimit(int $offset, int $size): void

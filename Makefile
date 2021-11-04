@@ -1,4 +1,4 @@
-.PHONY: analyze fix-code test coverage validation integration-test
+.PHONY: analyze fix-code test test-with-integration coverage coverage-with-integration validation integration-test integration-coverage
 
 analyze: | vendor
 	$(COMPOSER) exec -v parallel-lint -- src
@@ -18,14 +18,25 @@ fix-code: | vendor
 test: | vendor
 	$(COMPOSER) exec -v phpunit
 
+test-with-integration: | vendor
+	$(COMPOSER) exec -v phpunit -- --group default,integration
+
 coverage: | vendor
 	@if [ -z "`php -v | grep -i 'xdebug'`" ]; then echo "You need to install Xdebug in order to do this action"; exit 1; fi
 	$(COMPOSER) exec -v phpunit -- --coverage-text --color
 
+coverage-with-integration: | vendor
+	@if [ -z "`php -v | grep -i 'xdebug'`" ]; then echo "You need to install Xdebug in order to do this action"; exit 1; fi
+	$(COMPOSER) exec -v phpunit -- --group default,integration --coverage-text --color
+
 integration-test: | vendor
 	$(COMPOSER) exec -v phpunit -- --group integration
 
-validation: fix-code analyze test coverage integration-test
+integration-coverage: | vendor
+	@if [ -z "`php -v | grep -i 'xdebug'`" ]; then echo "You need to install Xdebug in order to do this action"; exit 1; fi
+	$(COMPOSER) exec -v phpunit -- --group integration --coverage-text --color
+
+validation: fix-code analyze test-with-integration coverage-with-integration
 
 vendor: composer.json
 	$(COMPOSER) install --optimize-autoloader --no-suggest --prefer-dist

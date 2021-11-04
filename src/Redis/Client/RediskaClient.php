@@ -31,9 +31,6 @@ use Rediska_Commands;
 use Rediska_Connection_Exec;
 use RuntimeException;
 
-/**
- * @codeCoverageIgnore
- */
 class RediskaClient extends AbstractClient
 {
     /** @var Rediska */
