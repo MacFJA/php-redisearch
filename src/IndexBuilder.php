@@ -44,8 +44,8 @@ use function strlen;
  * @method IndexBuilder withStructure(string $type)
  * @method IndexBuilder setPrefixes(array $prefixes)
  * @method IndexBuilder withPrefixes(array $prefixes)
- * @method IndexBuilder addPrefix(string ...$prefixes)
- * @method IndexBuilder withAddedPrefix(string ...$prefixes)
+ * @method IndexBuilder addPrefixes(string ...$prefixes)
+ * @method IndexBuilder withAddedPrefixes(string ...$prefixes)
  * @method IndexBuilder setFilter(string $filter)
  * @method IndexBuilder withFilter(string $filter)
  * @method IndexBuilder setDefaultLanguage(string $language)
@@ -74,11 +74,12 @@ use function strlen;
  * @method IndexBuilder withSkipInitialScan(bool $active)
  * @method IndexBuilder setStopWords(array $words)
  * @method IndexBuilder withStopWords(array $words)
- * @method IndexBuilder addStopWord(string ...$words)
- * @method IndexBuilder withAddedStopWord(string ...$words)
+ * @method IndexBuilder addStopWords(string ...$words)
+ * @method IndexBuilder withAddedStopWords(string ...$words)
  * @method IndexBuilder setFields(array $fields)
  * @method IndexBuilder withFields(array $fields)
- * @method IndexBuilder withAddedField(CreateCommandFieldOption ...$fields)
+ * @method IndexBuilder addFields(CreateCommandFieldOption ...$fields)
+ * @method IndexBuilder withAddedFields(CreateCommandFieldOption ...$fields)
  * @method IndexBuilder withAddedTextField(string $name, bool $noStem = false, ?float $weight = null, ?string $phonetic = null, bool $sortable = false, bool $noIndex = false)
  * @method IndexBuilder withAddedNumericField(string $name, bool $sortable = false, bool $noIndex = false)
  * @method IndexBuilder withAddedGeoField(string $name, bool $noIndex = false)
@@ -153,16 +154,9 @@ class IndexBuilder
         return $this;
     }
 
-    public function withNoStopWords(): self
+    public function addField(CreateCommandFieldOption $option): self
     {
-        $newInstance = clone $this;
-
-        return $newInstance->setNoStopWords();
-    }
-
-    public function addField(CreateCommandFieldOption ...$option): self
-    {
-        array_push($this->fields, ...$option);
+        $this->fields[] = $option;
 
         return $this;
     }
@@ -278,7 +272,7 @@ class IndexBuilder
     {
         $newInstance = clone $this;
 
-        return $newInstance->{'add'.$name}($arguments);
+        return $newInstance->{'add'.$name}(...$arguments);
     }
 
     /**
@@ -319,6 +313,9 @@ class IndexBuilder
             throw new InvalidArgumentException(sprintf('add%s method need at least one parameter', $name));
         }
 
+        if (null === $this->{$propertyName}) {
+            $this->{$propertyName} = [];
+        }
         array_push($this->{$propertyName}, ...$arguments);
 
         return $this;

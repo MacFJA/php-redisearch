@@ -21,8 +21,7 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis;
 
-use function count;
-use MacFJA\RediSearch\Redis\Client\AbstractClient;
+use MacFJA\RediSearch\Redis\Client\Rediska\RediskaRediSearchCommand;
 use MacFJA\RediSearch\Redis\Command\Aggregate;
 use MacFJA\RediSearch\Redis\Command\AliasAdd;
 use MacFJA\RediSearch\Redis\Command\AliasDel;
@@ -51,34 +50,7 @@ use MacFJA\RediSearch\Redis\Command\SynDump;
 use MacFJA\RediSearch\Redis\Command\SynUpdate;
 use MacFJA\RediSearch\Redis\Command\TagVals;
 use Predis\Profile\RedisProfile;
-use Rediska_Command_Abstract;
 use Rediska_Commands;
-use Rediska_Connection_Exec;
-
-if (class_exists(Rediska_Command_Abstract::class) && class_exists(Rediska_Connection_Exec::class)) {
-    /**
-     * @codeCoverageIgnore
-     */
-    class RediskaRediSearch extends Rediska_Command_Abstract
-    {
-        public function create(): Rediska_Connection_Exec
-        {
-            $connections = $this->_rediska->getConnections();
-
-            if (false === AbstractClient::$disableNotice && count($connections) > 1) {
-                trigger_error('Warning, Multiple redis connections exists, only the first connection will be used', E_USER_NOTICE);
-            }
-            $connection = reset($connections);
-
-            $commands = $this->_arguments;
-            if (!('__redisearch' === $this->_name)) {
-                array_unshift($commands, $this->_name);
-            }
-
-            return new Rediska_Connection_Exec($connection, $commands);
-        }
-    }
-}
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -124,34 +96,34 @@ class Initializer
      */
     public static function registerCommandsRediska(): void
     {
-        Rediska_Commands::add('ftaggregate', RediskaRediSearch::class);
-        Rediska_Commands::add('ftaliasadd', RediskaRediSearch::class);
-        Rediska_Commands::add('ftaliasdel', RediskaRediSearch::class);
-        Rediska_Commands::add('ftaliasupdate', RediskaRediSearch::class);
-        Rediska_Commands::add('ftalter', RediskaRediSearch::class);
-        Rediska_Commands::add('ftconfig', RediskaRediSearch::class);
-        Rediska_Commands::add('ftconfigset', RediskaRediSearch::class);
-        Rediska_Commands::add('ftcreate', RediskaRediSearch::class);
-        Rediska_Commands::add('ftcursordel', RediskaRediSearch::class);
-        Rediska_Commands::add('ftcursorread', RediskaRediSearch::class);
-        Rediska_Commands::add('ftdictadd', RediskaRediSearch::class);
-        Rediska_Commands::add('ftdictdel', RediskaRediSearch::class);
-        Rediska_Commands::add('ftdictdump', RediskaRediSearch::class);
-        Rediska_Commands::add('ftdropindex', RediskaRediSearch::class);
-        Rediska_Commands::add('ftexplain', RediskaRediSearch::class);
-        Rediska_Commands::add('ftexplaincli', RediskaRediSearch::class);
-        Rediska_Commands::add('ftlist', RediskaRediSearch::class);
-        Rediska_Commands::add('ftinfo', RediskaRediSearch::class);
-        Rediska_Commands::add('ftsearch', RediskaRediSearch::class);
-        Rediska_Commands::add('ftspellcheck', RediskaRediSearch::class);
-        Rediska_Commands::add('ftsugadd', RediskaRediSearch::class);
-        Rediska_Commands::add('ftsugdel', RediskaRediSearch::class);
-        Rediska_Commands::add('ftsugget', RediskaRediSearch::class);
-        Rediska_Commands::add('ftsuglen', RediskaRediSearch::class);
-        Rediska_Commands::add('ftsyndump', RediskaRediSearch::class);
-        Rediska_Commands::add('ftsynupdate', RediskaRediSearch::class);
-        Rediska_Commands::add('fttagvals', RediskaRediSearch::class);
-        Rediska_Commands::add('__redisearch', RediskaRediSearch::class);
+        Rediska_Commands::add('ftaggregate', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftaliasadd', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftaliasdel', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftaliasupdate', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftalter', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftconfig', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftconfigset', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftcreate', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftcursordel', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftcursorread', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftdictadd', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftdictdel', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftdictdump', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftdropindex', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftexplain', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftexplaincli', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftlist', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftinfo', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftsearch', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftspellcheck', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftsugadd', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftsugdel', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftsugget', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftsuglen', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftsyndump', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('ftsynupdate', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('fttagvals', RediskaRediSearchCommand::class);
+        Rediska_Commands::add('__redisearch', RediskaRediSearchCommand::class);
     }
 
     public static function getRediSearchVersion(Client $client): ?string

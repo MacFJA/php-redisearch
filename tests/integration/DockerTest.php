@@ -57,6 +57,7 @@ use TinyRedisClient;
  * @covers \MacFJA\RediSearch\Redis\Client\CredisClient
  * @covers \MacFJA\RediSearch\Redis\Client\PredisClient
  * @covers \MacFJA\RediSearch\Redis\Client\RedisentClient
+ * @covers \MacFJA\RediSearch\Redis\Client\Rediska\RediskaRediSearchCommand
  * @covers \MacFJA\RediSearch\Redis\Client\RediskaClient
  * @covers \MacFJA\RediSearch\Redis\Client\TinyRedisClient
  * @covers \MacFJA\RediSearch\Redis\Command\Aggregate
@@ -67,7 +68,6 @@ use TinyRedisClient;
  * @covers \MacFJA\RediSearch\Redis\Command\SynDump
  * @covers \MacFJA\RediSearch\Redis\Command\SynUpdate
  * @covers \MacFJA\RediSearch\Redis\Initializer
- * @covers \MacFJA\RediSearch\Redis\RediskaRediSearch
  * @covers \MacFJA\RediSearch\Redis\Response\InfoResponse
  * @covers \MacFJA\RediSearch\Redis\Response\PaginatedResponse
  *

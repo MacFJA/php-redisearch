@@ -2,7 +2,7 @@
 
 [MacFJA/redisearch](https://packagist.org/packages/macfja/redisearch) is a PHP Client for [RediSearch](https://oss.redislabs.com/redisearch/).
 
-The implemented API is for RediSearch 2.0
+The implemented API is for RediSearch 2.x
 
 ## Installation
 
@@ -25,7 +25,7 @@ This lib can use several connector for Redis:
  - [Redisent](https://github.com/jdp/redisent) - Pure PHP implementation
  - [TinyRedis](https://github.com/ptrofimov/tinyredisclient) - Pure PHP implementation
 
-You can pick the connector depending of your need.
+You can pick the connector depending on your need.
 
 ```php
 $clientFacade = new \MacFJA\RediSearch\Redis\Client\ClientFacade();
@@ -70,14 +70,14 @@ $clientFacade->addFactory(\MyVendor\MyPackage\MyRedisClient::class);
 $client = /* ... */;
 $builder = new \MacFJA\RediSearch\IndexBuilder();
 
-// Field can be create in advance
+// Field can be created in advance
 $address = (new \MacFJA\RediSearch\Redis\Command\CreateCommand\GeoFieldOption())
     ->setField('address');
 
 $builder
     ->setIndex('person')
     ->addField($address)
-    // Or field can be create "inline"
+    // Or field can be created "inline"
     ->addTextField('lastname', false, null, null, true)
     ->addTextField('firstname')
     ->addNumericField('age')
@@ -186,7 +186,17 @@ $result = $client->pipeline($search, $stats, $aggregate, $suggestion);
 
 ```php
 $client = new \Predis\Client(/* ... */);
-\MacFJA\RediSearch\Redis\Initializer::registerCommands($client->getProfile());
+\MacFJA\RediSearch\Redis\Initializer::registerCommandsPredis($client->getProfile());
+
+$client->ftsearch('people', '@age:[(17 +inf] %john%');
+// But you will have raw Redis output.
+```
+
+### Use Rediska shorthand syntax
+
+```php
+$client = new \Rediska(/* ... */);
+\MacFJA\RediSearch\Redis\Initializer::registerCommandsRediska();
 
 $client->ftsearch('people', '@age:[(17 +inf] %john%');
 // But you will have raw Redis output.
