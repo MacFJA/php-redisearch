@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased v2.x]
 
+## [2.0.0]
+
 ### Added
 
 - Allow multiple connector for Redis ([PR#17])
@@ -121,8 +123,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First version
 
-[Unreleased v2.x]: https://github.com/MacFJA/php-redisearch/compare/main...HEAD
-[Unreleased v1.x]: https://github.com/MacFJA/php-redisearch/compare/1.4.0...HEAD
+[Unreleased v2.x]: https://github.com/MacFJA/php-redisearch/compare/2.0.0...HEAD
+[1.0.0]: https://github.com/MacFJA/php-redisearch/releases/tag/2.0.0
+[Unreleased v1.x]: https://github.com/MacFJA/php-redisearch/compare/1.4.0...1.x
 [1.4.0]: https://github.com/MacFJA/php-redisearch/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/MacFJA/php-redisearch/compare/1.2.0...1.3.0
 [1.2.0]: https://github.com/MacFJA/php-redisearch/compare/1.1.0...1.2.0
