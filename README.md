@@ -96,7 +96,7 @@ $index->addDocumentFromArray([
     'firstname' => 'Joe',
     'lastname' => 'Doe',
     'age' => 30,
-    'address' => '40.689247,-74.044502'
+    'address' => '-74.044502,40.689247'
 ]);
 ```
 
@@ -130,14 +130,14 @@ $query = $queryBuilder
     ->addString('Doe')
     ->addElement(
         new Negation(
-            new GeoFacet(['address'], 40.589247, -74.044502, 40, GeoFilterOption::UNIT_KILOMETERS)
+            new GeoFacet(['address'], -74.044502, 40.589247, 40, GeoFilterOption::UNIT_KILOMETERS)
         )
     )
     ->addElement(new Optional(new Word('John')))
     ->render();
 
 // The value of $query is:
-// @age:[(17 +inf] Doe -@address:[40.589247 -74.044502 40.000000 km] ~John
+// @age:[(17 +inf] Doe -@address:[-74.044502 40.589247 40.000000 km] ~John
 ```
 
 ### Pipeline

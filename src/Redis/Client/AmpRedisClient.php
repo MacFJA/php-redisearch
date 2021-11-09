@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Client;
 
-use function Amp\Promise\all;
 use function Amp\Promise\wait;
 use Amp\Redis\Redis;
 use function function_exists;
@@ -39,7 +38,7 @@ class AmpRedisClient extends AbstractClient
         if (!static::supports($redis)) {
             throw new RuntimeException($this->getMissingMessage('Amp\Redis', false, [
                 Redis::class => ['query'],
-            ], ['\\Amp\\Promise\\wait', '\\Amp\\Promise\\all']));
+            ], ['\\Amp\\Promise\\wait']));
         }
         $this->redis = $redis;
     }
@@ -65,19 +64,21 @@ class AmpRedisClient extends AbstractClient
     {
         return $redis instanceof Redis
             && method_exists($redis, 'query')
-            && function_exists('\\Amp\\Promise\\wait')
-            && function_exists('\\Amp\\Promise\\all');
+            && function_exists('\\Amp\\Promise\\wait');
     }
 
-    protected function doPipeline(Command ...$commands): array
+    public function pipeline(Command ...$commands): array
     {
         false === static::$disableNotice
             && trigger_error('Warning, \\Amp\\Redis\\Redis don\'t use a real Redis Pipeline', E_USER_NOTICE);
 
-        return wait(all(
-            array_map(function (Command $command) {
-                return $this->redis->query($command->getId(), ...array_map('strval', $command->getArguments()));
-            }, $commands)
-        ));
+        return array_map(function (Command $command) {
+            return $this->execute($command);
+        }, $commands);
+    }
+
+    protected function doPipeline(Command ...$commands): array
+    {
+        return [];
     }
 }
