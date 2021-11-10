@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased v2.x]
 
+### Added
+
+- `reset` method for builder (`\MacFJA\RediSearch\IndexBuilder` and `\MacFJA\RediSearch\Query\Builder`)
+
 ## [2.0.1]
 
 ### Fixed

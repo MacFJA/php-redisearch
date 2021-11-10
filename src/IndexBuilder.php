@@ -147,6 +147,30 @@ class IndexBuilder
         throw new BadMethodCallException(sprintf('Call undefined %s method', $name));
     }
 
+    public function reset(): self
+    {
+        $this->index = null;
+        $this->structure = null;
+        $this->prefixes = [];
+        $this->filter = null;
+        $this->defaultLanguage = null;
+        $this->languageField = null;
+        $this->defaultScore = null;
+        $this->scoreField = null;
+        $this->payloadField = null;
+        $this->maxTextFields = false;
+        $this->temporary = null;
+        $this->noOffsets = false;
+        $this->noHighLight = false;
+        $this->noFields = false;
+        $this->noFrequencies = false;
+        $this->skipInitialScan = false;
+        $this->stopWords = null;
+        $this->fields = [];
+
+        return $this;
+    }
+
     public function setNoStopWords(): self
     {
         $this->stopWords = [];
@@ -167,6 +191,8 @@ class IndexBuilder
     public function create(Client $client, string $rediSearchVersion = AbstractCommand::MIN_IMPLEMENTED_VERSION)
     {
         $command = $this->getCommand($rediSearchVersion);
+
+        $this->reset();
 
         return $client->execute($command);
     }

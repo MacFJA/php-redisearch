@@ -30,6 +30,9 @@ use MacFJA\RediSearch\Query\Builder\QueryElementGroup;
 use MacFJA\RediSearch\Query\Builder\TagFacet;
 use MacFJA\RediSearch\Query\Builder\TextFacet;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class Builder implements QueryElement, QueryElementGroup
 {
     /** @var AndGroup */
@@ -37,7 +40,14 @@ class Builder implements QueryElement, QueryElementGroup
 
     public function __construct()
     {
+        $this->reset();
+    }
+
+    public function reset(): self
+    {
         $this->group = new AndGroup();
+
+        return $this;
     }
 
     public function addTextFacet(string $field, string ...$values): self
@@ -97,7 +107,10 @@ class Builder implements QueryElement, QueryElementGroup
 
     public function render(?callable $escaper = null): string
     {
-        return $this->group->render(null);
+        $rendered = $this->group->render(null);
+        $this->reset();
+
+        return $rendered;
     }
 
     public function priority(): int
