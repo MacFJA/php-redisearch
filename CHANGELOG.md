@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `reset` method for builder (`\MacFJA\RediSearch\IndexBuilder` and `\MacFJA\RediSearch\Query\Builder`)
+- Allow PHP 8.0
 
 ## [2.0.1]
 
