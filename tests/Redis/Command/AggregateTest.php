@@ -138,8 +138,42 @@ class AggregateTest extends TestCase
             'VERBATIM',
             'LOAD', 2, '@geo1', '@tag1',
             'GROUPBY', 1, '@text1', 'REDUCE', 'COUNT_DISTINCT', 1, '@user_id', 'REDUCE', 'AVG', 1, '@num1', 'AS', 'average',
-            'SORTBY', 3, '@text1', '@num1', 'DESC', 'MAX', 10,
             'APPLY', '@timestamp - (@timestamp % 86400)',  'AS', 'day',
+            'SORTBY', 3, '@text1', '@num1', 'DESC', 'MAX', 10,
+            'LIMIT', 12, 35,
+            'FILTER', "@name=='foo' && @age < 20",
+            'WITHCURSOR', 'COUNT', 20, 'MAXIDLE', 30,
+        ], $command->getArguments());
+    }
+
+    public function testApplyOrder(): void
+    {
+        $command = new Aggregate();
+        $command
+            ->setIndex('idx')
+            ->setQuery('@text1:"hello world"')
+            ->setVerbatim()
+            ->setLoad('@geo1', '@tag1')
+            ->addApply('split(@tag1)', 'tag2')
+            ->addGroupBy(new GroupByOption(['@text1'], [ReduceOption::countDistinct('user_id'), ReduceOption::average('num1', 'average')]))
+            ->addFilter("@name=='foo' && @age < 20")
+            ->addApply('@age - 1', 'age')
+            ->addSortBy('@text1')
+            ->addSortBy('@num1', 'DESC')
+            ->setSortByMax(10)
+            ->setLimit(12, 35)
+            ->setWithCursor(20, 30)
+        ;
+
+        static::assertSame([
+            'idx',
+            '@text1:"hello world"',
+            'VERBATIM',
+            'LOAD', 2, '@geo1', '@tag1',
+            'APPLY', 'split(@tag1)',  'AS', 'tag2',
+            'GROUPBY', 1, '@text1', 'REDUCE', 'COUNT_DISTINCT', 1, '@user_id', 'REDUCE', 'AVG', 1, '@num1', 'AS', 'average',
+            'APPLY', '@age - 1',  'AS', 'age',
+            'SORTBY', 3, '@text1', '@num1', 'DESC', 'MAX', 10,
             'LIMIT', 12, 35,
             'FILTER', "@name=='foo' && @age < 20",
             'WITHCURSOR', 'COUNT', 20, 'MAXIDLE', 30,

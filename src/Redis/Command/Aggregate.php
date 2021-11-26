@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Command;
 
 use function assert;
+use function count;
 use function is_array;
 use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\ApplyOption;
@@ -29,6 +30,7 @@ use MacFJA\RediSearch\Redis\Command\AggregateCommand\GroupByOption;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\LimitOption;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\SortByOption;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\WithCursor;
+use MacFJA\RediSearch\Redis\Command\Option\CommandOption;
 use MacFJA\RediSearch\Redis\Command\Option\FlagOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamedOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
@@ -44,6 +46,9 @@ use MacFJA\RediSearch\Redis\Response\PaginatedResponse;
 class Aggregate extends AbstractCommand implements PaginatedCommand
 {
     use ArrayResponseTrait;
+
+    /** @var CommandOption */
+    private $lastAdded;
 
     public function __construct(string $rediSearchVersion = self::MIN_IMPLEMENTED_VERSION)
     {
@@ -64,6 +69,7 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
     public function setIndex(string $index): self
     {
         $this->options['index']->setValue($index);
+        $this->lastAdded = $this->options['index'];
 
         return $this;
     }
@@ -76,6 +82,7 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
     public function setQuery(string $query): self
     {
         $this->options['query']->setValue($query);
+        $this->lastAdded = $this->options['query'];
 
         return $this;
     }
@@ -83,6 +90,7 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
     public function setVerbatim(bool $active = true): self
     {
         $this->options['verbatim']->setActive($active);
+        $this->lastAdded = $this->options['verbatim'];
 
         return $this;
     }
@@ -125,6 +133,8 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
             ->setDataOfOption('expression', $expression)
             ->setDataOfOption('alias', $alias)
         ;
+        $apply->setParent($this->lastAdded);
+        $this->lastAdded = $apply;
         $this->options['apply'][] = $apply;
 
         return $this;
@@ -133,6 +143,7 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
     public function addGroupBy(GroupByOption $group): self
     {
         $this->options['groupby'][] = $group;
+        $this->lastAdded = $group;
 
         return $this;
     }
@@ -140,6 +151,7 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
     public function setLoad(string ...$field): self
     {
         $this->options['load']->setArguments($field);
+        $this->lastAdded = $this->options['load'];
 
         return $this;
     }
@@ -213,6 +225,27 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
         }, $data);
 
         return new PaginatedResponse($this, $totalCount, $items);
+    }
+
+    protected function sortArguments(array $arguments): array
+    {
+        /** @var array<ApplyOption> $applies */
+        $applies = array_filter($arguments, static function (CommandOption $option) {
+            return $option instanceof ApplyOption;
+        });
+        $withoutApplies = array_values(array_filter($arguments, static function (CommandOption $option) {
+            return !($option instanceof ApplyOption);
+        }));
+        for ($index = count($withoutApplies); $index > 0; --$index) {
+            $item = $withoutApplies[$index - 1];
+            foreach ($applies as $apply) {
+                if ($apply->getParent() === $item || (null === $apply->getParent() && 1 === $index)) {
+                    array_splice($withoutApplies, $index, 0, [$apply]);
+                }
+            }
+        }
+
+        return $withoutApplies;
     }
 
     protected function getRequiredOptions(): array

@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `reset` method for builder (`\MacFJA\RediSearch\IndexBuilder` and `\MacFJA\RediSearch\Query\Builder`)
 - Allow PHP 8.0
+- (dev) Allow `podman` (in addition to `docker`) as container runner for integration test
+
+### Changed
+
+- `APPLY` option of Aggregate command is now dependent of the last inserted option (if the option have a meaning for `APPLY`)
+
+### Fixed
+
+- Fix the `APPLY` option of the Aggregate command
 
 ## [2.0.1]
 

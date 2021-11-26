@@ -21,16 +21,30 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Command\AggregateCommand;
 
+use MacFJA\RediSearch\Redis\Command\Option\CommandOption;
 use MacFJA\RediSearch\Redis\Command\Option\GroupedOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamedOption;
 
 class ApplyOption extends GroupedOption
 {
+    /** @var null|CommandOption */
+    private $parent;
+
     public function __construct()
     {
         parent::__construct([
             'expression' => new NamedOption('APPLY', null, '>=2.0.0'),
             'alias' => new NamedOption('AS', null, '>=2.0.0'),
         ], ['expression'], [], '>=2.0.0');
+    }
+
+    public function setParent(?CommandOption $parent): void
+    {
+        $this->parent = $parent;
+    }
+
+    public function getParent(): ?CommandOption
+    {
+        return $this->parent;
     }
 }

@@ -26,6 +26,7 @@ use Amp\Redis\RemoteExecutor;
 use Closure;
 use Credis_Client;
 use function get_class;
+use function is_string;
 use MacFJA\RediSearch\Index;
 use MacFJA\RediSearch\IndexBuilder;
 use MacFJA\RediSearch\Query\Builder;
@@ -110,30 +111,37 @@ class DockerTest extends TestCase
 {
     /** @var bool */
     private static $skip = false;
+    /** @var string */
+    private static $containerCommand = 'podman';
+    /** @var null|string */
+    private static $containerId;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        exec('which docker', $output, $code);
+        exec('which podman', $output, $code);
+        if ($code > 0) {
+            exec('which docker', $output, $code);
+            static::$containerCommand = 'docker';
+        }
         if ($code > 0) {
             static::$skip = true;
 
             return;
         }
-        exec('docker run --rm -p 16379:6379 -d redislabs/redisearch:latest');
+        $output = [];
+        exec(static::$containerCommand.' run --rm -p 16379:6379 -d redislabs/redisearch:latest', $output, $code);
+        static::$containerId = reset($output) ?: null;
         Client\AbstractClient::$disableNotice = true;
     }
 
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
-        if (static::$skip) {
+        if (static::$skip || !is_string(static::$containerId)) {
             return;
         }
-        exec('docker ps --filter publish=16379 -q', $output);
-        foreach ($output as $container) {
-            exec('docker stop '.escapeshellarg($container), $output);
-        }
+        exec(static::$containerCommand.' stop '.escapeshellarg(static::$containerId), $output);
         Client\AbstractClient::$disableNotice = false;
     }
 
@@ -141,7 +149,7 @@ class DockerTest extends TestCase
     {
         parent::setUp();
         if (static::$skip) {
-            static::markTestSkipped('Docker is missing');
+            static::markTestSkipped('Podman/Docker is missing');
         }
     }
 

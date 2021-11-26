@@ -82,6 +82,7 @@ abstract class AbstractCommand implements Command
         $arguments = array_filter($options, function (CommandOption $option) {
             return $option->isCompatible($this->rediSearchVersion) && $option->isValid();
         });
+        $arguments = $this->sortArguments($arguments);
 
         return array_reduce($arguments, function ($carry, CommandOption $option) {
             return array_merge($carry, $option->render($this->rediSearchVersion));
@@ -98,6 +99,16 @@ abstract class AbstractCommand implements Command
     public function parseResponse($data)
     {
         return $data;
+    }
+
+    /**
+     * @param array<CommandOption> $arguments
+     *
+     * @return array<CommandOption>
+     */
+    protected function sortArguments(array $arguments): array
+    {
+        return $arguments;
     }
 
     /**
