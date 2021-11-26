@@ -62,9 +62,6 @@ class NotEmptyOptionTest extends \PHPUnit\Framework\TestCase
         static::assertSame([], $option->render());
     }
 
-    /**
-     * @return Generator<array>
-     */
     public function dataProvider(string $testName): Generator
     {
         $namelessOption = new NotEmptyOption(new NamelessOption('foo'));

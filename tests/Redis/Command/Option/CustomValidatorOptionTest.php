@@ -61,9 +61,6 @@ class CustomValidatorOptionTest extends \PHPUnit\Framework\TestCase
         static::assertFalse($invalidList->isValid());
     }
 
-    /**
-     * @return Generator<array>
-     */
     public function dataProvider(string $testName): Generator
     {
         $invalidMinLengthOption = new CustomValidatorOption(new NamelessOption('foo'), new Length(4));

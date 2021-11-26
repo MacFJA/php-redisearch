@@ -54,8 +54,5 @@ trait BaseOptionTestTrait
         self::assertEquals($expected, $inputOption->getOptionData());
     }
 
-    /**
-     * @return Generator<array>
-     */
     abstract public function dataProvider(string $testName): Generator;
 }

@@ -122,33 +122,33 @@ class DockerTest extends TestCase
         exec('which podman', $output, $code);
         if ($code > 0) {
             exec('which docker', $output, $code);
-            static::$containerCommand = 'docker';
+            self::$containerCommand = 'docker';
         }
         if ($code > 0) {
-            static::$skip = true;
+            self::$skip = true;
 
             return;
         }
         $output = [];
-        exec(static::$containerCommand.' run --rm -p 16379:6379 -d redislabs/redisearch:latest', $output, $code);
-        static::$containerId = reset($output) ?: null;
+        exec(self::$containerCommand.' run --rm -p 16379:6379 -d redislabs/redisearch:latest', $output, $code);
+        self::$containerId = reset($output) ?: null;
         Client\AbstractClient::$disableNotice = true;
     }
 
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
-        if (static::$skip || !is_string(static::$containerId)) {
+        if (self::$skip || !is_string(self::$containerId)) {
             return;
         }
-        exec(static::$containerCommand.' stop '.escapeshellarg(static::$containerId), $output);
+        exec(self::$containerCommand.' stop '.escapeshellarg(self::$containerId), $output);
         Client\AbstractClient::$disableNotice = false;
     }
 
     protected function setUp(): void
     {
         parent::setUp();
-        if (static::$skip) {
+        if (self::$skip) {
             static::markTestSkipped('Podman/Docker is missing');
         }
     }

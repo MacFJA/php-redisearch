@@ -60,7 +60,7 @@ class ReduceOption extends AbstractCommandOption
     }
 
     /**
-     * @return array<string,null|array|string>
+     * @return array<string,null|array<float|int|string>|string>
      */
     public function getOptionData()
     {

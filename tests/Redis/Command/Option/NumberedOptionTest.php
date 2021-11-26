@@ -60,9 +60,6 @@ class NumberedOptionTest extends TestCase
         static::assertEquals('BAR', $option->getName());
     }
 
-    /**
-     * @return Generator<array>
-     */
     public function dataProvider(string $testName): Generator
     {
         $noArgumentsOption = new NumberedOption('FOO');
@@ -94,9 +91,6 @@ class NumberedOptionTest extends TestCase
                 yield [$withMultipleArgumentOption, ['FOO', 2, 'bar', 'foobar']];
 
                 break;
-
-            default:
-                return;
         }
     }
 }

@@ -58,9 +58,6 @@ class FlagOptionTest extends TestCase
         static::assertEquals('BAR', $option->getName());
     }
 
-    /**
-     * @return Generator<array>
-     */
     public function dataProvider(string $testName): Generator
     {
         $defaultValueFlag = new FlagOption('FOO');

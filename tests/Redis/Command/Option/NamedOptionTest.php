@@ -57,9 +57,6 @@ class NamedOptionTest extends TestCase
         static::assertEquals('BAR', $option->getName());
     }
 
-    /**
-     * @return Generator<array>
-     */
     public function dataProvider(string $testName): Generator
     {
         $defaultValueOption = new NamedOption('FOO');

@@ -48,9 +48,6 @@ class NamelessOptionTest extends TestCase
         static::assertEquals(10, $option->getValue());
     }
 
-    /**
-     * @return Generator<array>
-     */
     public function dataProvider(string $testName): Generator
     {
         $defaultValueOption = new NamelessOption();

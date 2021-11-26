@@ -10,6 +10,7 @@ parameters:
         - '#Method MacFJA\\RediSearch\\Redis\\Command\\\w+::getLanguageOptions\(\) should return#'
         - '#uses generic trait MacFJA\\RediSearch\\Redis\\Command\\Option\\DecoratedOptionTrait but does not specify its types: T#'
         - '#Call to an undefined method MacFJA\\RediSearch\\Redis\\Command\\Option\\CustomValidatorOption::setValue\(\).#'
+        - '#Method MacFJA\\RediSearch\\tests\\Redis.+::dataProvider\(\) return type has no value type specified in iterable type (array|Generator).#'
         -
             message: '#Call to an undefined method MacFJA\\RediSearch\\Redis\\Command\\Option\\CommandOption::set\w+\(\).#'
             path: src/Redis/Command/Option/GroupedOption.php

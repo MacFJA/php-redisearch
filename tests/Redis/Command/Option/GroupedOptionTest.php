@@ -122,9 +122,6 @@ class GroupedOptionTest extends TestCase
         $option->setDataOfOption('lock', 'bar');
     }
 
-    /**
-     * @return Generator<array>
-     */
     public function dataProvider(string $testName): Generator
     {
         $emptyGroup = new GroupedOption([], []);

@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `APPLY` option of Aggregate command is now dependent of the last inserted option (if the option have a meaning for `APPLY`)
+- (dev) Update `phpstan` (from `0.12` to `1.2`)
 
 ### Fixed
 
