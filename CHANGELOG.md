@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased v2.x]
 
+## [2.0.2]
+
 ### Added
 
 - `reset` method for builder (`\MacFJA\RediSearch\IndexBuilder` and `\MacFJA\RediSearch\Query\Builder`)
@@ -145,7 +147,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First version
 
-[Unreleased v2.x]: https://github.com/MacFJA/php-redisearch/compare/2.0.0...HEAD
+[Unreleased v2.x]: https://github.com/MacFJA/php-redisearch/compare/2.0.2...HEAD
+[2.0.2]: https://github.com/MacFJA/php-redisearch/compare/2.0.1...2.0.2
 [2.0.1]: https://github.com/MacFJA/php-redisearch/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/MacFJA/php-redisearch/releases/tag/2.0.0
 [Unreleased v1.x]: https://github.com/MacFJA/php-redisearch/compare/1.4.0...1.x
