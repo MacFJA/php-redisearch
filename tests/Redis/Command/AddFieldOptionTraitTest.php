@@ -51,6 +51,16 @@ class AddFieldOptionTraitTest extends \PHPUnit\Framework\TestCase
         $command->addNumericField('foo');
     }
 
+    public function testWrongParent2(): void
+    {
+        $command = new FakeAddFieldOptionTraitClass1();
+
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage('This method is not callable in '.FakeAddFieldOptionTraitClass1::class);
+
+        $command->addJSONNumericField('$.foo', 'foo');
+    }
+
     public function testValidParent(): void
     {
         $command = new FakeAddFieldOptionTraitClass2([]);

@@ -23,18 +23,18 @@ test-with-integration: | vendor
 
 coverage: | vendor
 	@if [ -z "`php -v | grep -i 'xdebug'`" ]; then echo "You need to install Xdebug in order to do this action"; exit 1; fi
-	$(COMPOSER) exec -v phpunit -- --coverage-text --color
+	XDEBUG_MODE=coverage $(COMPOSER) exec -v phpunit -- --coverage-text --color
 
 coverage-with-integration: | vendor
 	@if [ -z "`php -v | grep -i 'xdebug'`" ]; then echo "You need to install Xdebug in order to do this action"; exit 1; fi
-	$(COMPOSER) exec -v phpunit -- --group default,integration --coverage-text --color
+	XDEBUG_MODE=coverage $(COMPOSER) exec -v phpunit -- --group default,integration --coverage-text --color
 
 integration-test: | vendor
 	$(COMPOSER) exec -v phpunit -- --group integration
 
 integration-coverage: | vendor
 	@if [ -z "`php -v | grep -i 'xdebug'`" ]; then echo "You need to install Xdebug in order to do this action"; exit 1; fi
-	$(COMPOSER) exec -v phpunit -- --group integration --coverage-text --color
+	XDEBUG_MODE=coverage $(COMPOSER) exec -v phpunit -- --group integration --coverage-text --color
 
 validation: fix-code analyze test-with-integration coverage-with-integration
 

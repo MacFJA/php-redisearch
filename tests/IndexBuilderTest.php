@@ -48,6 +48,7 @@ use RuntimeException;
  * @uses \MacFJA\RediSearch\Redis\Command\CreateCommand\GeoFieldOption
  * @uses \MacFJA\RediSearch\Redis\Command\CreateCommand\NumericFieldOption
  * @uses \MacFJA\RediSearch\Redis\Command\CreateCommand\TagFieldOption
+ * @uses \MacFJA\RediSearch\Redis\Command\CreateCommand\JSONFieldOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\DecoratedOptionAwareTrait
  * @uses \MacFJA\RediSearch\Redis\Command\Option\GroupedOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\WithPublicGroupedSetterTrait
@@ -249,6 +250,45 @@ class IndexBuilderTest extends TestCase
 
         $builder->addTagField('languages');
         $createCommand->addTagField('languages');
+        static::assertEquals($createCommand, $builder->getCommand());
+    }
+
+    public function testAllJsonAdd(): void
+    {
+        $createCommand = new Create();
+
+        $builder = new IndexBuilder();
+
+        $builder->setIndex('city');
+        $createCommand->setIndex('city');
+
+        $oldBuilder = $builder;
+        $builder = $builder->addPrefixes('city-', 'c-');
+        static::assertNotEquals($createCommand, $builder->getCommand());
+        $createCommand->setPrefixes('city-', 'c-');
+        static::assertEquals($createCommand, $builder->getCommand());
+        static::assertSame($oldBuilder, $builder);
+
+        $builder->addStopWords('hello', 'world');
+        $createCommand->setStopWords('hello', 'world');
+
+        $builder->addJSONField('$.city.name', (new TextFieldOption())->setField('name'));
+        $createCommand->addJSONTextField('$.city.name', 'name');
+
+        $builder->addJSONField('$.city.country', (new TextFieldOption())->setField('country'));
+        $createCommand->addJSONTextField('$.city.country', 'country');
+
+        $builder->addJSONTextField('$.city.continent', 'continent');
+        $createCommand->addJSONTextField('$.city.continent', 'continent');
+
+        $builder->addJSONNumericField('$.city.population', 'population');
+        $createCommand->addJSONNumericField('$.city.population', 'population');
+
+        $builder->addJSONGeoField('$.city.gps', 'gps');
+        $createCommand->addJSONGeoField('$.city.gps', 'gps');
+
+        $builder->addJSONTagField('$.city.languages', 'languages');
+        $createCommand->addJSONTagField('$.city.languages', 'languages');
         static::assertEquals($createCommand, $builder->getCommand());
     }
 

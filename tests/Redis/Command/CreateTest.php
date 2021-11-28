@@ -21,8 +21,11 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\tests\Redis\Command;
 
+use InvalidArgumentException;
 use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\Create;
+use MacFJA\RediSearch\Redis\Command\CreateCommand\JSONFieldOption;
+use MacFJA\RediSearch\Redis\Command\CreateCommand\TagFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\TextFieldOption;
 use PHPUnit\Framework\TestCase;
 
@@ -30,9 +33,9 @@ use PHPUnit\Framework\TestCase;
  * @covers  \MacFJA\RediSearch\Redis\Command\AbstractCommand
  * @covers \MacFJA\RediSearch\Redis\Command\Create
  * @covers \MacFJA\RediSearch\Redis\Command\CreateCommand\GeoFieldOption
+ * @covers \MacFJA\RediSearch\Redis\Command\CreateCommand\JSONFieldOption
  * @covers \MacFJA\RediSearch\Redis\Command\CreateCommand\NumericFieldOption
  * @covers \MacFJA\RediSearch\Redis\Command\CreateCommand\TagFieldOption
- *
  * @covers \MacFJA\RediSearch\Redis\Command\CreateCommand\TextFieldOption
  *
  * @uses \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption
@@ -190,5 +193,68 @@ class CreateTest extends TestCase
         // Remove sorting
         $textField->setSortable(false);
         static::assertSame(['idx', 'SCHEMA', 'foo', 'TEXT'], $command->getArguments());
+    }
+
+    public function testJSONStructure(): void
+    {
+        $expected = [
+            'userIdx', 'ON', 'JSON', 'SCHEMA', '$.user.name', 'AS', 'name', 'TEXT', '$.user.tag', 'AS', 'country', 'TAG',
+        ];
+        $command = new Create('2.2.0');
+        $command
+            ->setIndex('userIdx')
+            ->setStructure('JSON')
+            ->addField(new JSONFieldOption('$.user.name', (new TextFieldOption())->setField('name')))
+            ->addField(new JSONFieldOption('$.user.tag', (new TagFieldOption())->setField('country')))
+        ;
+
+        static::assertSame($expected, $command->getArguments());
+    }
+
+    public function testJSONStructureShortHand(): void
+    {
+        $expected = [
+            'userIdx', 'ON', 'JSON', 'SCHEMA', '$.user.name', 'AS', 'name', 'TEXT', '$.user.tag', 'AS', 'country', 'TAG',
+        ];
+        $command = new Create('2.2.0');
+        $command
+            ->setIndex('userIdx')
+            ->setStructure('JSON')
+            ->addJSONField('$.user.name', (new TextFieldOption())->setField('name'))
+            ->addJSONField('$.user.tag', (new TagFieldOption())->setField('country'))
+        ;
+
+        static::assertSame($expected, $command->getArguments());
+    }
+
+    public function testJSONStructureShortHand2(): void
+    {
+        $expected = [
+            'userIdx', 'ON', 'JSON', 'SCHEMA', '$.user.name', 'AS', 'name', 'TEXT', '$.user.tag', 'AS', 'country', 'TAG',
+        ];
+        $command = new Create('2.2.0');
+        $command
+            ->setIndex('userIdx')
+            ->setStructure('JSON')
+            ->addJSONTextField('$.user.name', 'name')
+            ->addJSONTagField('$.user.tag', 'country')
+        ;
+
+        static::assertSame($expected, $command->getArguments());
+    }
+
+    public function testJSONStructureWrongVersion(): void
+    {
+        $command = new Create('2.0.0');
+        $command
+            ->setIndex('userIdx')
+            ->setStructure('JSON')
+            ->addJSONTextField('$.user.name', 'name')
+            ->addJSONTagField('$.user.tag', 'country')
+        ;
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Missing command option: fields');
+        $command->getArguments();
     }
 }

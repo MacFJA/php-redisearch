@@ -37,7 +37,10 @@ class Create extends AbstractCommand
     {
         parent::__construct([
             'index' => new NamelessOption(null, '>=2.0.0'),
-            'structure' => CV::allowedValues(new NamedOption('ON', null, '>=2.0.0'), ['HASH']),
+            'structure' => [
+                CV::allowedValues(new NamedOption('ON', null, '>=2.0.0 <2.2.0'), ['HASH']),
+                CV::allowedValues(new NamedOption('ON', null, '>=2.2.0'), ['HASH', 'JSON']),
+            ],
             'prefixes' => new NotEmptyOption(new NumberedOption('PREFIX', null, '>=2.0.0')),
             'filter' => new NamedOption('FILTER', null, '>=2.0.0'),
             'default_lang' => $this->getLanguageOptions(),
@@ -67,7 +70,9 @@ class Create extends AbstractCommand
 
     public function setStructure(string $structureType = 'HASH'): self
     {
-        $this->options['structure']->setValue($structureType);
+        array_walk($this->options['structure'], static function (CV $option) use ($structureType): void {
+            $option->setValue($structureType);
+        });
 
         return $this;
     }

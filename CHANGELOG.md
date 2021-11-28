@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased v2.x]
 
+### Added
+
+- Support from JSON document (require RediSearch 2.2)
+
+### Fixed
+
+- (dev) Code coverage with XDebug 3
+
 ## [2.0.2]
 
 ### Added
