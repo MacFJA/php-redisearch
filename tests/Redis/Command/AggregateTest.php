@@ -60,6 +60,13 @@ class AggregateTest extends TestCase
         static::assertSame('FT.AGGREGATE', $command->getId());
     }
 
+    public function testGetIndex(): void
+    {
+        $command = new Aggregate();
+        $command->setIndex('idx');
+        static::assertSame('idx', $command->getIndex());
+    }
+
     public function testMultiReduce(): void
     {
         $group = new GroupByOption(['@text1']);

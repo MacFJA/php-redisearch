@@ -34,6 +34,7 @@ use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\AddFieldOptionTrait;
 use MacFJA\RediSearch\Redis\Command\Create;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\CreateCommandFieldOption;
+use MacFJA\RediSearch\Redis\Command\CreateCommand\JSONFieldOption;
 use RuntimeException;
 use function strlen;
 
@@ -84,6 +85,10 @@ use function strlen;
  * @method IndexBuilder withAddedNumericField(string $name, bool $sortable = false, bool $noIndex = false)
  * @method IndexBuilder withAddedGeoField(string $name, bool $noIndex = false)
  * @method IndexBuilder withAddedTagField(string $name, ?string $separator = null, bool $sortable = false, bool $noIndex = false)
+ * @method IndexBuilder withAddedJSONTextField(string $path, string $attribute, bool $noStem = false, ?float $weight = null, ?string $phonetic = null, bool $sortable = false, bool $noIndex = false)
+ * @method IndexBuilder withAddedJSONNumericField(string $path, string $attribute, bool $sortable = false, bool $noIndex = false)
+ * @method IndexBuilder withAddedJSONGeoField(string $path, string $attribute, bool $noIndex = false)
+ * @method IndexBuilder withAddedJSONTagField(string $path, string $attribute, ?string $separator = null, bool $sortable = false, bool $noIndex = false)
  *
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
@@ -181,6 +186,13 @@ class IndexBuilder
     public function addField(CreateCommandFieldOption $option): self
     {
         $this->fields[] = $option;
+
+        return $this;
+    }
+
+    public function addJSONField(string $path, CreateCommandFieldOption $option): self
+    {
+        $this->fields[$option->getFieldName()] = new JSONFieldOption($path, $option);
 
         return $this;
     }

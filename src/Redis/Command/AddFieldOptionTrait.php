@@ -25,6 +25,7 @@ use BadMethodCallException;
 use function get_class;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\CreateCommandFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\GeoFieldOption;
+use MacFJA\RediSearch\Redis\Command\CreateCommand\JSONFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\NumericFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\TagFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\TextFieldOption;
@@ -75,6 +76,54 @@ trait AddFieldOptionTrait
         );
     }
 
+    public function addJSONTextField(string $path, string $attribute, bool $noStem = false, ?float $weight = null, ?string $phonetic = null, bool $sortable = false, bool $noIndex = false): self
+    {
+        return $this->addJSONField(
+            $path,
+            (new TextFieldOption())
+                ->setField($attribute)
+                ->setNoStem($noStem)
+                ->setWeight($weight)
+                ->setPhonetic($phonetic)
+                ->setSortable($sortable)
+                ->setNoIndex($noIndex)
+        );
+    }
+
+    public function addJSONNumericField(string $path, string $attribute, bool $sortable = false, bool $noIndex = false): self
+    {
+        return $this->addJSONField(
+            $path,
+            (new NumericFieldOption())
+                ->setField($attribute)
+                ->setSortable($sortable)
+                ->setNoIndex($noIndex)
+        );
+    }
+
+    public function addJSONGeoField(string $path, string $attribute, bool $noIndex = false): self
+    {
+        return $this->addJSONField(
+            $path,
+            (new GeoFieldOption())
+                ->setField($attribute)
+                ->setNoIndex($noIndex)
+        );
+    }
+
+    public function addJSONTagField(string $path, string $attribute, ?string $separator = null, bool $sortable = false, bool $noIndex = false, bool $caseSensitive = false): self
+    {
+        return $this->addJSONField(
+            $path,
+            (new TagFieldOption())
+                ->setField($attribute)
+                ->setSeparator($separator)
+                ->setCaseSensitive($caseSensitive)
+                ->setSortable($sortable)
+                ->setNoIndex($noIndex)
+        );
+    }
+
     public function addField(CreateCommandFieldOption $option): self
     {
         if (!($this instanceof AbstractCommand)) {
@@ -82,6 +131,17 @@ trait AddFieldOptionTrait
         }
 
         $this->options['fields'][$option->getFieldName()] = $option;
+
+        return $this;
+    }
+
+    public function addJSONField(string $path, CreateCommandFieldOption $option): self
+    {
+        if (!($this instanceof AbstractCommand)) {
+            throw new BadMethodCallException('This method is not callable in '.get_class($this));
+        }
+
+        $this->options['fields'][$option->getFieldName()] = new JSONFieldOption($path, $option);
 
         return $this;
     }
