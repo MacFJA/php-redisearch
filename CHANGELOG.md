@@ -10,11 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Support from JSON document (require RediSearch 2.2)
 - (dev) GitHub Actions
+- Protection against division by 0
 
 ### Fixed
 
 - (dev) Code coverage with XDebug 3
 - (dev) Defined list of allowed Composer plugins
+- Fix `PaginatedResponse` index (now start at 0, and have a linear progression)
 
 ## [2.0.2]
 
