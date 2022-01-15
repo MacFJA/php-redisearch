@@ -106,6 +106,10 @@ class CursorResponse implements Response, Iterator
 
     public function getPageCount(): int
     {
+        if (0 === $this->size) {
+            return 0;
+        }
+
         return (int) ceil($this->totalCount / $this->size);
     }
 

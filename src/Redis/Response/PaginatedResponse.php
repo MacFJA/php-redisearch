@@ -96,6 +96,10 @@ class PaginatedResponse implements Response, Iterator, Countable
 
     public function getPageCount(): int
     {
+        if (0 === $this->getPageSize()) {
+            return 0;
+        }
+
         return (int) ceil($this->totalCount / $this->getPageSize());
     }
 
@@ -105,7 +109,7 @@ class PaginatedResponse implements Response, Iterator, Countable
             return 0;
         }
 
-        return (int) ceil(($this->lastCommand->getOffset() ?? 0) / $this->getPageSize()) + 1;
+        return (int) floor(($this->lastCommand->getOffset() ?? 0) / $this->getPageSize());
     }
 
     public function valid()
