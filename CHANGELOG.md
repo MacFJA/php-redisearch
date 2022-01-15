@@ -9,10 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Support from JSON document (require RediSearch 2.2)
+- (dev) GitHub Actions
 
 ### Fixed
 
 - (dev) Code coverage with XDebug 3
+- (dev) Defined list of allowed Composer plugins
 
 ## [2.0.2]
 

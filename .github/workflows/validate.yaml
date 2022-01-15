@@ -1,0 +1,46 @@
+on:
+  pull_request:
+    branches: [ $default-branch ]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - &setup-php
+        name: Setup PHP with PECL extension
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          extensions: intl, mbstring
+          coverage: xdebug
+      - &composer-cache
+        name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.json,') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+      - name: Validate code
+        run: make analyze
+
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - *setup-php
+      - *composer-cache
+      - name: Run unit test
+        id: make-test
+        run: make test
+
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - *setup-php
+      - *composer-cache
+      - name: Code coverage
+        run: make coverage

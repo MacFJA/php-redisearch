@@ -22,6 +22,7 @@
         "respect/validation": "^2.0"
     },
     "require-dev": {
+        "ext-mbstring": "*",
         "amphp/redis": "^1.0",
         "cheprasov/php-redis-client": "^1.10",
         "colinmollenhour/credis": "^1.12",
@@ -53,6 +54,12 @@
         "predis/predis": "To use Predis implementation",
         "ptrofimov/tinyredisclient": "To use TinyRedisClient implementation",
         "redisent/redisent": "To use Redisent implementation"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "ergebnis/composer-normalize": true
+        }
     },
     "autoload": {
         "psr-4": {
