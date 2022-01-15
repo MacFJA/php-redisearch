@@ -24,3 +24,4 @@ Makefile        text
 /*.xml.dist       export-ignore
 /phpstan.neon     export-ignore
 /psalm.xml        export-ignore
+/.github          export-ignore
