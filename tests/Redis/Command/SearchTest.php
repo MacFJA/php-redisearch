@@ -126,4 +126,20 @@ class SearchTest extends TestCase
             'LIMIT', 12, 10,
         ], $command->getArguments());
     }
+
+    public function testNoSummarizeAndNoHighlight(): void
+    {
+        $command = new Search(AbstractCommand::MAX_IMPLEMENTED_VERSION);
+        $command
+            ->setIndex('idx')
+            ->setQuery('@text1:"hello world"')
+            ->setLimit(12, 10)
+        ;
+
+        static::assertSame([
+            'idx',
+            '@text1:"hello world"',
+            'LIMIT', 12, 10,
+        ], $command->getArguments());
+    }
 }

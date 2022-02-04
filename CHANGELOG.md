@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased v2.x]
 
+### Fixed
+
+- Summarize Search option enabled by default (without possibility to disable it) ([Issue#26])
+- Highlight Search option enabled by default (without possibility to disable it) ([Issue#26])
+
 ## [2.1.0]
 
 ### Added
@@ -181,6 +186,7 @@ First version
 [Issue#11]: https://github.com/MacFJA/php-redisearch/issues/11
 [Issue#12]: https://github.com/MacFJA/php-redisearch/issues/12
 [Issue#16]: https://github.com/MacFJA/php-redisearch/issues/16
+[Issue#26]: https://github.com/MacFJA/php-redisearch/issues/26
 [PR#1]: https://github.com/MacFJA/php-redisearch/pull/1
 [PR#3]: https://github.com/MacFJA/php-redisearch/pull/3
 [PR#8]: https://github.com/MacFJA/php-redisearch/pull/8
