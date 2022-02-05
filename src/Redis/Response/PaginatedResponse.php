@@ -109,14 +109,19 @@ class PaginatedResponse implements Response, Iterator, Countable
             return 0;
         }
 
-        return (int) floor(($this->lastCommand->getOffset() ?? 0) / $this->getPageSize());
+        return (int) floor(($this->lastCommand->getOffset() ?? $this->requestedOffset ?? 0) / $this->getPageSize());
     }
 
     public function valid()
     {
-        return $this->requestedOffset >= 0
-            && $this->requestedSize > 0
-            && $this->requestedOffset < $this->totalCount;
+        return (
+                null === $this->requestedOffset
+                && null === $this->requestedSize
+            ) || (
+                $this->requestedOffset >= 0
+                && $this->requestedSize > 0
+                && $this->requestedOffset < $this->totalCount
+            );
     }
 
     public function rewind(): void
