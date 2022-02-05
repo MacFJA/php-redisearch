@@ -24,6 +24,8 @@ namespace MacFJA\RediSearch\tests\Redis\Command;
 use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\Search;
 use MacFJA\RediSearch\Redis\Command\SearchCommand\FilterOption;
+use MacFJA\RediSearch\Redis\Response\PaginatedResponse;
+use MacFJA\RediSearch\Redis\Response\SearchResponseItem;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -37,6 +39,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \MacFJA\RediSearch\Redis\Command\SearchCommand\SortByOption
  *
  * @covers \MacFJA\RediSearch\Redis\Command\SearchCommand\SummarizeOption
+ *
+ * @covers \MacFJA\RediSearch\Redis\Response\PaginatedResponse
  *
  * @uses \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption
@@ -141,5 +145,93 @@ class SearchTest extends TestCase
             '@text1:"hello world"',
             'LIMIT', 12, 10,
         ], $command->getArguments());
+    }
+
+    public function testParsingResponseNoContent(): void
+    {
+        $redisResponse = [
+            3,
+            'hash_1',
+            'hash_2',
+            'hash_3',
+        ];
+
+        $command = new Search(AbstractCommand::MAX_IMPLEMENTED_VERSION);
+        $command->setQuery('*');
+        $command->setNoContent();
+
+        $expectedResponse = new PaginatedResponse($command, 3, [
+            new SearchResponseItem('hash_1'),
+            new SearchResponseItem('hash_2'),
+            new SearchResponseItem('hash_3'),
+        ]);
+
+        $actualResponse = $command->parseResponse($redisResponse);
+
+        static::assertEquals($expectedResponse, $actualResponse);
+    }
+
+    public function testParsingResponseScore(): void
+    {
+        $redisResponse = [
+            3,
+            'hash_1',
+            '0.741',
+            ['field', '1'],
+            'hash_2',
+            '0.654',
+            ['field', '2'],
+            'hash_3',
+            '0.258',
+            ['field', '3'],
+        ];
+
+        $command = new Search(AbstractCommand::MAX_IMPLEMENTED_VERSION);
+        $command->setQuery('*');
+        $command->setWithScores();
+
+        $expectedResponse = new PaginatedResponse($command, 3, [
+            new SearchResponseItem('hash_1', ['field' => '1'], 0.741),
+            new SearchResponseItem('hash_2', ['field' => '2'], 0.654),
+            new SearchResponseItem('hash_3', ['field' => '3'], 0.258),
+        ]);
+
+        $actualResponse = $command->parseResponse($redisResponse);
+
+        static::assertEquals($expectedResponse, $actualResponse);
+    }
+
+    public function testParsingResponseScoreAndPayload(): void
+    {
+        $redisResponse = [
+            3,
+            'hash_1',
+            '0.741',
+            null,
+            ['field', '1'],
+            'hash_2',
+            '0.654',
+            null,
+            ['field', '2', 'other', 'field'],
+            'hash_3',
+            '0.258',
+            'third',
+            ['field', '3'],
+        ];
+
+        $command = new Search(AbstractCommand::MAX_IMPLEMENTED_VERSION);
+        $command->setQuery('*');
+        $command->setWithScores();
+        $command->setWithPayloads();
+
+        $expectedResponse = new PaginatedResponse($command, 3, [
+            new SearchResponseItem('hash_1', ['field' => '1'], 0.741),
+            new SearchResponseItem('hash_2', ['field' => '2', 'other' => 'field'], 0.654),
+            new SearchResponseItem('hash_3', ['field' => '3'], 0.258, 'third'),
+        ]);
+
+        $actualResponse = $command->parseResponse($redisResponse);
+
+        static::assertEquals($expectedResponse, $actualResponse);
     }
 }
