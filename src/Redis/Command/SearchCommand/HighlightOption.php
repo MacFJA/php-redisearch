@@ -32,14 +32,14 @@ class HighlightOption extends GroupedOption
     public function __construct()
     {
         parent::__construct([
-            'type' => new FlagOption('HIGHLIGHT', true, '>=2.0.0'),
+            'type' => new FlagOption('HIGHLIGHT', false, '>=2.0.0'),
             'fields' => new NotEmptyOption(new NumberedOption('FIELDS', null, '>=2.0.0')),
             'tag' => new GroupedOption([
                 'type' => new FlagOption('TAGS', true, '>=2.0.0'),
                 'open' => new NamelessOption(null, '>=2.0.0'),
                 'close' => new NamelessOption(null, '>=2.0.0'),
             ], ['type', 'open', 'close'], ['type'], '>=2.0.0'),
-        ], ['type'], ['type'], '>=2.0.0');
+        ], ['type'], [], '>=2.0.0');
     }
 
     public function setTags(?string $open, ?string $close): self

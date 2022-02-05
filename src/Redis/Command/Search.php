@@ -146,6 +146,7 @@ class Search extends AbstractCommand implements PaginatedCommand
     public function setSummarize(?array $fields = null, ?int $fragmentCount = null, ?int $fragmentSize = null, ?string $separator = null): self
     {
         $this->options['summarize']
+            ->setDataOfOption('type', true)
             ->setDataOfOption('fields', $fields)
             ->setDataOfOption('frags', $fragmentCount)
             ->setDataOfOption('len', $fragmentSize)
@@ -163,6 +164,7 @@ class Search extends AbstractCommand implements PaginatedCommand
     public function setHighlight(?array $fields, ?string $openTag, ?string $closeTag): self
     {
         $this->options['highlight']
+            ->setDataOfOption('type', true)
             ->setDataOfOption('fields', $fields)
             ->setTags($openTag, $closeTag)
         ;

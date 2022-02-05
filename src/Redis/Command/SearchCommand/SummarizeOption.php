@@ -33,11 +33,11 @@ class SummarizeOption extends GroupedOption
     public function __construct()
     {
         parent::__construct([
-            'type' => new FlagOption('SUMMARIZE', true, '>=2.0.0'),
+            'type' => new FlagOption('SUMMARIZE', false, '>=2.0.0'),
             'fields' => new NotEmptyOption(new NumberedOption('FIELDS', null, '>=2.0.0')),
             'frags' => CV::isNumeric(new NamedOption('FRAGS', null, '>=2.0.0')),
             'len' => CV::isNumeric(new NamedOption('LEN', null, '>=2.0.0')),
             'separator' => new NamedOption('SEPARATOR', null, '>=2.0.0'),
-        ], ['type'], ['type'], '>=2.0.0');
+        ], ['type'], [], '>=2.0.0');
     }
 }
