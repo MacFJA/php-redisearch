@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Summarize Search option enabled by default (without possibility to disable it) ([Issue#26])
 - Highlight Search option enabled by default (without possibility to disable it) ([Issue#26])
+- Fix error when parsing response from Search with NOCONTENT flag
 
 ## [2.1.0]
 
