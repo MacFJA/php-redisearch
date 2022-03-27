@@ -2,7 +2,7 @@
 
 analyze: | vendor
 	$(COMPOSER) exec -v parallel-lint -- src
-	$(COMPOSER) exec -v php-cs-fixer -- fix --dry-run
+	$(COMPOSER) exec -v php-cs-fixer -- fix --dry-run -v
 	$(COMPOSER) exec -v unused_scanner -- .unused.dist.php
 	$(COMPOSER) exec -v security-checker -- security:check
 	$(COMPOSER) exec -v phpcpd -- --fuzzy src
@@ -13,7 +13,7 @@ analyze: | vendor
 
 fix-code: | vendor
 	$(COMPOSER) normalize
-	$(COMPOSER) exec -v php-cs-fixer -- fix
+	$(COMPOSER) exec -v php-cs-fixer -- fix -v
 
 test: | vendor
 	$(COMPOSER) exec -v phpunit

@@ -27,6 +27,7 @@ class JSONFieldOption extends AbstractCommandOption implements CreateCommandJSON
 {
     /** @var CreateCommandFieldOption */
     private $decorated;
+
     /** @var string */
     private $path;
 

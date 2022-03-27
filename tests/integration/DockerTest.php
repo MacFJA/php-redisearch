@@ -111,8 +111,10 @@ class DockerTest extends TestCase
 {
     /** @var bool */
     private static $skip = false;
+
     /** @var string */
     private static $containerCommand = 'podman';
+
     /** @var null|string */
     private static $containerId;
 

@@ -25,10 +25,13 @@ class EncapsulationGroup implements QueryElement, QueryElementDecorator
 {
     /** @var string */
     private $open;
+
     /** @var string */
     private $close;
+
     /** @var bool */
     private $omitIfNoSpace;
+
     /** @var QueryElement */
     private $element;
 

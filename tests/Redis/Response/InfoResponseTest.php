@@ -144,6 +144,7 @@ class InfoResponseTest extends TestCase
             ],
         ];
         $command = new Info();
+
         /** @var InfoResponse $parsed */
         $parsed = $command->parseResponse($rawResponse);
 

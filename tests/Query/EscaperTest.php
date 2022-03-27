@@ -40,6 +40,7 @@ class EscaperTest extends \PHPUnit\Framework\TestCase
         'testEscapeOptional' => 'optional',
         'testEscapeNothing' => 'input',
     ];
+
     /**
      * @var array<array<string>>
      */

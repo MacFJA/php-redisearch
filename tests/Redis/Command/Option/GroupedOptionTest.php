@@ -137,51 +137,78 @@ class GroupedOptionTest extends TestCase
         switch ($testName) {
             case 'testGetOptionData':
                 yield [$emptyGroup, []];
+
                 yield [$noRequiredGroup, ['foo' => new NamelessOption()]];
+
                 yield [$emptyRequiredGroup, []];
+
                 yield [$noValueRequireGroup, ['foo' => new NamelessOption()]];
+
                 yield [$valueRequireGroup, ['foo' => new NamelessOption('FOO')]];
+
                 yield [$valueRequireGroup2, ['foo' => new NamelessOption(0)]];
+
                 yield [$valueLockGroup, ['foo' => new NamelessOption('FOO')]];
 
                 break;
 
             case 'testIsValid':
                 yield [$emptyGroup, true];
+
                 yield [$noRequiredGroup, true];
+
                 yield [$emptyRequiredGroup, false];
+
                 yield [$noValueRequireGroup, false];
+
                 yield [$valueRequireGroup, true];
+
                 yield [$valueRequireGroup2, true];
+
                 yield [$valueLockGroup, true];
 
                 break;
 
             case 'testRender':
                 yield [$emptyGroup, []];
+
                 yield [$noRequiredGroup, []];
+
                 yield [$emptyRequiredGroup, []];
+
                 yield [$noValueRequireGroup, []];
+
                 yield [$valueRequireGroup, ['FOO']];
+
                 yield [$valueRequireGroup2, [0]];
+
                 yield [$valueLockGroup, ['FOO']];
 
                 break;
 
             case 'testIsCompatible':
                 yield [$emptyGroup, '1.0.0', true];
+
                 yield [$emptyGroup, '1.5.0', true];
+
                 yield [$emptyGroup, '2.0.0', true];
+
                 yield [$emptyGroup, '2.5.0', true];
 
                 yield [$lowVersionGroup, '1.0.0', true];
+
                 yield [$lowVersionGroup, '1.5.0', true];
+
                 yield [$lowVersionGroup, '2.0.0', true];
+
                 yield [$lowVersionGroup, '2.5.0', true];
 
                 yield [$highVersionGroup, '1.0.0', false];
+
                 yield [$highVersionGroup, '1.5.0', false];
+
                 yield [$highVersionGroup, '2.0.0', true];
+
                 yield [$highVersionGroup, '2.5.0', true];
 
                 break;

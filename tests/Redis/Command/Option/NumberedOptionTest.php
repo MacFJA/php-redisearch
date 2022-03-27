@@ -70,24 +70,33 @@ class NumberedOptionTest extends TestCase
         switch ($testName) {
             case 'testGetOptionData':
                 yield [$noArgumentsOption, null];
+
                 yield [$emptyArgumentsOption, []];
+
                 yield [$withOneArgumentOption, ['bar']];
+
                 yield [$withMultipleArgumentOption, ['bar', 'foobar']];
 
                 break;
 
             case 'testIsValid':
                 yield [$noArgumentsOption, false];
+
                 yield [$emptyArgumentsOption, true];
+
                 yield [$withOneArgumentOption, true];
+
                 yield [$withMultipleArgumentOption, true];
 
                 break;
 
             case 'testRender':
                 yield [$noArgumentsOption, []];
+
                 yield [$emptyArgumentsOption, ['FOO', 0]];
+
                 yield [$withOneArgumentOption, ['FOO', 1, 'bar']];
+
                 yield [$withMultipleArgumentOption, ['FOO', 2, 'bar', 'foobar']];
 
                 break;

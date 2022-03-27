@@ -51,11 +51,17 @@ class InitializerTest extends \PHPUnit\Framework\TestCase
     {
         if ('testRediSearchVersion' === $testName) {
             yield [[['name', 'search', 'ver', '20005']], '2.0.5'];
+
             yield [[['name', 'search', 'ver', '20000']], '2.0.0'];
+
             yield [[['name', 'search', 'ver', '26512']], '2.65.12'];
+
             yield [[['name', 'search', 'ver', '120569']], '12.5.69'];
+
             yield [[['name', 'search', 'ver', '99999']], '9.99.99'];
+
             yield [[['name', 'json', 'ver', '99999']], null];
+
             yield [[['name', 'json', 'ver', '99999'], ['name', 'search', 'ver', '20005']], '2.0.5'];
         }
     }

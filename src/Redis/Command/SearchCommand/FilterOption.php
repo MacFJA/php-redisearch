@@ -29,12 +29,16 @@ class FilterOption extends AbstractCommandOption
 
     /** @var string */
     private $fieldName;
+
     /** @var null|float */
     private $min;
+
     /** @var null|float */
     private $max;
+
     /** @var bool */
     private $isMaxInclusive;
+
     /** @var bool */
     private $isMinInclusive;
 

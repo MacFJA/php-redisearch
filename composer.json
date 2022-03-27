@@ -1,7 +1,8 @@
 {
     "name": "macfja/redisearch",
-    "type": "library",
     "description": "PHP Client for RediSearch",
+    "license": "MIT",
+    "type": "library",
     "keywords": [
         "Redis",
         "RediSearch",
@@ -9,12 +10,15 @@
         "Suggestion"
     ],
     "readme": "README.md",
-    "license": "MIT",
     "authors": [
         {
             "name": "MacFJA"
         }
     ],
+    "support": {
+        "issues": "https://github.com/MacFJA/php-redisearch/issues",
+        "source": "https://github.com/MacFJA/php-redisearch"
+    },
     "require": {
         "php": "^7.2 || ^8.0",
         "ext-intl": "*",
@@ -55,12 +59,6 @@
         "ptrofimov/tinyredisclient": "To use TinyRedisClient implementation",
         "redisent/redisent": "To use Redisent implementation"
     },
-    "config": {
-        "allow-plugins": {
-            "composer/package-versions-deprecated": true,
-            "ergebnis/composer-normalize": true
-        }
-    },
     "autoload": {
         "psr-4": {
             "MacFJA\\RediSearch\\": "src/"
@@ -71,8 +69,10 @@
             "MacFJA\\RediSearch\\tests\\": "tests/"
         }
     },
-    "support": {
-        "issues": "https://github.com/MacFJA/php-redisearch/issues",
-        "source": "https://github.com/MacFJA/php-redisearch"
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "ergebnis/composer-normalize": true
+        }
     }
 }

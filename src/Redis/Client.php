@@ -43,8 +43,6 @@ interface Client
     public function executeRaw(...$args);
 
     /**
-     * @param Command ...$commands
-     *
      * @return array<mixed>
      */
     public function pipeline(Command ...$commands): array;

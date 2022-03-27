@@ -28,6 +28,7 @@ class TermsOption extends AbstractCommandOption
 {
     /** @var bool */
     private $isExclusion = false;
+
     /** @var string */
     private $dictionary;
 

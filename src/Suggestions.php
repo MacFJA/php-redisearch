@@ -39,10 +39,13 @@ class Suggestions
 {
     /** @var string */
     private $dictionary;
+
     /** @var Client */
     private $client;
+
     /** @var int */
     private $length;
+
     /** @var string */
     private $version;
 

@@ -72,42 +72,60 @@ class CustomValidatorOptionTest extends \PHPUnit\Framework\TestCase
         switch ($testName) {
             case 'testGetOptionData':
                 yield [$invalidMinLengthOption, 'foo'];
+
                 yield [$validMinLengthOption, 'foobar'];
+
                 yield [$emptyMinLengthOption, null];
 
                 break;
 
             case 'testIsValid':
                 yield [$invalidMinLengthOption, false];
+
                 yield [$validMinLengthOption, true];
+
                 yield [$emptyMinLengthOption, false];
 
                 break;
 
             case 'testRender':
                 yield [$invalidMinLengthOption, []];
+
                 yield [$validMinLengthOption, ['foobar']];
+
                 yield [$emptyMinLengthOption, []];
 
                 break;
 
             case 'testIsCompatible':
                 yield [$validMinLengthOption, '1.0.0', true];
+
                 yield [$validMinLengthOption, '1.5.0', true];
+
                 yield [$validMinLengthOption, '2.0.0', true];
+
                 yield [$validMinLengthOption, '2.5.0', true];
+
                 yield [$validMinLengthOption, 'foo', false];
 
                 yield [$lowValidMinLengthOption, '1.0.0', true];
+
                 yield [$lowValidMinLengthOption, '1.5.0', true];
+
                 yield [$lowValidMinLengthOption, '2.0.0', true];
+
                 yield [$lowValidMinLengthOption, '2.5.0', true];
+
                 yield [$lowValidMinLengthOption, 'foo', false];
 
                 yield [$highValidMinLengthOption, '1.0.0', false];
+
                 yield [$highValidMinLengthOption, '1.5.0', false];
+
                 yield [$highValidMinLengthOption, '2.0.0', true];
+
                 yield [$highValidMinLengthOption, '2.5.0', true];
+
                 yield [$highValidMinLengthOption, 'foo', false];
 
                 break;

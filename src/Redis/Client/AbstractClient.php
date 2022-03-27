@@ -41,8 +41,6 @@ abstract class AbstractClient implements Client
     }
 
     /**
-     * @param Command ...$commands
-     *
      * @return array<mixed>
      */
     abstract protected function doPipeline(Command ...$commands): array;

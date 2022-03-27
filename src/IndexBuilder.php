@@ -97,40 +97,58 @@ class IndexBuilder
     use AddFieldOptionTrait;
 
     private const IS_ARRAY = ['prefixes', 'stopWords', 'fields'];
+
     /** @var null|string */
     private $index;
+
     /** @var null|string */
     private $structure;
+
     /** @var array<string> */
     private $prefixes = [];
+
     /** @var null|string */
     private $filter;
+
     /** @var null|string */
     private $defaultLanguage;
+
     /** @var null|string */
     private $languageField;
+
     /** @var null|float */
     private $defaultScore;
+
     /** @var null|string */
     private $scoreField;
+
     /** @var null|string */
     private $payloadField;
+
     /** @var bool */
     private $maxTextFields = false;
+
     /** @var null|int */
     private $temporary;
+
     /** @var bool */
     private $noOffsets = false;
+
     /** @var bool */
     private $noHighLight = false;
+
     /** @var bool */
     private $noFields = false;
+
     /** @var bool */
     private $noFrequencies = false;
+
     /** @var bool */
     private $skipInitialScan = false;
+
     /** @var null|array<string> */
     private $stopWords;
+
     /** @var array<CreateCommandFieldOption> */
     private $fields = [];
 

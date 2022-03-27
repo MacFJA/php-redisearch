@@ -28,6 +28,7 @@ class Fuzzy implements QueryElement
 {
     /** @var string */
     private $word;
+
     /** @var int */
     private $distance;
 

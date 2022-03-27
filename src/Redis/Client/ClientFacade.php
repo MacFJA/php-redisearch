@@ -53,9 +53,6 @@ class ClientFacade
     {
         /** @var Client $factory */
         foreach ($this->factories as $factory) {
-            if (!is_subclass_of($factory, Client::class)) {
-                continue;
-            }
             if ($factory::supports($redis)) {
                 return $factory::make($redis);
             }

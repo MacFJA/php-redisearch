@@ -39,6 +39,7 @@ function phpiredis_pconnect($host, $port = 6379): void
 function phpiredis_disconnect(): void
 {
 }
+
 /**
  * @param resource $redis
  * @param string[] $command
@@ -57,6 +58,7 @@ function phpiredis_command_bs($redis, array $command)
 function phpiredis_command($redis, string $command)
 {
 }
+
 /**
  * @param resource      $redis
  * @param array<string> $commands
@@ -113,6 +115,7 @@ function phpiredis_reader_feed($reader, string $response): void
 function phpiredis_reader_get_state($reader)
 {
 }
+
 /**
  * @param resource $reader
  *
@@ -144,6 +147,7 @@ function phpiredis_reader_destroy($redis): void
 function phpiredis_reader_set_error_handler($reader, ?callable $handler): void
 {
 }
+
 /**
  * @param resource $reader
  */

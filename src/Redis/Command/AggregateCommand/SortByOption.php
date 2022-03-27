@@ -29,8 +29,10 @@ use MacFJA\RediSearch\Redis\Command\PrefixFieldName;
 class SortByOption extends AbstractCommandOption
 {
     use PrefixFieldName;
+
     /** @var array<string,null|string> */
     private $fields = [];
+
     /** @var null|int */
     private $max;
 
