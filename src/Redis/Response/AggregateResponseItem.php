@@ -24,7 +24,7 @@ namespace MacFJA\RediSearch\Redis\Response;
 /**
  * @codeCoverageIgnore Simple value object
  */
-class AggregateResponseItem
+class AggregateResponseItem implements ResponseItem
 {
     /** @var array<string,null|array<mixed>|float|int|string> */
     private $fields = [];
@@ -49,8 +49,24 @@ class AggregateResponseItem
      * @param null|array<mixed>|float|int|string $default
      *
      * @return null|array<mixed>|float|int|string
+     *
+     * @deprecated Use ::getFieldValue instead
+     * @codeCoverageIgnore
+     * @psalm-suppress
+     * @SuppressWarnings
      */
     public function getValue(string $fieldName, $default = null)
+    {
+        trigger_error(sprintf(
+            'Method %s is deprecated from version 2.2.0, use %s::getFieldValue instead',
+            __METHOD__,
+            __CLASS__
+        ), E_USER_DEPRECATED);
+        // @phpstan-ignore-next-line
+        return $this->getFieldValue($fieldName, $default);
+    }
+
+    public function getFieldValue(string $fieldName, $default = null)
     {
         return $this->fields[$fieldName] ?? $default;
     }

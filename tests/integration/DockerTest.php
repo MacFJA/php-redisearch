@@ -58,7 +58,6 @@ use TinyRedisClient;
  * @covers \MacFJA\RediSearch\Redis\Client\CredisClient
  * @covers \MacFJA\RediSearch\Redis\Client\PredisClient
  * @covers \MacFJA\RediSearch\Redis\Client\RedisentClient
- * @covers \MacFJA\RediSearch\Redis\Client\Rediska\RediskaRediSearchCommand
  * @covers \MacFJA\RediSearch\Redis\Client\RediskaClient
  * @covers \MacFJA\RediSearch\Redis\Client\TinyRedisClient
  * @covers \MacFJA\RediSearch\Redis\Command\Aggregate
@@ -214,8 +213,9 @@ class DockerTest extends TestCase
 
         /** @var PaginatedResponse $result */
         $result = $client->execute($search);
-        static::assertCount(3, $result);
+        static::assertCount(1, $result);
         static::assertSame(1, $result->getPageCount());
+        static::assertSame(3, $result->getTotalCount());
 
         /** @var array<SearchResponseItem> $page */
         foreach ($result as $page) {
@@ -255,12 +255,13 @@ class DockerTest extends TestCase
                 ->addGroupBy(new GroupByOption([], [ReduceOption::toList('age', 'list')]))
         );
 
-        static::assertCount(3, $result[0]);
-        static::assertEquals('1', current($result[1])[0]->getValue('count'));
-        static::assertEquals('2', current($result[1])[1]->getValue('count'));
-        static::assertEquals('3', current($result[2])[0]->getValue('count'));
-        static::assertEquals('3', current($result[3])[0]->getValue('count'));
-        static::assertEquals(['30'], current($result[4])[0]->getValue('list'));
+        static::assertCount(1, $result[0]);
+        static::assertSame(3, $result[0]->getTotalCount());
+        static::assertEquals('1', current($result[1])[0]->getFieldValue('count'));
+        static::assertEquals('2', current($result[1])[1]->getFieldValue('count'));
+        static::assertEquals('3', current($result[2])[0]->getFieldValue('count'));
+        static::assertEquals('3', current($result[3])[0]->getFieldValue('count'));
+        static::assertEquals(['30'], current($result[4])[0]->getFieldValue('list'));
 
         $client->execute((new DropIndex())->setIndex('testDoc')->setDeleteDocument());
         $client->executeRaw('del', ...$docToRemove);

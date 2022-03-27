@@ -33,6 +33,9 @@ class CheprasovRedisClient extends AbstractClient
     /** @var AbstractRedisClient */
     private $redis;
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function __construct(AbstractRedisClient $redis)
     {
         if (!static::supports($redis)) {

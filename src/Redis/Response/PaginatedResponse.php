@@ -25,16 +25,19 @@ use function count;
 use Countable;
 use function is_int;
 use Iterator;
+use MacFJA\RediSearch\Exception\MissingClientException;
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command\PaginatedCommand;
 use MacFJA\RediSearch\Redis\Response;
 
 /**
- * @implements Iterator<int,AggregateResponseItem[]|SearchResponseItem[]>
+ * @implements Iterator<int,ResponseItem[]|AggregateResponseItem[]|SearchResponseItem[]>
  */
-class PaginatedResponse implements Response, Iterator, Countable
+class PaginatedResponse implements Response, Iterator, Countable, ClientAware
 {
-    /** @var array<AggregateResponseItem>|array<SearchResponseItem> */
+    use ClientAwareTrait;
+
+    /** @var array<ResponseItem> */
     private $items;
 
     /** @var PaginatedCommand */
@@ -43,9 +46,6 @@ class PaginatedResponse implements Response, Iterator, Countable
     /** @var int */
     private $totalCount;
 
-    /** @var Client */
-    private $client;
-
     /** @var null|int */
     private $requestedOffset;
 
@@ -53,7 +53,7 @@ class PaginatedResponse implements Response, Iterator, Countable
     private $requestedSize;
 
     /**
-     * @param AggregateResponseItem[]|SearchResponseItem[] $items
+     * @param ResponseItem[] $items
      */
     public function __construct(PaginatedCommand $command, int $totalCount, array $items)
     {
@@ -62,15 +62,8 @@ class PaginatedResponse implements Response, Iterator, Countable
         $this->lastCommand = $command;
     }
 
-    public function setClient(Client $client): PaginatedResponse
-    {
-        $this->client = $client;
-
-        return $this;
-    }
-
     /**
-     * @return array<AggregateResponseItem>|array<SearchResponseItem>
+     * @return array<ResponseItem>
      */
     public function current()
     {
@@ -141,17 +134,21 @@ class PaginatedResponse implements Response, Iterator, Countable
 
     public function count()
     {
-        return $this->getTotalCount();
+        return $this->getPageCount();
     }
 
     private function updateWithLimit(int $offset, int $size): void
     {
+        if (!($this->getClient() instanceof Client)) {
+            throw new MissingClientException();
+        }
+
         /** @var PaginatedCommand $nextCommand */
         $nextCommand = clone $this->lastCommand;
         $nextCommand->setLimit($offset, $size);
 
         /** @var PaginatedResponse $paginated */
-        $paginated = $this->client->execute($nextCommand);
+        $paginated = $this->getClient()->execute($nextCommand);
         $this->lastCommand = $nextCommand;
         $this->totalCount = $paginated->totalCount;
         $this->items = $paginated->items;

@@ -34,6 +34,9 @@ class PredisClient extends AbstractClient
     /** @var ClientInterface */
     private $redis;
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function __construct(ClientInterface $redis)
     {
         if (!static::supports($redis)) {

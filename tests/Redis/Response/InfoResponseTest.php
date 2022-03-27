@@ -23,6 +23,10 @@ namespace MacFJA\RediSearch\tests\Redis\Response;
 
 use BadMethodCallException;
 use InvalidArgumentException;
+use MacFJA\RediSearch\Redis\Command\CreateCommand\GeoFieldOption;
+use MacFJA\RediSearch\Redis\Command\CreateCommand\NumericFieldOption;
+use MacFJA\RediSearch\Redis\Command\CreateCommand\TagFieldOption;
+use MacFJA\RediSearch\Redis\Command\CreateCommand\TextFieldOption;
 use MacFJA\RediSearch\Redis\Command\Info;
 use MacFJA\RediSearch\Redis\Response\InfoResponse;
 use PHPUnit\Framework\TestCase;
@@ -36,6 +40,9 @@ use Predis\Response\Status;
  * @uses \MacFJA\RediSearch\Redis\Command\Option\NamelessOption
  * @uses \MacFJA\RediSearch\Redis\Command\AbstractCommand::__construct
  * @uses \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption
+ * @uses \MacFJA\RediSearch\Redis\Command\CreateCommand\GeoFieldOption
+ * @uses \MacFJA\RediSearch\Redis\Command\CreateCommand\NumericFieldOption
+ * @uses \MacFJA\RediSearch\Redis\Command\CreateCommand\TagFieldOption
  * @uses \MacFJA\RediSearch\Redis\Command\CreateCommand\TextFieldOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\DecoratedOptionAwareTrait
@@ -78,6 +85,22 @@ class InfoResponseTest extends TestCase
                     2 => new Status('TEXT'),
                     3 => new Status('WEIGHT'),
                     4 => '1',
+                ],
+                1 => [
+                    0 => new Status('labels'),
+                    1 => new Status('type'),
+                    2 => new Status('TAG'),
+                ],
+                2 => [
+                    0 => new Status('place'),
+                    1 => new Status('type'),
+                    2 => new Status('GEO'),
+                ],
+                3 => [
+                    0 => new Status('count'),
+                    1 => new Status('type'),
+                    2 => new Status('NUMERIC'),
+                    3 => new Status('NOINDEX'),
                 ],
             ],
             8 => new Status('num_docs'),
@@ -176,6 +199,13 @@ class InfoResponseTest extends TestCase
         $response = $parsed->getFieldsAsOption();
 
         static::assertSame(['text', 'TEXT', 'WEIGHT', '1'], $response[0]->render());
+        static::assertInstanceOf(TextFieldOption::class, $response[0]);
+        static::assertSame(['labels', 'TAG'], $response[1]->render());
+        static::assertInstanceOf(TagFieldOption::class, $response[1]);
+        static::assertSame(['place', 'GEO'], $response[2]->render());
+        static::assertInstanceOf(GeoFieldOption::class, $response[2]);
+        static::assertSame(['count', 'NUMERIC', 'NOINDEX'], $response[3]->render());
+        static::assertInstanceOf(NumericFieldOption::class, $response[3]);
     }
 
     public function doTestGetIndexDefinition(InfoResponse $parsed): void
@@ -231,5 +261,29 @@ class InfoResponseTest extends TestCase
         $response = new InfoResponse(['num_docs', '-nan']);
 
         static::assertNull($response->getNumDocs());
+    }
+
+    public function testDataCasting(): void
+    {
+        $response = new InfoResponse([
+            'records_per_doc_avg', '1.5',
+            'max_doc_id', '50',
+            'index_name', 'idx',
+            'indexing', '1',
+            'non_existent_string', 'hello',
+            'non_existent_float', 1.2,
+            'non_existent_int', 1,
+        ]);
+
+        static::assertSame(1.5, $response->getRecordsPerDocAvg());
+        static::assertSame(50, $response->getMaxDocId());
+        static::assertSame('idx', $response->getIndexName());
+        static::assertTrue($response->getIndexing());
+        // @phpstan-ignore-next-line
+        static::assertSame('hello', $response->getNonExistentString());
+        // @phpstan-ignore-next-line
+        static::assertSame(1.2, $response->getNonExistentFloat());
+        // @phpstan-ignore-next-line
+        static::assertSame(1, $response->getNonExistentInt());
     }
 }

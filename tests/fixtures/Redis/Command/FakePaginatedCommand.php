@@ -19,30 +19,44 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RediSearch\tests\Redis\Command;
+namespace MacFJA\RediSearch\tests\fixtures\Redis\Command;
 
-use MacFJA\RediSearch\Redis\Command\IndexList;
-use PHPUnit\Framework\TestCase;
+use MacFJA\RediSearch\Redis\Command;
+use MacFJA\RediSearch\Redis\Command\PaginatedCommand;
 
-/**
- * @covers \MacFJA\RediSearch\Redis\Command\IndexList
- *
- * @internal
- */
-class IndexListTest extends TestCase
+class FakePaginatedCommand extends Command\AbstractCommand implements PaginatedCommand
 {
-    public function testGetId(): void
+    /** @var null|int */
+    private $size;
+
+    /** @var null|int */
+    private $offset;
+
+    public function getId(): string
     {
-        $command = new IndexList();
-        static::assertSame('FT._LIST', $command->getId());
+        return 'fake';
     }
 
-    public function testGetRediSearchVersion(): void
+    public function getOffset(): ?int
     {
-        $command = new IndexList();
+        return $this->offset;
+    }
 
-        static::assertSame('2.0.0', $command->getRediSearchVersion());
-        $command->setRediSearchVersion('2.2.0');
-        static::assertSame('2.2.0', $command->getRediSearchVersion());
+    public function getSize(): ?int
+    {
+        return $this->size;
+    }
+
+    public function setLimit(int $offset, int $size): PaginatedCommand
+    {
+        $this->offset = $offset;
+        $this->size = $size;
+
+        return $this;
+    }
+
+    protected function getRequiredOptions(): array
+    {
+        return [];
     }
 }

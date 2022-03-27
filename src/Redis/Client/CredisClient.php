@@ -32,6 +32,9 @@ class CredisClient extends AbstractClient
     /** @var Credis_Client */
     private $redis;
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function __construct(Credis_Client $redis)
     {
         if (!self::supports($redis)) {

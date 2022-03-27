@@ -21,7 +21,9 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\tests\Redis\Command;
 
+use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\CursorRead;
+use MacFJA\RediSearch\Redis\Response\CursorResponse;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -32,6 +34,8 @@ use PHPUnit\Framework\TestCase;
  * @uses \MacFJA\RediSearch\Redis\Command\Option\NamelessOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\NamedOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\FlagOption
+ * @uses \MacFJA\RediSearch\Redis\Response\CursorResponse
+ * @uses \MacFJA\RediSearch\Exception\UnexpectedServerResponseException
  *
  * @internal
  */
@@ -62,5 +66,38 @@ class CursorReadTest extends TestCase
         $command->setCursorId(398);
         $command->setCount(30);
         static::assertSame(['READ', 'idx', 398, 'COUNT', 30], $command->getArguments());
+    }
+
+    public function testParseResponseWithError(): void
+    {
+        $this->expectException(UnexpectedServerResponseException::class);
+
+        $command = new CursorRead();
+        $command->parseResponse('');
+    }
+
+    public function testParseResponse(): void
+    {
+        $rawResponse = [
+            0 => [
+                0 => 0,
+                1 => [
+                    0 => 'f1',
+                    1 => 'bar',
+                ],
+                2 => [
+                    0 => 'f1',
+                    1 => 'baz',
+                ],
+            ],
+            1 => 976015094,
+        ];
+        $command = new CursorRead();
+        $command->setIndex('idx')
+            ->setCursorId(976015094)
+        ;
+        $response = $command->parseResponse($rawResponse);
+
+        static::assertInstanceOf(CursorResponse::class, $response);
     }
 }

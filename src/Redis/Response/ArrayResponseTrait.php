@@ -86,9 +86,12 @@ trait ArrayResponseTrait
      */
     private static function getKeys(array $notKeyedArray): array
     {
-        $keys = array_filter(array_values($notKeyedArray), static function (int $key): bool {
+        if (count($notKeyedArray) % 2 > 0) {
+            array_pop($notKeyedArray);
+        }
+        $keys = array_values(array_filter(array_values($notKeyedArray), static function (int $key): bool {
             return 0 === $key % 2;
-        }, ARRAY_FILTER_USE_KEY);
+        }, ARRAY_FILTER_USE_KEY));
 
         return array_map(static function ($key): string {
             return (string) $key;

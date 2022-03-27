@@ -31,6 +31,9 @@ class RedisentClient extends AbstractClient
     /** @var Redis */
     private $redis;
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function __construct(Redis $redis)
     {
         if (!static::supports($redis)) {

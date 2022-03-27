@@ -30,6 +30,9 @@ class TinyRedisClient extends AbstractClient
     /** @var \TinyRedisClient */
     private $redis;
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function __construct(\TinyRedisClient $redis)
     {
         if (!self::supports($redis)) {

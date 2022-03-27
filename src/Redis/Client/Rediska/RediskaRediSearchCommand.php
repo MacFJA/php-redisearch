@@ -26,6 +26,9 @@ use MacFJA\RediSearch\Redis\Client\AbstractClient;
 use Rediska_Command_Abstract;
 use Rediska_Connection_Exec;
 
+/**
+ * @codeCoverageIgnore
+ */
 class RediskaRediSearchCommand extends Rediska_Command_Abstract
 {
     public function create(): Rediska_Connection_Exec

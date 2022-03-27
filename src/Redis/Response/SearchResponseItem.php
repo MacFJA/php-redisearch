@@ -24,7 +24,7 @@ namespace MacFJA\RediSearch\Redis\Response;
 /**
  * @codeCoverageIgnore Simple value object
  */
-class SearchResponseItem
+class SearchResponseItem implements ResponseItem
 {
     /** @var string */
     private $hash;

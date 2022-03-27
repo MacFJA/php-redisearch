@@ -19,30 +19,19 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RediSearch\tests\Redis\Command;
+namespace MacFJA\RediSearch\Redis\Response;
 
-use MacFJA\RediSearch\Redis\Command\IndexList;
-use PHPUnit\Framework\TestCase;
-
-/**
- * @covers \MacFJA\RediSearch\Redis\Command\IndexList
- *
- * @internal
- */
-class IndexListTest extends TestCase
+interface ResponseItem
 {
-    public function testGetId(): void
-    {
-        $command = new IndexList();
-        static::assertSame('FT._LIST', $command->getId());
-    }
+    /**
+     * @return array<string,null|array<mixed>|float|int|string>
+     */
+    public function getFields(): array;
 
-    public function testGetRediSearchVersion(): void
-    {
-        $command = new IndexList();
-
-        static::assertSame('2.0.0', $command->getRediSearchVersion());
-        $command->setRediSearchVersion('2.2.0');
-        static::assertSame('2.2.0', $command->getRediSearchVersion());
-    }
+    /**
+     * @param null|array<mixed>|bool|float|int|string $default
+     *
+     * @return null|array<mixed>|bool|float|int|string
+     */
+    public function getFieldValue(string $fieldName, $default = null);
 }

@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\tests\Redis\Command\Option;
 
+use BadMethodCallException;
 use Generator;
 use MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
@@ -59,6 +60,24 @@ class CustomValidatorOptionTest extends \PHPUnit\Framework\TestCase
         static::assertTrue($validList->isValid());
         static::assertFalse($invalidNumeric->isValid());
         static::assertFalse($invalidList->isValid());
+    }
+
+    public function testInvalidMethodName(): void
+    {
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage('Call undefined method invalidName');
+
+        $decorator = new CustomValidatorOption(new NamelessOption('foo'), new Length(4));
+        // @phpstan-ignore-next-line
+        $decorator->invalidName();
+    }
+
+    public function testVersionConstraint(): void
+    {
+        $decorator = new CustomValidatorOption(new NamelessOption('foo'), new Length(4));
+        static::assertSame('*', $decorator->getVersionConstraint());
+        $decorator = new CustomValidatorOption(new NamelessOption('foo', '>=1.0.0'), new Length(4));
+        static::assertSame('>=1.0.0', $decorator->getVersionConstraint());
     }
 
     public function dataProvider(string $testName): Generator
