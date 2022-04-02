@@ -28,6 +28,7 @@ class LimitOption extends AbstractCommandOption
 {
     /** @var null|int */
     private $offset;
+
     /** @var null|int */
     private $size;
 

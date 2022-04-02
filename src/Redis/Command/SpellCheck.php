@@ -100,8 +100,12 @@ class SpellCheck extends AbstractCommand
             $misspelled = array_shift($group);
             $suggestions = reset($group);
             $suggestions = array_column($suggestions, 0, 1);
+            $castedSuggestions = [];
+            foreach ($suggestions as $term => $score) {
+                $castedSuggestions[(string) $term] = (float) $score;
+            }
 
-            return new SpellCheckResponseItem($misspelled, $suggestions);
+            return new SpellCheckResponseItem($misspelled, $castedSuggestions);
         }, $data);
 
         return array_filter($items);

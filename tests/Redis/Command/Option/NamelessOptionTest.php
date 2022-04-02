@@ -57,21 +57,27 @@ class NamelessOptionTest extends TestCase
         switch ($testName) {
             case 'testGetOptionData':
                 yield [$defaultValueOption, null];
+
                 yield [$withValueOption, 'FOO'];
+
                 yield [$emptyValueOption, ''];
 
                 break;
 
             case 'testIsValid':
                 yield [$defaultValueOption, false];
+
                 yield [$withValueOption, true];
+
                 yield [$emptyValueOption, true];
 
                 break;
 
             case 'testRender':
                 yield [$defaultValueOption, []];
+
                 yield [$withValueOption, ['FOO']];
+
                 yield [$emptyValueOption, ['']];
 
                 break;

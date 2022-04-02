@@ -25,6 +25,7 @@ class FlagOption extends AbstractCommandOption
 {
     /** @var string */
     private $name;
+
     /** @var bool */
     private $active;
 

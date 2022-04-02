@@ -29,6 +29,7 @@ class FieldFacet implements QueryElement
 {
     /** @var array<string> */
     private $fields;
+
     /** @var QueryElement */
     private $element;
 

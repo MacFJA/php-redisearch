@@ -35,20 +35,28 @@ class CursorResponse implements Response, Iterator
 {
     /** @var array<AggregateResponseItem> */
     private $items;
+
     /** @var int */
     private $totalCount;
+
     /** @var Client */
     private $client;
+
     /** @var bool */
     private $doNext = false;
+
     /** @var int */
     private $cursorId;
+
     /** @var int */
     private $size;
+
     /** @var int */
     private $offset = 0;
+
     /** @var string */
     private $index;
+
     /** @var string */
     private $redisVersion;
 
@@ -82,6 +90,7 @@ class CursorResponse implements Response, Iterator
             $cursorRead->setIndex($this->index);
             $cursorRead->setCursorId($this->cursorId);
             $cursorRead->setCount($this->getPageSize());
+
             /** @var CursorResponse $next */
             $next = $this->client->execute($cursorRead);
             $this->cursorId = $next->cursorId;

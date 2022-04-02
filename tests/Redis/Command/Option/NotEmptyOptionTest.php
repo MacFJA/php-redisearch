@@ -27,6 +27,7 @@ use MacFJA\RediSearch\Redis\Command\Option\NamedOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
 use MacFJA\RediSearch\Redis\Command\Option\NotEmptyOption;
 use MacFJA\RediSearch\Redis\Command\Option\NumberedOption;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption
@@ -40,7 +41,7 @@ use MacFJA\RediSearch\Redis\Command\Option\NumberedOption;
  *
  * @internal
  */
-class NotEmptyOptionTest extends \PHPUnit\Framework\TestCase
+class NotEmptyOptionTest extends TestCase
 {
     use BaseOptionTestTrait;
     use TestIsCompatibleTrait;
@@ -79,58 +80,92 @@ class NotEmptyOptionTest extends \PHPUnit\Framework\TestCase
         switch ($testName) {
             case 'testGetOptionData':
                 yield [$namelessOption, 'foo'];
+
                 yield [$namedOption, 'bar'];
+
                 yield [$numberedOption, ['bar', 'foobar']];
+
                 yield [$emptyNamelessOption, null];
+
                 yield [$emptyNamedOption, null];
+
                 yield [$emptyNumberedOption, []];
+
                 yield [$nullNumberedOption, null];
+
                 yield [$trueFlagOption, true];
+
                 yield [$falseFlagOption, false];
 
                 break;
 
             case 'testIsValid':
                 yield [$namelessOption, true];
+
                 yield [$namedOption, true];
+
                 yield [$numberedOption, true];
+
                 yield [$emptyNamelessOption, false];
+
                 yield [$emptyNamedOption, false];
+
                 yield [$emptyNumberedOption, false];
+
                 yield [$trueFlagOption, true];
+
                 yield [$falseFlagOption, false];
 
                 break;
 
             case 'testRender':
                 yield [$namelessOption, ['foo']];
+
                 yield [$namedOption, ['FOO', 'bar']];
+
                 yield [$numberedOption, ['FOO', 2, 'bar', 'foobar']];
+
                 yield [$emptyNamelessOption, []];
+
                 yield [$emptyNamedOption, []];
+
                 yield [$emptyNumberedOption, []];
+
                 yield [$trueFlagOption, ['FOO']];
+
                 yield [$falseFlagOption, []];
 
                 break;
 
             case 'testIsCompatible':
                 yield [$namelessOption, '1.0.0', true];
+
                 yield [$namelessOption, '1.5.0', true];
+
                 yield [$namelessOption, '2.0.0', true];
+
                 yield [$namelessOption, '2.5.0', true];
+
                 yield [$namelessOption, 'foo', false];
 
                 yield [$lowOptionOption, '1.0.0', true];
+
                 yield [$lowOptionOption, '1.5.0', true];
+
                 yield [$lowOptionOption, '2.0.0', true];
+
                 yield [$lowOptionOption, '2.5.0', true];
+
                 yield [$lowOptionOption, 'foo', false];
 
                 yield [$highOptionOption, '1.0.0', false];
+
                 yield [$highOptionOption, '1.5.0', false];
+
                 yield [$highOptionOption, '2.0.0', true];
+
                 yield [$highOptionOption, '2.5.0', true];
+
                 yield [$highOptionOption, 'foo', false];
 
                 break;

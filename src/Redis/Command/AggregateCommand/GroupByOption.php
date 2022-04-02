@@ -31,6 +31,7 @@ class GroupByOption extends AbstractCommandOption
 
     /** @var array<ReduceOption> */
     private $reducers = [];
+
     /** @var array<string> */
     private $fields;
 

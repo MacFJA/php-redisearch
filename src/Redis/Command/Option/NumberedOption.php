@@ -29,6 +29,7 @@ class NumberedOption extends AbstractCommandOption
 {
     /** @var string */
     private $name;
+
     /** @var null|array<float|int|string> */
     private $arguments;
 

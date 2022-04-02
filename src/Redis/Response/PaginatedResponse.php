@@ -36,15 +36,19 @@ class PaginatedResponse implements Response, Iterator, Countable
 {
     /** @var array<AggregateResponseItem>|array<SearchResponseItem> */
     private $items;
+
     /** @var PaginatedCommand */
     private $lastCommand;
+
     /** @var int */
     private $totalCount;
+
     /** @var Client */
     private $client;
 
     /** @var null|int */
     private $requestedOffset;
+
     /** @var null|int */
     private $requestedSize;
 

@@ -30,6 +30,7 @@ class SpellCheckResponseItem
 {
     /** @var string */
     private $term;
+
     /** @var array<string,float> */
     private $suggestions;
 

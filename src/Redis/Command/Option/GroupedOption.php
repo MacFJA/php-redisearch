@@ -25,6 +25,7 @@ use function array_key_exists;
 use BadMethodCallException;
 use function in_array;
 use function is_bool;
+use function is_scalar;
 use OutOfRangeException;
 
 class GroupedOption extends AbstractCommandOption
@@ -33,8 +34,10 @@ class GroupedOption extends AbstractCommandOption
 
     /** @var array<string,CommandOption> */
     private $options;
+
     /** @var array<string> */
     private $required;
+
     /** @var array<string> */
     private $locked;
 

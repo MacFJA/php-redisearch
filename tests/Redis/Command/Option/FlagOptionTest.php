@@ -67,21 +67,27 @@ class FlagOptionTest extends TestCase
         switch ($testName) {
             case 'testGetOptionData':
                 yield [$defaultValueFlag, false];
+
                 yield [$notActiveFlag, false];
+
                 yield [$activeFlag, true];
 
                 break;
 
             case 'testIsValid':
                 yield [$defaultValueFlag, true];
+
                 yield [$notActiveFlag, true];
+
                 yield [$activeFlag, true];
 
                 break;
 
             case 'testRender':
                 yield [$defaultValueFlag, []];
+
                 yield [$notActiveFlag, []];
+
                 yield [$activeFlag, ['BAR']];
 
                 break;

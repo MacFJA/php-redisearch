@@ -34,10 +34,12 @@ abstract class AbstractCommand implements Command
 {
     public const MAX_IMPLEMENTED_VERSION = '2.0.12';
     public const MIN_IMPLEMENTED_VERSION = '2.0.0';
+
     /**
      * @var array<array<CommandOption>|CommandOption|mixed>
      */
     protected $options;
+
     /** @var string */
     private $rediSearchVersion;
 

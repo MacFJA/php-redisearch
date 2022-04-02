@@ -65,18 +65,21 @@ class NamedOptionTest extends TestCase
         switch ($testName) {
             case 'testGetOptionData':
                 yield [$defaultValueOption, null];
+
                 yield [$withValueOption, 'bar'];
 
                 break;
 
             case 'testIsValid':
                 yield [$defaultValueOption, false];
+
                 yield [$withValueOption, true];
 
                 break;
 
             case 'testRender':
                 yield [$defaultValueOption, []];
+
                 yield [$withValueOption, ['FOO', 'bar']];
 
                 break;

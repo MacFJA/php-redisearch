@@ -44,10 +44,13 @@ class Index
 {
     /** @var Client */
     private $client;
+
     /** @var InfoResponse */
     private $info;
+
     /** @var string */
     private $index;
+
     /** @var string */
     private $version;
 

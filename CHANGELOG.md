@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased v2.x]
 
+### Changed
+
+- (dev) Update version and rules of PHP-CS-Fixer and PHPStan
+
 ## [2.1.1]
 
 ### Fixed
