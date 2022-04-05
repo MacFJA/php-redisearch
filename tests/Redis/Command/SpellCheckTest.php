@@ -36,6 +36,7 @@ use PHPUnit\Framework\TestCase;
  **
  * @uses \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\DecoratedOptionTrait
  * @uses \MacFJA\RediSearch\Redis\Command\Option\NamelessOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\NamedOption
  *
@@ -51,19 +52,21 @@ class SpellCheckTest extends TestCase
 
     public function testFullOption(): void
     {
-        $command = new SpellCheck();
+        $command = new SpellCheck(SpellCheck::MAX_IMPLEMENTED_VERSION);
         $command
             ->setIndex('idx')
             ->setQuery('@text1:"hello world"')
             ->setDistance(2)
             ->addTerms('badword', true)
             ->addTerms('cities', false)
+            ->setDialect(2)
             ;
 
         static::assertSame([
             'idx',
             '@text1:"hello world"',
             'DISTANCE', 2,
+            'DIALECT', 2,
             'TERMS', 'EXCLUDE', 'badword',
             'TERMS', 'INCLUDE', 'cities',
         ], $command->getArguments());

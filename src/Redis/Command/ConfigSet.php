@@ -33,7 +33,8 @@ class ConfigSet extends AbstractCommand
             'action' => new FlagOption('SET', true, '>=2.0.0'),
             'options' => [
                 CustomValidatorOption::allowedValues(new NamelessOption(null, '>=2.0.0 <2.0.6'), ['NOGC', 'MAXEXPANSIONS', 'TIMEOUT', 'ON_TIMEOUT', 'MIN_PHONETIC_TERM_LEN']),
-                CustomValidatorOption::allowedValues(new NamelessOption(null, '>=2.0.6'), ['NOGC', 'MINPREFIX', 'MAXEXPANSIONS', 'MAXFILTEREXPANSION', 'TIMEOUT', 'ON_TIMEOUT', 'MIN_PHONETIC_TERM_LEN']),
+                CustomValidatorOption::allowedValues(new NamelessOption(null, '>=2.0.6 < 2.4.3'), ['NOGC', 'MINPREFIX', 'MAXEXPANSIONS', 'MAXFILTEREXPANSION', 'TIMEOUT', 'ON_TIMEOUT', 'MIN_PHONETIC_TERM_LEN']),
+                CustomValidatorOption::allowedValues(new NamelessOption(null, '>=2.4.3'), ['NOGC', 'MINPREFIX', 'MAXEXPANSIONS', 'TIMEOUT', 'ON_TIMEOUT', 'MIN_PHONETIC_TERM_LEN', 'DEFAULT_DIALECT']),
             ],
             'value' => new NamelessOption(null, '>=2.0.0'),
         ], $rediSearchVersion);

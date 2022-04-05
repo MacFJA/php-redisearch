@@ -31,6 +31,7 @@ use MacFJA\RediSearch\Redis\Command\AggregateCommand\LimitOption;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\SortByOption;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\WithCursor;
 use MacFJA\RediSearch\Redis\Command\Option\CommandOption;
+use MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption as CV;
 use MacFJA\RediSearch\Redis\Command\Option\FlagOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamedOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
@@ -63,6 +64,7 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
             'limit' => new LimitOption(),
             'filter' => [],
             'cursor' => new WithCursor(),
+            'dialect' => CV::isNumeric(new NamedOption('DIALECT', null, '>=2.4.3')),
         ], $rediSearchVersion);
     }
 
@@ -152,6 +154,13 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
     {
         $this->options['load']->setArguments($field);
         $this->lastAdded = $this->options['load'];
+
+        return $this;
+    }
+
+    public function setDialect(int $version): self
+    {
+        $this->options['dialect']->setValue($version);
 
         return $this;
     }

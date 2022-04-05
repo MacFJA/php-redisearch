@@ -123,7 +123,7 @@ class AggregateTest extends TestCase
 
     public function testFullOption(): void
     {
-        $command = new Aggregate();
+        $command = new Aggregate(Aggregate::MAX_IMPLEMENTED_VERSION);
         $command
             ->setIndex('idx')
             ->setQuery('@text1:"hello world"')
@@ -137,6 +137,7 @@ class AggregateTest extends TestCase
             ->setLimit(12, 35)
             ->addApply('@timestamp - (@timestamp % 86400)', 'day')
             ->setWithCursor(20, 30)
+            ->setDialect(2)
             ;
 
         static::assertSame([
@@ -150,6 +151,7 @@ class AggregateTest extends TestCase
             'LIMIT', 12, 35,
             'FILTER', "@name=='foo' && @age < 20",
             'WITHCURSOR', 'COUNT', 20, 'MAXIDLE', 30,
+            'DIALECT', 2,
         ], $command->getArguments());
     }
 

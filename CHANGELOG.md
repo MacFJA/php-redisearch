@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased v2.x]
 
+### Added
+
+- Add `DIALECT` option from RediSearch `2.4.3`
+
 ### Changed
 
 - (dev) Update version and rules of PHP-CS-Fixer and PHPStan
