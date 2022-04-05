@@ -121,6 +121,48 @@ class AggregateTest extends TestCase
         static::assertSame(10, $command->getSize());
     }
 
+    public function testLoadAll(): void
+    {
+        $command = new Aggregate('2.0.12');
+        $command
+            ->setIndex('idx')
+            ->setQuery('@text1:"hello world"')
+            ->setLoadAll()
+        ;
+
+        static::assertSame([
+            'idx',
+            '@text1:"hello world"',
+        ], $command->getArguments());
+
+        $command = new Aggregate('2.0.13');
+        $command
+            ->setIndex('idx')
+            ->setQuery('@text1:"hello world"')
+            ->setLoadAll()
+        ;
+
+        static::assertSame([
+            'idx',
+            '@text1:"hello world"',
+            'LOAD', 'ALL',
+        ], $command->getArguments());
+
+        $command = new Aggregate('2.0.13');
+        $command
+            ->setIndex('idx')
+            ->setQuery('@text1:"hello world"')
+            ->setLoad('foo', 'bar')
+            ->setLoadAll()
+        ;
+
+        static::assertSame([
+            'idx',
+            '@text1:"hello world"',
+            'LOAD', 'ALL',
+        ], $command->getArguments());
+    }
+
     public function testFullOption(): void
     {
         $command = new Aggregate();

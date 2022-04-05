@@ -32,6 +32,7 @@ use MacFJA\RediSearch\Redis\Command\AggregateCommand\LimitOption;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\SortByOption;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\WithCursor;
 use MacFJA\RediSearch\Redis\Command\Option\CommandOption;
+use MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption as CV;
 use MacFJA\RediSearch\Redis\Command\Option\FlagOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamedOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
@@ -58,6 +59,7 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
             'query' => new NamelessOption(null, '>=2.0.0'),
             'verbatim' => new FlagOption('VERBATIM', false, '>= 2.0.0'),
             'load' => new NumberedOption('LOAD', null, '>=2.0.0'),
+            'loadall' => CV::allowedValues(new NamedOption('LOAD', null, '>=2.0.13'), ['ALL']),
             'groupby' => [],
             'sortby' => new SortByOption(),
             'apply' => [],
@@ -153,6 +155,15 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
     {
         $this->options['load']->setArguments($field);
         $this->lastAdded = $this->options['load'];
+
+        return $this;
+    }
+
+    public function setLoadAll(): self
+    {
+        $this->options['load']->setArguments(null);
+        $this->options['loadall']->setValue('ALL');
+        $this->lastAdded = $this->options['loadall'];
 
         return $this;
     }

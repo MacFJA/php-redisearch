@@ -50,6 +50,12 @@ class NumberedOptionTest extends TestCase
         $option = new NumberedOption('FOO', ['foo']);
         static::assertIsArray($option->getArguments());
         static::assertEquals(['foo'], $option->getArguments());
+
+        $option = new NumberedOption('FOO', ['foo']);
+        $option->setArguments(null);
+        static::assertNull($option->getArguments());
+        static::assertFalse($option->isValid());
+        static::assertSame([], $option->render());
     }
 
     public function testGetName(): void

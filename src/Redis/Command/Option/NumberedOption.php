@@ -44,9 +44,9 @@ class NumberedOption extends AbstractCommandOption
     }
 
     /**
-     * @param array<float|int|string> $arguments
+     * @param null|array<float|int|string> $arguments
      */
-    public function setArguments(array $arguments): void
+    public function setArguments(?array $arguments): void
     {
         $this->arguments = $arguments;
     }

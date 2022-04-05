@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation on paginated responses
 - Throw custom exception is client is missing
 - Add compatibility for Predis version 2.x
+- `LOAD ALL` option on Aggregate command (RediSearch `2.0.13`)
 - (dev) Add `make clean` to remove all generated files
 - (dev) Add code coverage to `\MacFJA\RediSearch\Index`
 - (dev) Add integration test for document insertion
