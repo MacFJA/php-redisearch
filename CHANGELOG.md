@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Throw custom exception is client is missing
 - Add compatibility for Predis version 2.x
 - `LOAD ALL` option on Aggregate command (RediSearch `2.0.13`)
+- Profile command (RediSearch `2.2.0`) ([Issue#4])
 - (dev) Add `make clean` to remove all generated files
 - (dev) Add code coverage to `\MacFJA\RediSearch\Index`
 - (dev) Add integration test for document insertion
@@ -223,6 +224,7 @@ First version
 [1.0.0]: https://github.com/MacFJA/php-redisearch/releases/tag/1.0.0
 
 [Issue#2]: https://github.com/MacFJA/php-redisearch/issues/2
+[Issue#4]: https://github.com/MacFJA/php-redisearch/issues/4
 [Issue#5]: https://github.com/MacFJA/php-redisearch/issues/5
 [Issue#6]: https://github.com/MacFJA/php-redisearch/issues/6
 [Issue#9]: https://github.com/MacFJA/php-redisearch/issues/9

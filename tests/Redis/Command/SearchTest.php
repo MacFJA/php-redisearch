@@ -63,6 +63,13 @@ class SearchTest extends TestCase
         static::assertSame('FT.SEARCH', $command->getId());
     }
 
+    public function testGetIndex(): void
+    {
+        $command = new Search();
+        $command->setIndex('idx');
+        static::assertSame('idx', $command->getIndex());
+    }
+
     public function testSizeOptions(): void
     {
         $command = new Search();

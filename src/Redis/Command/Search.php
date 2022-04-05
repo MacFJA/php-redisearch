@@ -42,7 +42,6 @@ use MacFJA\RediSearch\Redis\Response\PaginatedResponse;
 use MacFJA\RediSearch\Redis\Response\SearchResponseItem;
 
 /**
- * @method PaginatedResponse<SearchResponseItem> parseResponse(mixed $data)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Search extends AbstractCommand implements PaginatedCommand
@@ -88,6 +87,11 @@ class Search extends AbstractCommand implements PaginatedCommand
         $this->options['index']->setValue($index);
 
         return $this;
+    }
+
+    public function getIndex(): string
+    {
+        return $this->options['index']->getValue();
     }
 
     public function setQuery(string $query): self
@@ -306,6 +310,7 @@ class Search extends AbstractCommand implements PaginatedCommand
      * @param mixed $data
      *
      * @return PaginatedResponse
+     * @psalm-return PaginatedResponse<SearchResponseItem>
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
