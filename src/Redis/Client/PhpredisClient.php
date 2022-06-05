@@ -49,9 +49,11 @@ class PhpredisClient extends AbstractClient
     {
         $arguments = $command->getArguments();
         if (0 === count($arguments)) {
-            $arguments = [null];
+            /** @psalm-suppress TooFewArguments */
+            $rawResponse = $this->redis->rawCommand($command->getId());
+        } else {
+            $rawResponse = $this->redis->rawCommand($command->getId(), ...$arguments);
         }
-        $rawResponse = $this->redis->rawCommand($command->getId(), ...$arguments);
 
         return $command->parseResponse($rawResponse);
     }
@@ -73,9 +75,6 @@ class PhpredisClient extends AbstractClient
     {
         if (count($args) < 1) {
             return null;
-        }
-        if (count($args) < 2) {
-            $args[] = null;
         }
         // @phpstan-ignore-next-line
         return $this->redis->rawCommand(...$args);

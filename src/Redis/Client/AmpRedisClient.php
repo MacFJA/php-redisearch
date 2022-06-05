@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Client;
 
+use Amp\Promise;
 use function Amp\Promise\wait;
 use Amp\Redis\Redis;
 use function function_exists;
@@ -50,14 +51,19 @@ class AmpRedisClient extends AbstractClient
 
     public function execute(Command $command)
     {
-        $result = wait($this->redis->query($command->getId(), ...array_map('strval', $command->getArguments())));
+        /** @var Promise<mixed> $query */
+        $query = $this->redis->query($command->getId(), ...array_map('strval', $command->getArguments()));
+        $result = wait($query);
 
         return $command->parseResponse($result);
     }
 
     public function executeRaw(...$args)
     {
-        return wait($this->redis->query(...array_map('strval', $args)));
+        /** @var Promise<mixed> $query */
+        $query = $this->redis->query(...array_map('strval', $args));
+
+        return wait($query);
     }
 
     public static function supports($redis): bool
