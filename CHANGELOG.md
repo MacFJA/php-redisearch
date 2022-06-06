@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased v2.x]
 
+## [2.1.2]
+
 ### Fixed
 
 - Allow Phpredis raw command to have 0 arguments ([Issue#39])
@@ -178,7 +180,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First version
 
-[Unreleased v2.x]: https://github.com/MacFJA/php-redisearch/compare/2.1.1...HEAD
+[Unreleased v2.x]: https://github.com/MacFJA/php-redisearch/compare/2.1.2...HEAD
+[2.1.2]: https://github.com/MacFJA/php-redisearch/compare/2.1.1...2.1.2
 [2.1.1]: https://github.com/MacFJA/php-redisearch/compare/2.1.0...2.1.1
 [2.1.0]: https://github.com/MacFJA/php-redisearch/compare/2.0.2...2.1.0
 [2.0.2]: https://github.com/MacFJA/php-redisearch/compare/2.0.1...2.0.2
