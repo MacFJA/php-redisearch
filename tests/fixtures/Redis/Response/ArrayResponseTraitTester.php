@@ -19,30 +19,51 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RediSearch\tests\Redis\Command;
+namespace MacFJA\RediSearch\tests\fixtures\Redis\Response;
 
-use MacFJA\RediSearch\Redis\Command\IndexList;
-use PHPUnit\Framework\TestCase;
+use MacFJA\RediSearch\Redis\Response\ArrayResponseTrait;
 
-/**
- * @covers \MacFJA\RediSearch\Redis\Command\IndexList
- *
- * @internal
- */
-class IndexListTest extends TestCase
+class ArrayResponseTraitTester
 {
-    public function testGetId(): void
+    use ArrayResponseTrait;
+
+    /**
+     * @param array<float|int|mixed|string> $notKeyedArray
+     *
+     * @return array<string,mixed>
+     */
+    public function publicGetPairs($notKeyedArray)
     {
-        $command = new IndexList();
-        static::assertSame('FT._LIST', $command->getId());
+        return self::getPairs($notKeyedArray);
     }
 
-    public function testGetRediSearchVersion(): void
+    /**
+     * @param array<float|int|mixed|string> $notKeyedArray
+     *
+     * @return array<string>
+     */
+    public function publicGetKeys($notKeyedArray)
     {
-        $command = new IndexList();
+        return self::getKeys($notKeyedArray);
+    }
 
-        static::assertSame('2.0.0', $command->getRediSearchVersion());
-        $command->setRediSearchVersion('2.2.0');
-        static::assertSame('2.2.0', $command->getRediSearchVersion());
+    /**
+     * @param array<array|mixed> $notKeyedArray
+     *
+     * @return null|array<mixed>|bool|float|int|string
+     */
+    public function publicGetValue(array $notKeyedArray, string $key)
+    {
+        return self::getValue($notKeyedArray, $key);
+    }
+
+    /**
+     * @param array<array|mixed> $notKeyedArray
+     *
+     * @return null|bool|float|int|string
+     */
+    public function publicGetNextValue(array $notKeyedArray, string $key)
+    {
+        return self::getNextValue($notKeyedArray, $key);
     }
 }

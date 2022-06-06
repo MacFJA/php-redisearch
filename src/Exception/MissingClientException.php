@@ -19,30 +19,15 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RediSearch\tests\Redis\Command;
+namespace MacFJA\RediSearch\Exception;
 
-use MacFJA\RediSearch\Redis\Command\IndexList;
-use PHPUnit\Framework\TestCase;
+use RuntimeException;
+use Throwable;
 
-/**
- * @covers \MacFJA\RediSearch\Redis\Command\IndexList
- *
- * @internal
- */
-class IndexListTest extends TestCase
+class MissingClientException extends RuntimeException
 {
-    public function testGetId(): void
+    public function __construct(Throwable $previous = null)
     {
-        $command = new IndexList();
-        static::assertSame('FT._LIST', $command->getId());
-    }
-
-    public function testGetRediSearchVersion(): void
-    {
-        $command = new IndexList();
-
-        static::assertSame('2.0.0', $command->getRediSearchVersion());
-        $command->setRediSearchVersion('2.2.0');
-        static::assertSame('2.2.0', $command->getRediSearchVersion());
+        parent::__construct('The Redis client is missing. You need to manually set it.', 0, $previous);
     }
 }

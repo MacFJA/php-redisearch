@@ -36,6 +36,9 @@ class RediskaClient extends AbstractClient
     /** @var Rediska */
     private $redis;
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function __construct(Rediska $redis)
     {
         if (!static::supports($redis)) {

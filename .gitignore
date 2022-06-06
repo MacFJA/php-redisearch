@@ -9,8 +9,5 @@
 ### PHPUnit
 /.phpunit.result.cache
 
-### Documentation
-/docs
-
 ### Local test
 /test*.php

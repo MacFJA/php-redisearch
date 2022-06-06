@@ -22,7 +22,9 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Response;
 
 use function count;
+use Countable;
 use Iterator;
+use MacFJA\RediSearch\Exception\MissingClientException;
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\CursorRead;
@@ -31,16 +33,15 @@ use MacFJA\RediSearch\Redis\Response;
 /**
  * @implements Iterator<int,AggregateResponseItem[]>
  */
-class CursorResponse implements Response, Iterator
+class CursorResponse implements Response, Iterator, Countable, ClientAware
 {
+    use ClientAwareTrait;
+
     /** @var array<AggregateResponseItem> */
     private $items;
 
     /** @var int */
     private $totalCount;
-
-    /** @var Client */
-    private $client;
 
     /** @var bool */
     private $doNext = false;
@@ -73,26 +74,23 @@ class CursorResponse implements Response, Iterator
         $this->cursorId = $cursorId;
     }
 
-    public function setClient(Client $client): self
-    {
-        $this->client = $client;
-
-        return $this;
-    }
-
     /**
      * @return array<AggregateResponseItem>
      */
     public function current()
     {
         if ($this->doNext) {
+            if (!($this->getClient() instanceof Client)) {
+                throw new MissingClientException();
+            }
+
             $cursorRead = new CursorRead($this->redisVersion);
             $cursorRead->setIndex($this->index);
             $cursorRead->setCursorId($this->cursorId);
             $cursorRead->setCount($this->getPageSize());
 
             /** @var CursorResponse $next */
-            $next = $this->client->execute($cursorRead);
+            $next = $this->getClient()->execute($cursorRead);
             $this->cursorId = $next->cursorId;
             $this->offset += count($this->items);
             $this->items = $next->items;
@@ -144,5 +142,10 @@ class CursorResponse implements Response, Iterator
     public function getTotalCount(): int
     {
         return $this->totalCount;
+    }
+
+    public function count()
+    {
+        return $this->getPageCount();
     }
 }

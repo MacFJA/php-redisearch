@@ -19,30 +19,24 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RediSearch\tests\Redis\Command;
+namespace MacFJA\RediSearch\Redis\Response;
 
-use MacFJA\RediSearch\Redis\Command\IndexList;
-use PHPUnit\Framework\TestCase;
+use MacFJA\RediSearch\Redis\Client;
 
-/**
- * @covers \MacFJA\RediSearch\Redis\Command\IndexList
- *
- * @internal
- */
-class IndexListTest extends TestCase
+trait ClientAwareTrait
 {
-    public function testGetId(): void
+    /** @var null|Client */
+    private $client;
+
+    public function getClient(): ?Client
     {
-        $command = new IndexList();
-        static::assertSame('FT._LIST', $command->getId());
+        return $this->client;
     }
 
-    public function testGetRediSearchVersion(): void
+    public function setClient(Client $client): ClientAware
     {
-        $command = new IndexList();
+        $this->client = $client;
 
-        static::assertSame('2.0.0', $command->getRediSearchVersion());
-        $command->setRediSearchVersion('2.2.0');
-        static::assertSame('2.2.0', $command->getRediSearchVersion());
+        return $this;
     }
 }
