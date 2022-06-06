@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased v2.x]
 
+### Fixed
+
+- Allow Phpredis raw command to have 0 arguments ([Issue#39])
+
 ### Changed
 
 - (dev) Update version and rules of PHP-CS-Fixer and PHPStan
@@ -196,6 +200,7 @@ First version
 [Issue#12]: https://github.com/MacFJA/php-redisearch/issues/12
 [Issue#16]: https://github.com/MacFJA/php-redisearch/issues/16
 [Issue#26]: https://github.com/MacFJA/php-redisearch/issues/26
+[Issue#39]: https://github.com/MacFJA/php-redisearch/issues/39
 [PR#1]: https://github.com/MacFJA/php-redisearch/pull/1
 [PR#3]: https://github.com/MacFJA/php-redisearch/pull/3
 [PR#8]: https://github.com/MacFJA/php-redisearch/pull/8
