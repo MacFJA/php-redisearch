@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation on paginated responses
 - Throw custom exception is client is missing
 
+### Fixed
+
+- Missing default values on highlight option ([Issue#38])
+
 ### Changed
 
 - Rework paginated responses
@@ -216,6 +220,7 @@ First version
 [Issue#12]: https://github.com/MacFJA/php-redisearch/issues/12
 [Issue#16]: https://github.com/MacFJA/php-redisearch/issues/16
 [Issue#26]: https://github.com/MacFJA/php-redisearch/issues/26
+[Issue#38]: https://github.com/MacFJA/php-redisearch/issues/38
 [Issue#39]: https://github.com/MacFJA/php-redisearch/issues/39
 [PR#1]: https://github.com/MacFJA/php-redisearch/pull/1
 [PR#3]: https://github.com/MacFJA/php-redisearch/pull/3

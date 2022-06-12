@@ -161,7 +161,7 @@ class Search extends AbstractCommand implements PaginatedCommand
      *
      * @return $this
      */
-    public function setHighlight(?array $fields, ?string $openTag, ?string $closeTag): self
+    public function setHighlight(?array $fields, ?string $openTag = null, ?string $closeTag = null): self
     {
         $this->options['highlight']
             ->setDataOfOption('type', true)
