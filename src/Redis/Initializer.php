@@ -128,7 +128,14 @@ class Initializer
 
     public static function getRediSearchVersion(Client $client): ?string
     {
-        $modules = $client->executeRaw('module', 'list') ?? [];
+        try {
+            $modules = $client->executeRaw('module', 'list') ?? [];
+        } catch (\Throwable $exception) {
+            if (strpos($exception->getMessage(), 'unknown command') === false) {
+                throw $exception;
+            }
+            $modules = [];
+        }
 
         foreach ($modules as $module) {
             $data = array_column(
