@@ -142,7 +142,7 @@ class Initializer
         try {
             $modules = $client->executeRaw('module', 'list') ?? [];
         } catch (\Throwable $exception) {
-            if (strpos($exception->getMessage(), 'unknown command') === false) {
+            if (strpos($exception->getMessage(), 'unknown command') !== false) {
                 throw $exception;
             }
             $modules = [];
