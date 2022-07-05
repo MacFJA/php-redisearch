@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Documentation on paginated responses
 - Throw custom exception is client is missing
+- Add compatibility for Predis version 2.x
+- (dev) Add `make clean` to remove all generated files
 
 ### Fixed
 
@@ -18,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Rework paginated responses
+- Add warning for Predis commands initialization
+- (dev) Remove deprecated `--no-suggest` option of Composer in the `Makefile`
 
 ### Deprecated
 

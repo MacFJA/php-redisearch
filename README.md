@@ -182,7 +182,7 @@ $result = $client->pipeline($search, $stats, $aggregate, $suggestion);
 // $result[3] is the suggestion result
 ```
 
-### Use Predis shorthand syntax
+### Use Predis (v1.x) shorthand syntax
 
 ```php
 $client = new \Predis\Client(/* ... */);

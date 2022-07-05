@@ -1,4 +1,4 @@
-.PHONY: analyze fix-code test test-with-integration coverage coverage-with-integration validation integration-test integration-coverage
+.PHONY: analyze fix-code clean test test-with-integration coverage coverage-with-integration validation integration-test integration-coverage
 
 analyze: | vendor
 	$(COMPOSER) exec -v parallel-lint -- src
@@ -10,6 +10,13 @@ analyze: | vendor
 	$(COMPOSER) exec -v phpa -- src
 	$(COMPOSER) exec -v phpstan -- analyse
 	$(COMPOSER) exec -v psalm -- src
+
+clean:
+	rm -rf composer.phar
+	rm -rf vendor/
+	rm -rf composer.lock
+	rm -rf .php-cs-fixer.cache
+	rm -rf .phpunit.result.cache
 
 fix-code: | vendor
 	$(COMPOSER) normalize
@@ -39,7 +46,7 @@ integration-coverage: | vendor
 validation: fix-code analyze test-with-integration coverage-with-integration
 
 vendor: composer.json
-	$(COMPOSER) install --optimize-autoloader --no-suggest --prefer-dist
+	$(COMPOSER) install --optimize-autoloader --prefer-dist
 	touch vendor
 
 composer.phar:

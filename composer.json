@@ -39,7 +39,7 @@
         "phpmd/phpmd": "^2.10",
         "phpstan/phpstan": "^1.2.0",
         "phpunit/phpunit": "^8.5 || ^9.3",
-        "predis/predis": "^1.1",
+        "predis/predis": "^1.1 || ^2.0",
         "ptrofimov/tinyredisclient": "^1.1",
         "redisent/redisent": "dev-master",
         "roave/security-advisories": "dev-latest",

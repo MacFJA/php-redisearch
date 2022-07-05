@@ -14,3 +14,4 @@ parameters:
         -
             message: '#Call to an undefined method MacFJA\\RediSearch\\Redis\\Command\\Option\\CommandOption::set\w+\(\).#'
             path: src/Redis/Command/Option/GroupedOption.php
+        - '#Predis\\Profile\\RedisProfile#'
