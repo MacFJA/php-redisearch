@@ -70,7 +70,7 @@ class ProfileTest extends TestCase
             ->setTypeAggregate()
             ->setLimited()
             ->setQuery($aggregate)
-            ;
+        ;
 
         static::assertSame([
             'idx', 'AGGREGATE', 'LIMITED', 'QUERY', '@foo:bar',

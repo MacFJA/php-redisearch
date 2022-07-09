@@ -22,8 +22,9 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Command\CreateCommand;
 
 use function in_array;
-use InvalidArgumentException;
 use function is_int;
+
+use InvalidArgumentException;
 use MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption;
 use MacFJA\RediSearch\Redis\Command\Option\GroupedOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamedOption;

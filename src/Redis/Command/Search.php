@@ -79,6 +79,7 @@ class Search extends AbstractCommand implements PaginatedCommand
                 'params' => new NotEmptyOption(new NumberedOption('PARAMS', null, '>=2.4.0')),
                 'sortby' => new SortByOption(),
                 'limit' => new LimitOption(),
+                'dialect' => CV::isNumeric(new NamedOption('DIALECT', null, '>=2.4.3')),
             ],
             $rediSearchVersion
         );
@@ -321,6 +322,13 @@ class Search extends AbstractCommand implements PaginatedCommand
         $limit = $this->options['limit'];
 
         return $limit->getSize();
+    }
+
+    public function setDialect(int $version): self
+    {
+        $this->options['dialect']->setValue($version);
+
+        return $this;
     }
 
     /**

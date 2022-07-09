@@ -31,6 +31,9 @@ use PHPUnit\Framework\TestCase;
  * @covers \MacFJA\RediSearch\Redis\Command\ExplainCli
  *
  * @uses \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\DecoratedOptionTrait
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\NamedOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\NamelessOption
  *
  * @internal
@@ -45,15 +48,17 @@ class ExplainCliTest extends TestCase
 
     public function testFullOption(): void
     {
-        $command = new ExplainCli();
+        $command = new ExplainCli(ExplainCli::MAX_IMPLEMENTED_VERSION);
         $command
             ->setIndex('idx')
             ->setQuery('@text1:"hello world"')
+            ->setDialect(2)
         ;
 
         static::assertSame([
             'idx',
             '@text1:"hello world"',
+            'DIALECT', 2,
         ], $command->getArguments());
     }
 }

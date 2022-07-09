@@ -25,6 +25,7 @@ use function is_array;
 
 use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption;
+use MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption as CV;
 use MacFJA\RediSearch\Redis\Command\Option\NamedOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
 use MacFJA\RediSearch\Redis\Command\SpellCheckCommand\TermsOption;
@@ -42,6 +43,7 @@ class SpellCheck extends AbstractCommand
                 new NamedOption('DISTANCE', null, '>=2.0.0'),
                 Validator::intVal()->between(1, 4)
             ),
+            'dialect' => CV::isNumeric(new NamedOption('DIALECT', null, '>=2.4.3')),
             'terms' => [],
         ], $rediSearchVersion);
     }
@@ -63,6 +65,13 @@ class SpellCheck extends AbstractCommand
     public function setDistance(int $distance): self
     {
         $this->options['distance']->setValue($distance);
+
+        return $this;
+    }
+
+    public function setDialect(int $version): self
+    {
+        $this->options['dialect']->setValue($version);
 
         return $this;
     }

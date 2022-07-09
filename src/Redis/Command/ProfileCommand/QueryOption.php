@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Command\ProfileCommand;
 
 use function assert;
+
 use MacFJA\RediSearch\Redis\Command\Aggregate;
 use MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption;
 use MacFJA\RediSearch\Redis\Command\Search;

@@ -66,6 +66,7 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
             'limit' => new LimitOption(),
             'filter' => [],
             'cursor' => new WithCursor(),
+            'dialect' => CV::isNumeric(new NamedOption('DIALECT', null, '>=2.4.3')),
         ], $rediSearchVersion);
     }
 
@@ -164,6 +165,13 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
         $this->options['load']->setArguments(null);
         $this->options['loadall']->setValue('ALL');
         $this->lastAdded = $this->options['loadall'];
+
+        return $this;
+    }
+
+    public function setDialect(int $version): self
+    {
+        $this->options['dialect']->setValue($version);
 
         return $this;
     }

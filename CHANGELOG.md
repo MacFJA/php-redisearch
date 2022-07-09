@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `LOAD ALL` option on Aggregate command (RediSearch `2.0.13`)
 - Profile command (RediSearch `2.2.0`) ([Issue#4])
 - Vector feature (RediSearch `2.4.0` / `2.4.2`)
+- Add `DIALECT` option (RediSearch `2.4.3`) ([Issue#35])
 - (dev) Add `make clean` to remove all generated files
 - (dev) Add code coverage to `\MacFJA\RediSearch\Index`
 - (dev) Add integration test for document insertion
@@ -234,6 +235,7 @@ First version
 [Issue#12]: https://github.com/MacFJA/php-redisearch/issues/12
 [Issue#16]: https://github.com/MacFJA/php-redisearch/issues/16
 [Issue#26]: https://github.com/MacFJA/php-redisearch/issues/26
+[Issue#35]: https://github.com/MacFJA/php-redisearch/issues/35
 [Issue#38]: https://github.com/MacFJA/php-redisearch/issues/38
 [Issue#39]: https://github.com/MacFJA/php-redisearch/issues/39
 [Issue#46]: https://github.com/MacFJA/php-redisearch/issues/46

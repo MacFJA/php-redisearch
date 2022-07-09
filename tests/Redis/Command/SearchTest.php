@@ -112,6 +112,7 @@ class SearchTest extends TestCase
             ->setPayload('foobar')
             ->setSortBy('@num1', 'ASC')
             ->setLimit(12, 10)
+            ->setDialect(2)
         ;
 
         static::assertSame([
@@ -138,6 +139,7 @@ class SearchTest extends TestCase
             'PAYLOAD', 'foobar',
             'SORTBY', '@num1', 'ASC',
             'LIMIT', 12, 10,
+            'DIALECT', 2,
         ], $command->getArguments());
     }
 

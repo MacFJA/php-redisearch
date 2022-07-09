@@ -24,10 +24,11 @@ namespace MacFJA\RediSearch\Query\Builder;
 use function array_key_exists;
 use function count;
 use function gettype;
-use InvalidArgumentException;
 use function is_int;
 use function is_string;
 use function strlen;
+
+use InvalidArgumentException;
 
 class QueryElementVector implements QueryElementDecorator
 {
