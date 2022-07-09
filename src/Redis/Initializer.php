@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis;
 
+use MacFJA\RediSearch\Redis\Client\AbstractClient;
 use MacFJA\RediSearch\Redis\Client\Rediska\RediskaRediSearchCommand;
 use MacFJA\RediSearch\Redis\Command\Aggregate;
 use MacFJA\RediSearch\Redis\Command\AliasAdd;
@@ -59,9 +60,19 @@ class Initializer
 {
     /**
      * @codeCoverageIgnore
+     * @psalm-suppress UndefinedDocblockClass
+     * @psalm-suppress UndefinedClass
+     *
+     * @param RedisProfile $profile
      */
-    public static function registerCommandsPredis(RedisProfile $profile): void
+    public static function registerCommandsPredis($profile): void
     {
+        if (!$profile instanceof RedisProfile) {
+            false === AbstractClient::$disableNotice
+            && trigger_error(sprintf('The parameter $profile must be an instance of %s, which is only available in Predis 1.x.', RedisProfile::class), E_USER_WARNING);
+
+            return;
+        }
         $profile->defineCommand('ftaggregate', Aggregate::class);
         $profile->defineCommand('ftaliasadd', AliasAdd::class);
         $profile->defineCommand('ftaliasdel', AliasDel::class);

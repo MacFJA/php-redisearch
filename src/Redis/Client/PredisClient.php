@@ -26,13 +26,18 @@ use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command;
 use Predis\ClientContextInterface;
 use Predis\ClientInterface;
+use Predis\Command\CommandInterface;
 use Predis\Command\RawCommand;
+use Predis\Command\RawFactory;
 use RuntimeException;
 
 class PredisClient extends AbstractClient
 {
     /** @var ClientInterface */
     private $redis;
+
+    /** @var null|RawFactory */
+    private static $rawFactory;
 
     /**
      * @codeCoverageIgnore
@@ -51,7 +56,7 @@ class PredisClient extends AbstractClient
 
     public function execute(Command $command)
     {
-        $rawResponse = $this->redis->executeCommand(new RawCommand(array_merge([$command->getId()], $command->getArguments())));
+        $rawResponse = $this->redis->executeCommand(self::createRawCommand(array_merge([$command->getId()], $command->getArguments())));
 
         return $command->parseResponse($rawResponse);
     }
@@ -82,7 +87,7 @@ class PredisClient extends AbstractClient
      */
     public function executeRaw(...$args)
     {
-        return $this->redis->executeCommand(new RawCommand($args));
+        return $this->redis->executeCommand(self::createRawCommand($args));
     }
 
     protected function doPipeline(Command ...$commands): array
@@ -91,8 +96,27 @@ class PredisClient extends AbstractClient
 
         return $this->redis->pipeline(static function (ClientContextInterface $pipeline) use ($commands): void {
             foreach ($commands as $command) {
-                $pipeline->executeCommand(new RawCommand(array_merge([$command->getId()], $command->getArguments())));
+                $pipeline->executeCommand(self::createRawCommand(array_merge([$command->getId()], $command->getArguments())));
             }
         });
+    }
+
+    /**
+     * @param array<float|int|string> $args
+     * @codeCoverageIgnore
+     */
+    private static function createRawCommand(array $args): CommandInterface
+    {
+        if (class_exists(RawFactory::class)) {
+            if (null === self::$rawFactory) {
+                self::$rawFactory = new RawFactory();
+            }
+            $commandID = array_shift($args);
+
+            return self::$rawFactory->create((string) $commandID, $args);
+        }
+
+        // @phpstan-ignore-next-line
+        return new RawCommand($args);
     }
 }
