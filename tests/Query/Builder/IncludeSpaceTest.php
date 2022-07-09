@@ -59,6 +59,7 @@ use MacFJA\RediSearch\Redis\Command\SearchCommand\GeoFilterOption;
  * @covers \MacFJA\RediSearch\Query\Builder\Prefix
  * @covers \MacFJA\RediSearch\Query\Builder\QueryElement::priority
  * @covers \MacFJA\RediSearch\Query\Builder\QueryElementAttribute
+ * @covers \MacFJA\RediSearch\Query\Builder\QueryElementVector
  * @covers \MacFJA\RediSearch\Query\Builder\RawElement
  * @covers \MacFJA\RediSearch\Query\Builder\TagFacet
  * @covers \MacFJA\RediSearch\Query\Builder\TextFacet
@@ -124,6 +125,7 @@ class IncludeSpaceTest extends \PHPUnit\Framework\TestCase
         $optional = new Optional(new RawElement('foo bar'));
         $prefix = new Prefix('foo bar');
         $attribute = new QueryElementAttribute(new RawElement('foo bar'));
+        $vector = new Builder\QueryElementVector(new RawElement('foo bar'), 10, 'vec', 'BLOB');
         $raw = new RawElement('foo bar');
         $word = new Word('foo bar');
 
@@ -133,6 +135,7 @@ class IncludeSpaceTest extends \PHPUnit\Framework\TestCase
         static::assertFalse($optional->includeSpace());
         static::assertFalse($prefix->includeSpace());
         static::assertTrue($attribute->includeSpace());
+        static::assertFalse($vector->includeSpace());
         static::assertTrue($raw->includeSpace());
         static::assertTrue($word->includeSpace());
     }

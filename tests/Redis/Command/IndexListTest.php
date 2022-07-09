@@ -37,7 +37,7 @@ class IndexListTest extends TestCase
         static::assertSame('FT._LIST', $command->getId());
     }
 
-    public function testGetRediSearchVersion(): void
+    public function testGetSetRediSearchVersion(): void
     {
         $command = new IndexList();
 

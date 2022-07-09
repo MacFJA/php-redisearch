@@ -27,6 +27,7 @@ use MacFJA\RediSearch\Redis\Command\Create;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\JSONFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\TagFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\TextFieldOption;
+use MacFJA\RediSearch\Redis\Command\CreateCommand\VectorFieldOption;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -37,6 +38,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \MacFJA\RediSearch\Redis\Command\CreateCommand\NumericFieldOption
  * @covers \MacFJA\RediSearch\Redis\Command\CreateCommand\TagFieldOption
  * @covers \MacFJA\RediSearch\Redis\Command\CreateCommand\TextFieldOption
+ * @covers \MacFJA\RediSearch\Redis\Command\CreateCommand\VectorFieldOption
  *
  * @uses \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption
@@ -48,6 +50,7 @@ use PHPUnit\Framework\TestCase;
  * @uses \MacFJA\RediSearch\Redis\Command\Option\NamelessOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\NotEmptyOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\NumberedOption
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\OptionListOption
  *
  * @internal
  */
@@ -106,6 +109,13 @@ class CreateTest extends TestCase
             ->addTagField('tag4', null, false, true)
             ->addTagField('tag5', null, false, false, true)
             ->addTagField('tag6', '#', true, true, true)
+            ->addVectorField('vec', VectorFieldOption::ALGORITHM_FLAT, VectorFieldOption::TYPE_FLOAT32, 10, VectorFieldOption::DISTANCE_METRIC_L2)
+            ->addField(
+                (new VectorFieldOption())
+                    ->setField('vector_field')
+                    ->setAlgorithm(VectorFieldOption::ALGORITHM_HNSW)
+                    ->addHnswAttribute(VectorFieldOption::TYPE_FLOAT32, 128, VectorFieldOption::DISTANCE_METRIC_L2, 1000000, 40, 250, 20)
+            )
             ->setPrefixes('doc_', 'document_')
             ->setIndex('idx')
             ->setDefaultLanguage('french')
@@ -157,6 +167,8 @@ class CreateTest extends TestCase
             'tag4', 'TAG', 'NOINDEX',
             'tag5', 'TAG', 'CASESENSITIVE',
             'tag6', 'TAG', 'SEPARATOR', '#', 'CASESENSITIVE', 'SORTABLE', 'NOINDEX',
+            'vec', 'VECTOR', 'FLAT', 6, 'TYPE', 'FLOAT32', 'DIM', 10, 'DISTANCE_METRIC', 'L2',
+            'vector_field', 'VECTOR', 'HNSW', 14, 'TYPE', 'FLOAT32', 'DIM', 128, 'DISTANCE_METRIC', 'L2', 'INITIAL_CAP', 1000000, 'M', 40, 'EF_CONSTRUCTION', 250, 'EF_RUNTIME', 20,
         ], $command->getArguments());
     }
 

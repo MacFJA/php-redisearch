@@ -30,6 +30,7 @@ use MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption as CV;
 use MacFJA\RediSearch\Redis\Command\Option\FlagOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamedOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
+use MacFJA\RediSearch\Redis\Command\Option\NotEmptyOption;
 use MacFJA\RediSearch\Redis\Command\Option\NumberedOption;
 use MacFJA\RediSearch\Redis\Command\SearchCommand\FilterOption;
 use MacFJA\RediSearch\Redis\Command\SearchCommand\GeoFilterOption;
@@ -75,6 +76,7 @@ class Search extends AbstractCommand implements PaginatedCommand
                 'scorer' => new NamedOption('SCORER', null, '>=2.0.0'),
                 'explainscore' => new FlagOption('EXPLAINSCORE', false, '>=2.0.0'),
                 'payload' => new NamedOption('PAYLOAD', null, '>=2.0.0'),
+                'params' => new NotEmptyOption(new NumberedOption('PARAMS', null, '>=2.4.0')),
                 'sortby' => new SortByOption(),
                 'limit' => new LimitOption(),
             ],
@@ -281,6 +283,21 @@ class Search extends AbstractCommand implements PaginatedCommand
     public function setReturn(string ...$field): self
     {
         $this->options['return']->setArguments($field);
+
+        return $this;
+    }
+
+    /**
+     * @param int|scalar|string $value
+     *
+     * @return $this
+     */
+    public function addParam(string $name, $value): self
+    {
+        $params = $this->options['params']->getArguments() ?? [];
+        $params[] = $name;
+        $params[] = (string) $value;
+        $this->options['params']->setArguments($params);
 
         return $this;
     }

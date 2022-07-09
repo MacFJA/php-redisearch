@@ -27,6 +27,7 @@ use MacFJA\RediSearch\IndexBuilder;
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command\Create;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\TextFieldOption;
+use MacFJA\RediSearch\Redis\Command\CreateCommand\VectorFieldOption;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -43,12 +44,14 @@ use RuntimeException;
  * @uses \MacFJA\RediSearch\Redis\Command\Option\NamelessOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\NotEmptyOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\NumberedOption
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\OptionListOption
  * @uses \MacFJA\RediSearch\Redis\Command\CreateCommand\BaseCreateFieldOptionTrait
  * @uses \MacFJA\RediSearch\Redis\Command\CreateCommand\TextFieldOption
  * @uses \MacFJA\RediSearch\Redis\Command\CreateCommand\GeoFieldOption
  * @uses \MacFJA\RediSearch\Redis\Command\CreateCommand\NumericFieldOption
  * @uses \MacFJA\RediSearch\Redis\Command\CreateCommand\TagFieldOption
  * @uses \MacFJA\RediSearch\Redis\Command\CreateCommand\JSONFieldOption
+ * @uses \MacFJA\RediSearch\Redis\Command\CreateCommand\VectorFieldOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\DecoratedOptionAwareTrait
  * @uses \MacFJA\RediSearch\Redis\Command\Option\GroupedOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\WithPublicGroupedSetterTrait
@@ -289,6 +292,9 @@ class IndexBuilderTest extends TestCase
 
         $builder->addJSONTagField('$.city.languages', 'languages');
         $createCommand->addJSONTagField('$.city.languages', 'languages');
+
+        $builder->addJSONVectorField('$.city.vec', 'vec', VectorFieldOption::ALGORITHM_FLAT, VectorFieldOption::TYPE_FLOAT32, 10, VectorFieldOption::DISTANCE_METRIC_L2);
+        $createCommand->addJSONVectorField('$.city.vec', 'vec', VectorFieldOption::ALGORITHM_FLAT, VectorFieldOption::TYPE_FLOAT32, 10, VectorFieldOption::DISTANCE_METRIC_L2);
         static::assertEquals($createCommand, $builder->getCommand());
     }
 
