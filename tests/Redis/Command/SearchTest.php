@@ -102,7 +102,7 @@ class SearchTest extends TestCase
             ->setPayload('foobar')
             ->setSortBy('@num1', 'ASC')
             ->setLimit(12, 10)
-            ;
+        ;
 
         static::assertSame([
             'idx',

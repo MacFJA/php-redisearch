@@ -48,7 +48,7 @@ class ExplainTest extends TestCase
         $command
             ->setIndex('idx')
             ->setQuery('@text1:"hello world"')
-            ;
+        ;
 
         static::assertSame([
             'idx',

@@ -22,10 +22,11 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Command\Option;
 
 use function array_key_exists;
-use BadMethodCallException;
 use function in_array;
 use function is_bool;
 use function is_scalar;
+
+use BadMethodCallException;
 use OutOfRangeException;
 
 class GroupedOption extends AbstractCommandOption

@@ -58,7 +58,7 @@ class SugGetTest extends TestCase
             ->setWithScores()
             ->setWithPayloads()
             ->setMax(10)
-            ;
+        ;
 
         static::assertSame([
             'ac', 'hell', 'FUZZY', 'WITHSCORES', 'WITHPAYLOADS', 'MAX', 10,

@@ -21,8 +21,9 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Command\Option;
 
-use Composer\Semver\Semver;
 use function is_scalar;
+
+use Composer\Semver\Semver;
 use UnexpectedValueException;
 
 abstract class AbstractCommandOption implements CommandOption

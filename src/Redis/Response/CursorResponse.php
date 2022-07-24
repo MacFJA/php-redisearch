@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Response;
 
 use function count;
+
 use Countable;
 use Iterator;
 use MacFJA\RediSearch\Exception\MissingClientException;
@@ -126,7 +127,7 @@ class CursorResponse implements Response, Iterator, Countable, ClientAware
             return 0;
         }
 
-        return (int) ceil(($this->offset) / $this->size) + 1;
+        return (int) ceil($this->offset / $this->size) + 1;
     }
 
     public function valid()

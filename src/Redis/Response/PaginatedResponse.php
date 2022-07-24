@@ -22,8 +22,9 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Response;
 
 use function count;
-use Countable;
 use function is_int;
+
+use Countable;
 use Iterator;
 use MacFJA\RediSearch\Exception\MissingClientException;
 use MacFJA\RediSearch\Redis\Client;
@@ -112,13 +113,13 @@ class PaginatedResponse implements Response, Iterator, Countable, ClientAware
     public function valid()
     {
         return (
-                null === $this->requestedOffset
-                && null === $this->requestedSize
-            ) || (
-                $this->requestedOffset >= 0
-                && $this->requestedSize > 0
-                && $this->requestedOffset < $this->totalCount
-            );
+            null === $this->requestedOffset
+            && null === $this->requestedSize
+        ) || (
+            $this->requestedOffset >= 0
+            && $this->requestedSize > 0
+            && $this->requestedOffset < $this->totalCount
+        );
     }
 
     public function rewind(): void

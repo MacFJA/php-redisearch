@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Query\Builder;
 
 use function is_array;
+
 use MacFJA\RediSearch\Exception\NotEnoughFieldsException;
 use MacFJA\RediSearch\Redis\Command\SearchCommand\NumericRangeTrait;
 

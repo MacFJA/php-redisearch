@@ -22,9 +22,10 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Client;
 
 use function count;
+use function strlen;
+
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command;
-use function strlen;
 
 abstract class AbstractClient implements Client
 {

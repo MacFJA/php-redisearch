@@ -51,7 +51,7 @@ class SynUpdateTest extends TestCase
             ->setGroupId('blue')
             ->setSkipInitialScan()
             ->setTerms('blue', 'cyan', 'navy', 'teal')
-            ;
+        ;
 
         static::assertSame([
             'idx', 'blue', 'SKIPINITIALSCAN', 'blue',  'cyan', 'navy', 'teal',

@@ -26,8 +26,9 @@ use function implode;
 use function is_bool;
 use function is_float;
 use function is_int;
-use NumberFormatter;
 use function sprintf;
+
+use NumberFormatter;
 
 class QueryElementAttribute implements QueryElement, QueryElementDecorator
 {

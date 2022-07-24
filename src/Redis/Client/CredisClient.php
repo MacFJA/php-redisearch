@@ -21,8 +21,9 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Client;
 
-use Credis_Client;
 use function is_array;
+
+use Credis_Client;
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command;
 use RuntimeException;

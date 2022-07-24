@@ -22,12 +22,13 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Response;
 
 use function assert;
-use BadMethodCallException;
 use function in_array;
-use InvalidArgumentException;
 use function is_array;
 use function is_object;
 use function is_string;
+
+use BadMethodCallException;
+use InvalidArgumentException;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\CreateCommandFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\GeoFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\NumericFieldOption;

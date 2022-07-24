@@ -50,7 +50,7 @@ class InfoTest extends TestCase
         $command = new Info();
         $command
             ->setIndex('idx')
-            ;
+        ;
 
         static::assertSame([
             'idx',

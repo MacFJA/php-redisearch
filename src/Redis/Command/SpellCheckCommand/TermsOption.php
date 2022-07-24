@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Command\SpellCheckCommand;
 
 use function is_string;
+
 use MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption;
 
 class TermsOption extends AbstractCommandOption

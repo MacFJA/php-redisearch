@@ -21,9 +21,10 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Client;
 
-use Exception;
 use function function_exists;
 use function is_resource;
+
+use Exception;
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command;
 use RuntimeException;

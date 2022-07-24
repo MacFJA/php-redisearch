@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Command;
 
 use function is_array;
+
 use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
 use MacFJA\RediSearch\Redis\Response\InfoResponse;

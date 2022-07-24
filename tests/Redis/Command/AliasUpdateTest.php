@@ -48,7 +48,7 @@ class AliasUpdateTest extends TestCase
         $command
             ->setIndex('idx')
             ->setAlias('current')
-            ;
+        ;
 
         static::assertSame([
             'current', 'idx',

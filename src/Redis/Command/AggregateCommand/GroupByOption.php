@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Command\AggregateCommand;
 
 use function count;
+
 use MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption;
 use MacFJA\RediSearch\Redis\Command\PrefixFieldName;
 

@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Query\Builder;
 
 use function count;
+
 use MacFJA\RediSearch\Exception\NotEnoughFieldsException;
 use MacFJA\RediSearch\Query\Escaper;
 
@@ -49,7 +50,7 @@ class FieldFacet implements QueryElement
     {
         return sprintf(
             '@%s:%s',
-            (OrGroup::fromStrings(...$this->fields)->render()),
+            OrGroup::fromStrings(...$this->fields)->render(),
             EncapsulationGroup::simple($this->element)->render()
         );
     }

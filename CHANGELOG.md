@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rework paginated responses
 - Add warning for Predis commands initialization
 - (dev) Remove deprecated `--no-suggest` option of Composer in the `Makefile`
+- (dev) Update PHP-CS-Fixer version
 
 ### Deprecated
 

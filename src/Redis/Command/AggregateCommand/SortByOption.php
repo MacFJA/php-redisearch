@@ -23,6 +23,7 @@ namespace MacFJA\RediSearch\Redis\Command\AggregateCommand;
 
 use function count;
 use function is_int;
+
 use MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption;
 use MacFJA\RediSearch\Redis\Command\PrefixFieldName;
 

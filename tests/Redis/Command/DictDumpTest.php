@@ -47,7 +47,7 @@ class DictDumpTest extends TestCase
         $command = new DictDump();
         $command
             ->setDictionary('cities')
-            ;
+        ;
 
         static::assertSame([
             'cities',

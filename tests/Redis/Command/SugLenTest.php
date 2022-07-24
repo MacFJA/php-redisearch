@@ -47,7 +47,7 @@ class SugLenTest extends TestCase
         $command = new SugLen();
         $command
             ->setDictionary('ac')
-            ;
+        ;
 
         static::assertSame([
             'ac',

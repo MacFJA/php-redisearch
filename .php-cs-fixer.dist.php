@@ -48,8 +48,10 @@ return $config
         'no_alias_functions' => ['sets' => ['@all']],
         'no_php4_constructor' => true,
         'no_superfluous_phpdoc_tags' => ['allow_mixed' => true, 'remove_inheritdoc' => true],
+        'no_unneeded_control_parentheses' => ['statements' => ['break', 'clone', 'continue', 'echo_print', 'others', 'return', 'switch_case', 'yield', 'yield_from']],
         'no_unreachable_default_argument_value' => true,
         'no_useless_sprintf' => true,
+        'ordered_imports' => ['imports_order' => ['const', 'function', 'class']],
         'php_unit_dedicate_assert' => true,
         'php_unit_dedicate_assert_internal_type' => true,
         'php_unit_expectation' => true,
@@ -71,4 +73,4 @@ return $config
             ->in(__DIR__.'/src')
             ->in(__DIR__.'/tests')
     )
-    ;
+;

@@ -21,8 +21,9 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Command;
 
-use BadMethodCallException;
 use function get_class;
+
+use BadMethodCallException;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\CreateCommandFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\GeoFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\JSONFieldOption;

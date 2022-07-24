@@ -24,6 +24,7 @@ namespace MacFJA\RediSearch;
 use function count;
 use function is_array;
 use function is_string;
+
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\AliasAdd;

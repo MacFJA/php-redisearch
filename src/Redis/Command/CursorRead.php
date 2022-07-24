@@ -25,6 +25,7 @@ use function assert;
 use function count;
 use function is_array;
 use function is_int;
+
 use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\Option\FlagOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamedOption;

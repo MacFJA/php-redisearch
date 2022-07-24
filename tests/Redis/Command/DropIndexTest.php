@@ -49,7 +49,7 @@ class DropIndexTest extends TestCase
         $command
             ->setIndex('idx')
             ->setDeleteDocument(true)
-            ;
+        ;
 
         static::assertSame([
             'idx', 'DD',

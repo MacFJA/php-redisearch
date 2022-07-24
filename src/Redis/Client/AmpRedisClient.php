@@ -21,10 +21,11 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Client;
 
-use Amp\Promise;
 use function Amp\Promise\wait;
-use Amp\Redis\Redis;
 use function function_exists;
+
+use Amp\Promise;
+use Amp\Redis\Redis;
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command;
 use RuntimeException;

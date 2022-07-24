@@ -47,7 +47,7 @@ class SynDumpTest extends TestCase
         $command = new SynDump();
         $command
             ->setIndex('idx')
-            ;
+        ;
 
         static::assertSame([
             'idx',
