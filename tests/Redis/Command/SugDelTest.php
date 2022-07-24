@@ -48,7 +48,7 @@ class SugDelTest extends TestCase
         $command
             ->setDictionary('ac')
             ->setSuggestion('hello world')
-            ;
+        ;
 
         static::assertSame([
             'ac', 'hello world',

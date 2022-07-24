@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\tests\Query;
 
 use function count;
+
 use MacFJA\RediSearch\Query\Escaper;
 
 /**

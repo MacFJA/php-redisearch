@@ -54,7 +54,7 @@ class AlterTest extends TestCase
         $command
             ->setIndex('idx')
             ->addNumericField('id2', true, false)
-            ;
+        ;
 
         static::assertSame([
             'idx', 'SCHEMA', 'ADD', 'id2', 'NUMERIC', 'SORTABLE',

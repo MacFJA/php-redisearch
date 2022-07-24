@@ -219,7 +219,7 @@ class BuilderTest extends TestCase
         $builder
             ->addElement(new Builder\Fuzzy('hello'))
             ->addString('world')
-            ;
+        ;
 
         static::assertSame($expected, $builder->render());
     }

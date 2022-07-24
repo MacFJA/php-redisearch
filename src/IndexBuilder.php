@@ -21,14 +21,16 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch;
 
-use BadMethodCallException;
 use function count;
 use function in_array;
-use InvalidArgumentException;
 use function is_array;
 use function is_float;
 use function is_int;
 use function is_string;
+use function strlen;
+
+use BadMethodCallException;
+use InvalidArgumentException;
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\AddFieldOptionTrait;
@@ -36,7 +38,6 @@ use MacFJA\RediSearch\Redis\Command\Create;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\CreateCommandFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\JSONFieldOption;
 use RuntimeException;
-use function strlen;
 
 /**
  * @method IndexBuilder setIndex(string $name)

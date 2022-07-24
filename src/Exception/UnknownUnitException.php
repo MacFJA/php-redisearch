@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Exception;
 
 use function sprintf;
+
 use Throwable;
 use UnexpectedValueException;
 

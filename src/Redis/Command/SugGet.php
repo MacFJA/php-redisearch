@@ -23,6 +23,7 @@ namespace MacFJA\RediSearch\Redis\Command;
 
 use function count;
 use function is_array;
+
 use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption as CV;
 use MacFJA\RediSearch\Redis\Command\Option\FlagOption;

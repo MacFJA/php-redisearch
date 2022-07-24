@@ -24,6 +24,7 @@ namespace MacFJA\RediSearch\Redis\Command\AggregateCommand;
 use function count;
 use function is_bool;
 use function is_string;
+
 use MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption;
 use MacFJA\RediSearch\Redis\Command\PrefixFieldName;
 

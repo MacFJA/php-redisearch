@@ -28,7 +28,7 @@ class AndGroup extends AbstractGroup
     public function render(?callable $escaper = null): string
     {
         if (1 === count($this->elements)) {
-            return (reset($this->elements))->render($escaper);
+            return reset($this->elements)->render($escaper);
         }
 
         return implode(' ', array_map(static function (QueryElement $element) use ($escaper): string {

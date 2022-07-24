@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Command\SearchCommand;
 
 use function is_int;
+
 use MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption;
 
 class LimitOption extends AbstractCommandOption

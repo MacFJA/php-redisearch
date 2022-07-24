@@ -21,10 +21,11 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Command\Option;
 
-use BadMethodCallException;
 use function count;
 use function get_class;
 use function in_array;
+
+use BadMethodCallException;
 use InvalidArgumentException;
 
 trait WithPublicGroupedSetterTrait

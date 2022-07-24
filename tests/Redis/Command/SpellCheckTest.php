@@ -58,7 +58,7 @@ class SpellCheckTest extends TestCase
             ->setDistance(2)
             ->addTerms('badword', true)
             ->addTerms('cities', false)
-            ;
+        ;
 
         static::assertSame([
             'idx',

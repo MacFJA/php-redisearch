@@ -22,8 +22,9 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Command;
 
 use function count;
-use InvalidArgumentException;
 use function is_array;
+
+use InvalidArgumentException;
 use MacFJA\RediSearch\Redis\Command;
 use MacFJA\RediSearch\Redis\Command\Option\CommandOption;
 

@@ -47,7 +47,7 @@ class AliasDelTest extends TestCase
         $command = new AliasDel();
         $command
             ->setAlias('current')
-            ;
+        ;
 
         static::assertSame([
             'current',

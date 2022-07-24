@@ -21,8 +21,9 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Exception;
 
-use OutOfRangeException;
 use function sprintf;
+
+use OutOfRangeException;
 use Throwable;
 
 class OutOfRangeLevenshteinDistanceException extends OutOfRangeException

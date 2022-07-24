@@ -48,7 +48,7 @@ class DictDelTest extends TestCase
         $command
             ->setDictionary('cities')
             ->addTerms('paris', 'new york', 'london')
-            ;
+        ;
 
         static::assertSame([
             'cities',

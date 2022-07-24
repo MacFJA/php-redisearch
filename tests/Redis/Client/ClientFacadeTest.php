@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\tests\Redis\Client;
 
 use function get_class;
+
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Client\ClientFacade;
 use MacFJA\RediSearch\Redis\Command;

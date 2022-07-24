@@ -21,12 +21,13 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\tests\integration;
 
+use function get_class;
+use function is_string;
+
 use Amp\Redis\Config;
 use Amp\Redis\RemoteExecutor;
 use Closure;
 use Credis_Client;
-use function get_class;
-use function is_string;
 use MacFJA\RediSearch\Index;
 use MacFJA\RediSearch\IndexBuilder;
 use MacFJA\RediSearch\Query\Builder;

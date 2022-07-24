@@ -54,7 +54,7 @@ class SugAddTest extends TestCase
             ->setScore(1)
             ->setIncrement()
             ->setPayload('greeting')
-            ;
+        ;
 
         static::assertSame([
             'ac', 'hello world', 1.0, 'INCR', 'PAYLOAD', 'greeting',

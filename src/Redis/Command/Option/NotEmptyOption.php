@@ -29,7 +29,10 @@ use function count;
  */
 class NotEmptyOption implements CommandOption, DecoratedCommandOption
 {
-    use DecoratedOptionTrait { isValid as decoratedIsValid; render as decoratedRender; }
+    use DecoratedOptionTrait {
+        isValid as decoratedIsValid;
+        render as decoratedRender;
+    }
 
     /**
      * @phpstan-param T $decorated

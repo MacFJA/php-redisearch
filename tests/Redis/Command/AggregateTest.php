@@ -137,7 +137,7 @@ class AggregateTest extends TestCase
             ->setLimit(12, 35)
             ->addApply('@timestamp - (@timestamp % 86400)', 'day')
             ->setWithCursor(20, 30)
-            ;
+        ;
 
         static::assertSame([
             'idx',

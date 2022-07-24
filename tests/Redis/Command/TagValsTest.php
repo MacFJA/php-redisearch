@@ -48,7 +48,7 @@ class TagValsTest extends TestCase
         $command
             ->setIndex('idx')
             ->setField('myTag')
-            ;
+        ;
 
         static::assertSame([
             'idx', 'myTag',

@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\tests\Redis\Response;
 
 use function array_slice;
+
 use MacFJA\RediSearch\Exception\MissingClientException;
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Command\PaginatedCommand;
