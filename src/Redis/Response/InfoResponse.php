@@ -171,7 +171,9 @@ class InfoResponse implements Response
     public function getIndexDefinition(?string $key = null)
     {
         $rawDefinitions = self::getValue($this->rawLines, 'index_definition');
-        assert(is_array($rawDefinitions));
+        if (!is_array($rawDefinitions)) {
+            return is_string($key) ? null : [];
+        }
         $data = self::getPairs($rawDefinitions);
         if (!is_string($key)) {
             return $data;

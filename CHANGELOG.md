@@ -12,15 +12,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Throw custom exception is client is missing
 - Add compatibility for Predis version 2.x
 - (dev) Add `make clean` to remove all generated files
+- (dev) Add code coverage to `\MacFJA\RediSearch\Index`
+- (dev) Add integration test for document insertion
 
 ### Fixed
 
 - Missing default values on highlight option ([Issue#38])
+- Don't throw an exception if the result of the index definition is incorrect ([Issue#46])
 
 ### Changed
 
 - Rework paginated responses
 - Add warning for Predis commands initialization
+- Lazy load RediSearch version and index information in `\MacFJA\RediSearch\Index`
+- Allow to provide RediSearch version manually to `\MacFJA\RediSearch\Index`
 - (dev) Remove deprecated `--no-suggest` option of Composer in the `Makefile`
 - (dev) Update PHP-CS-Fixer version
 
@@ -227,6 +232,7 @@ First version
 [Issue#26]: https://github.com/MacFJA/php-redisearch/issues/26
 [Issue#38]: https://github.com/MacFJA/php-redisearch/issues/38
 [Issue#39]: https://github.com/MacFJA/php-redisearch/issues/39
+[Issue#46]: https://github.com/MacFJA/php-redisearch/issues/46
 [PR#1]: https://github.com/MacFJA/php-redisearch/pull/1
 [PR#3]: https://github.com/MacFJA/php-redisearch/pull/3
 [PR#8]: https://github.com/MacFJA/php-redisearch/pull/8

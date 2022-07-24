@@ -286,4 +286,12 @@ class InfoResponseTest extends TestCase
         // @phpstan-ignore-next-line
         static::assertSame(1, $response->getNonExistentInt());
     }
+
+    public function testMissingIndexDefinition(): void
+    {
+        $response = new InfoResponse([]);
+        static::assertNull($response->getIndexDefinition('foobar'));
+        static::assertSame([], $response->getIndexDefinition());
+        static::assertEmpty($response->getIndexDefinition());
+    }
 }

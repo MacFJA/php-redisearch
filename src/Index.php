@@ -38,29 +38,25 @@ use MacFJA\RediSearch\Redis\Command\TagVals;
 use MacFJA\RediSearch\Redis\Initializer;
 use MacFJA\RediSearch\Redis\Response\InfoResponse;
 
-/**
- * @codeCoverageIgnore
- */
 class Index
 {
     /** @var Client */
     private $client;
 
-    /** @var InfoResponse */
+    /** @var null|InfoResponse */
     private $info;
 
     /** @var string */
     private $index;
 
-    /** @var string */
+    /** @var null|string */
     private $version;
 
-    public function __construct(string $index, Client $client)
+    public function __construct(string $index, Client $client, ?string $version = null)
     {
         $this->client = $client;
         $this->index = $index;
-        $this->version = Initializer::getRediSearchVersion($client) ?? AbstractCommand::MIN_IMPLEMENTED_VERSION;
-        $this->getInfo();
+        $this->version = $version;
     }
 
     /**
@@ -68,7 +64,7 @@ class Index
      */
     public function addDocumentFromArray(array $properties, ?string $hash = null): string
     {
-        $prefixes = $this->info->getIndexDefinition('prefixes');
+        $prefixes = $this->getInfo()->getIndexDefinition('prefixes');
         $prefix = '';
         if (is_array($prefixes) && count($prefixes) > 0) {
             $prefix = (string) reset($prefixes);
@@ -94,7 +90,7 @@ class Index
 
     public function addField(CreateCommandFieldOption $field): bool
     {
-        $command = new Alter($this->version);
+        $command = new Alter($this->getVersion());
         $command
             ->setIndex($this->index)
             ->addField($field)
@@ -105,7 +101,7 @@ class Index
 
     public function delete(bool $withDocuments = false): bool
     {
-        $command = new DropIndex($this->version);
+        $command = new DropIndex($this->getVersion());
         $command->setIndex($this->index)
             ->setDeleteDocument($withDocuments)
         ;
@@ -116,7 +112,7 @@ class Index
     public function addAlias(string $alias): bool
     {
         return 'OK' === (string) $this->client->execute(
-            (new AliasAdd($this->version))
+            (new AliasAdd($this->getVersion()))
                 ->setIndex($this->index)
                 ->setAlias($alias)
         );
@@ -124,12 +120,12 @@ class Index
 
     public function updateAlias(string $alias): bool
     {
-        return 'OK' === (string) $this->client->execute((new AliasUpdate($this->version))->setIndex($this->index)->setAlias($alias));
+        return 'OK' === (string) $this->client->execute((new AliasUpdate($this->getVersion()))->setIndex($this->index)->setAlias($alias));
     }
 
     public function deleteAlias(string $alias): bool
     {
-        return 'OK' === (string) $this->client->execute((new AliasDel($this->version))->setAlias($alias));
+        return 'OK' === (string) $this->client->execute((new AliasDel($this->getVersion()))->setAlias($alias));
     }
 
     /**
@@ -137,13 +133,24 @@ class Index
      */
     public function getTagValues(string $fieldName): array
     {
-        return $this->client->execute((new TagVals($this->version))->setIndex($this->index)->setField($fieldName));
+        return $this->client->execute((new TagVals($this->getVersion()))->setIndex($this->index)->setField($fieldName));
     }
 
     public function getInfo(): InfoResponse
     {
-        $this->info = $this->client->execute((new Info($this->version))->setIndex($this->index));
+        if (!($this->info instanceof InfoResponse)) {
+            $this->info = $this->client->execute((new Info($this->getVersion()))->setIndex($this->index));
+        }
 
         return $this->info;
+    }
+
+    private function getVersion(): string
+    {
+        if (!is_string($this->version)) {
+            $this->version = Initializer::getRediSearchVersion($this->client) ?? AbstractCommand::MIN_IMPLEMENTED_VERSION;
+        }
+
+        return $this->version;
     }
 }
