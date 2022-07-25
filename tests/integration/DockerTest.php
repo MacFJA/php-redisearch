@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\tests\integration;
 
 use function get_class;
+use function in_array;
 use function is_string;
 
 use Amp\Redis\Config;
@@ -273,7 +274,7 @@ class DockerTest extends TestCase
      */
     public function dataProvider(string $testName): array
     {
-        if ('testIntegration' === $testName) {
+        if (in_array($testName, ['testIntegration', 'testAddDocument'])) {
             return [
                 [static function () { return Client\PredisClient::make(new \Predis\Client(['scheme' => 'tcp', 'host' => 'localhost', 'port' => '16379', 'db' => 0])); }],
                 [static function () { return Client\RediskaClient::make(new Rediska(['servers' => [['host' => 'localhost', 'port' => '16379', 'db' => 0]]])); }],
@@ -294,5 +295,65 @@ class DockerTest extends TestCase
             [Client\TinyRedisClient::class, static function () { return new TinyRedisClient('localhost:16379'); }],
             [Client\CredisClient::class, static function () { return new Credis_Client('localhost', 16379, null, '', 0); }],
         ];
+    }
+
+    /**
+     * @dataProvider dataProvider
+     * @large
+     *
+     * @param mixed $clientBuilder
+     */
+    public function testAddDocument($clientBuilder): void
+    {
+        $client = $clientBuilder();
+
+        $list = $client->execute(new IndexList());
+        static::assertEmpty($list);
+        $builder = new IndexBuilder();
+        $builder
+            ->withIndex('testDoc')
+            ->addPrefixes('person:')
+            ->addTextField('lastname', false, null, null, true)
+            ->addTextField('firstname')
+            ->addNumericField('age')
+            ->create($client)
+        ;
+        static::assertEquals(['testDoc'], $client->execute(new IndexList()));
+
+        $index = new Index('testDoc', $client);
+        $docToRemove = [];
+        $docToRemove[] = $index->addDocumentFromArray(['firstname' => 'Joe', 'lastname' => 'Doe', 'age' => 30], 'person:1');
+        $docToRemove[] = $index->addDocumentFromArray(['firstname' => 'Joe', 'age' => 30], 'person:2');
+        $docToRemove[] = $index->addDocumentFromArray(['firstname' => 'Joe', 'age' => 30, 'fullname' => 'eeeee'], 'person:3');
+
+        $search = new Search();
+
+        $query = (new Builder())
+            ->addElement(new Fuzzy('Joo'))
+        ;
+
+        $search
+            ->setIndex('testDoc')
+            ->setQuery($query->render())
+            ->setWithPayloads()
+            ->setHighlight(['lastname'], '<b>', '</b>')
+            ->setWithScores()
+        ;
+
+        /** @var PaginatedResponse $result */
+        $result = $client->execute($search);
+        static::assertCount(1, $result);
+        static::assertSame(1, $result->getPageCount());
+        static::assertSame(3, $result->getTotalCount());
+
+        /** @var array<SearchResponseItem> $page */
+        foreach ($result as $page) {
+            foreach ($page as $item) {
+                static::assertSame(30, (int) $item->getFieldValue('age'));
+            }
+        }
+
+        $client->execute((new DropIndex())->setIndex('testDoc')->setDeleteDocument());
+        $client->executeRaw('del', ...$docToRemove);
     }
 }
