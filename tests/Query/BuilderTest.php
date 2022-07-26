@@ -21,7 +21,9 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\tests\Query;
 
+use InvalidArgumentException;
 use MacFJA\RediSearch\Query\Builder;
+use MacFJA\RediSearch\Redis\Command\Search;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -39,11 +41,32 @@ use PHPUnit\Framework\TestCase;
  * @covers \MacFJA\RediSearch\Query\Builder\OrGroup
  * @covers \MacFJA\RediSearch\Query\Builder\Prefix
  * @covers \MacFJA\RediSearch\Query\Builder\QueryElementAttribute
+ * @covers \MacFJA\RediSearch\Query\Builder\QueryElementVector
  * @covers \MacFJA\RediSearch\Query\Builder\RawElement
  * @covers \MacFJA\RediSearch\Query\Builder\TagFacet
  * @covers \MacFJA\RediSearch\Query\Builder\TextFacet
  * @covers \MacFJA\RediSearch\Query\Builder\Word
  * @covers \MacFJA\RediSearch\Query\Escaper
+ *
+ * @covers \MacFJA\RediSearch\Redis\Command\Search::addParam
+ *
+ * @uses \MacFJA\RediSearch\Redis\Command\AbstractCommand
+ * @uses \MacFJA\RediSearch\Redis\Command\LanguageOptionTrait
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\DecoratedOptionAwareTrait
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\FlagOption
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\GroupedOption
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\NamedOption
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\NamelessOption
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\NotEmptyOption
+ * @uses \MacFJA\RediSearch\Redis\Command\Option\NumberedOption
+ * @uses \MacFJA\RediSearch\Redis\Command\Search
+ * @uses \MacFJA\RediSearch\Redis\Command\SearchCommand\GeoFilterOption
+ * @uses \MacFJA\RediSearch\Redis\Command\SearchCommand\HighlightOption
+ * @uses \MacFJA\RediSearch\Redis\Command\SearchCommand\LimitOption
+ * @uses \MacFJA\RediSearch\Redis\Command\SearchCommand\SortByOption
+ * @uses \MacFJA\RediSearch\Redis\Command\SearchCommand\SummarizeOption
  *
  * @internal
  */
@@ -520,5 +543,231 @@ class BuilderTest extends TestCase
         ;
 
         static::assertSame($expected, $builder->render());
+    }
+
+    /**
+     * @see https://redis.io/docs/stack/search/reference/vectors/#examples-for-querying-vector-fields
+     */
+    public function testVectorDocExample1(): void
+    {
+        // $expected = 'idx "*=>[KNN 100 @vec $BLOB]" PARAMS 2 BLOB "\12\a9\f5\6c"';
+        // Data escaping is partially handled by the Redis lib, + this lib put extra safety ()
+        $expected = 'idx (*)=>[KNN 100 @vec $BLOB] PARAMS 2 BLOB \12\a9\f5\6c';
+        $builder = new Builder();
+        $search = new Search('2.4.0');
+
+        $builder
+            ->addElement(
+                new Builder\QueryElementVector(new Builder\RawElement('*'), 100, 'vec', 'BLOB')
+            )
+        ;
+        $search
+            ->setIndex('idx')
+            ->setQuery($builder->render())
+            ->addParam('BLOB', '\12\a9\f5\6c')
+        ;
+
+        static::assertSame($expected, implode(' ', $search->getArguments()));
+    }
+
+    /**
+     * @see https://redis.io/docs/stack/search/reference/vectors/#examples-for-querying-vector-fields
+     */
+    public function testVectorDocExample12(): void
+    {
+        // $expected = 'idx "*=>[KNN 100 @vec $BLOB]" PARAMS 2 BLOB "\12\a9\f5\6c"';
+        // Data escaping is partially handled by the Redis lib, + this lib put extra safety ()
+        $expected = 'idx (*)=>[KNN 100 @vec $BLOB] PARAMS 2 BLOB \12\a9\f5\6c';
+        $builder = new Builder();
+        $search = new Search('2.4.0');
+
+        $builder
+            ->addElement(
+                new Builder\QueryElementVector(new Builder\RawElement('*'), 100, '@vec', '$BLOB')
+            )
+        ;
+        $search
+            ->setIndex('idx')
+            ->setQuery($builder->render())
+            ->addParam('BLOB', '\12\a9\f5\6c')
+        ;
+
+        static::assertSame($expected, implode(' ', $search->getArguments()));
+    }
+
+    /**
+     * @see https://redis.io/docs/stack/search/reference/vectors/#examples-for-querying-vector-fields
+     */
+    public function testVectorDocExample2(): void
+    {
+        // $expected = 'idx "*=>[KNN 100 @vec $BLOB]" PARAMS 2 BLOB "\12\a9\f5\6c" SORTBY __vec_score';
+        // Data escaping is partially handled by the Redis lib, + this lib put extra safety ()
+        $expected = 'idx (*)=>[KNN 100 @vec $BLOB] PARAMS 2 BLOB \12\a9\f5\6c SORTBY __vec_score';
+        $builder = new Builder();
+        $search = new Search('2.4.0');
+
+        $builder
+            ->addElement(
+                new Builder\QueryElementVector(new Builder\RawElement('*'), 100, 'vec', 'BLOB')
+            )
+        ;
+        $search
+            ->setIndex('idx')
+            ->setQuery($builder->render())
+            ->addParam('BLOB', '\12\a9\f5\6c')
+            ->setSortBy('__vec_score')
+        ;
+
+        static::assertSame($expected, implode(' ', $search->getArguments()));
+    }
+
+    /**
+     * @see https://redis.io/docs/stack/search/reference/vectors/#examples-for-querying-vector-fields
+     */
+    public function testVectorDocExample3(): void
+    {
+        // $expected = 'idx "*=>[KNN $K @vec $BLOB EF_RUNTIME $EF]" PARAMS 6 BLOB "\12\a9\f5\6c" K 10 EF 150';
+        // Data escaping is partially handled by the Redis lib, + this lib put extra safety ()
+        $expected = 'idx (*)=>[KNN $K @vec $BLOB EF_RUNTIME $EF] PARAMS 6 BLOB \12\a9\f5\6c K 10 EF 150';
+        $builder = new Builder();
+        $search = new Search('2.4.0');
+
+        $vector = new Builder\QueryElementVector(new Builder\RawElement('*'), 'K', 'vec', 'BLOB');
+        $vector->addParameter('EF_RUNTIME', '$EF');
+        $builder->addElement($vector);
+        $search
+            ->setIndex('idx')
+            ->setQuery($builder->render())
+            ->addParam('BLOB', '\12\a9\f5\6c')
+            ->addParam('K', 10)
+            ->addParam('EF', 150)
+        ;
+
+        static::assertSame($expected, implode(' ', $search->getArguments()));
+    }
+
+    /**
+     * @see https://redis.io/docs/stack/search/reference/vectors/#examples-for-querying-vector-fields
+     */
+    public function testVectorDocExample32(): void
+    {
+        // $expected = 'idx "*=>[KNN $K @vec $BLOB EF_RUNTIME $EF]" PARAMS 6 BLOB "\12\a9\f5\6c" K 10 EF 150';
+        // Data escaping is partially handled by the Redis lib, + this lib put extra safety ()
+        $expected = 'idx (*)=>[KNN $K @vec $BLOB EF_RUNTIME $EF] PARAMS 6 BLOB \12\a9\f5\6c K 10 EF 150';
+        $builder = new Builder();
+        $search = new Search('2.4.0');
+
+        $vector = new Builder\QueryElementVector(new Builder\RawElement('*'), '$K', '@vec', '$BLOB');
+        $vector->addParameter('EF_RUNTIME', '$EF');
+        $builder->addElement($vector);
+        $search
+            ->setIndex('idx')
+            ->setQuery($builder->render())
+            ->addParam('BLOB', '\12\a9\f5\6c')
+            ->addParam('K', 10)
+            ->addParam('EF', 150)
+        ;
+
+        static::assertSame($expected, implode(' ', $search->getArguments()));
+    }
+
+    /**
+     * @see https://redis.io/docs/stack/search/reference/vectors/#examples-for-querying-vector-fields
+     */
+    public function testVectorDocExample33Error(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $vector = new Builder\QueryElementVector(new Builder\RawElement('*'), '$K', '@vec', '$BLOB');
+        $vector->addParameter('EF_RUNTIME', 'EF');
+    }
+
+    /**
+     * @see https://redis.io/docs/stack/search/reference/vectors/#examples-for-querying-vector-fields
+     */
+    public function testVectorDocExample4(): void
+    {
+        // $expected = 'idx "*=>[KNN $K @vec $BLOB AS my_scores]" PARAMS 4 BLOB "\12\a9\f5\6c" K 10 SORTBY my_scores';
+        // Data escaping is partially handled by the Redis lib, + this lib put extra safety ()
+        $expected = 'idx (*)=>[KNN $K @vec $BLOB AS my_scores] PARAMS 4 BLOB \12\a9\f5\6c K 10 SORTBY my_scores';
+        $builder = new Builder();
+        $search = new Search('2.4.0');
+
+        $builder
+            ->addElement(
+                new Builder\QueryElementVector(new Builder\RawElement('*'), 'K', 'vec', 'BLOB', 'my_scores')
+            )
+        ;
+        $search
+            ->setIndex('idx')
+            ->setQuery($builder->render())
+            ->addParam('BLOB', '\12\a9\f5\6c')
+            ->addParam('K', 10)
+            ->setSortBy('my_scores')
+        ;
+
+        static::assertSame($expected, implode(' ', $search->getArguments()));
+    }
+
+    /**
+     * @see https://redis.io/docs/stack/search/reference/vectors/#examples-for-querying-vector-fields
+     */
+    public function testVectorDocExample5(): void
+    {
+        // $expected = 'idx "(@title:Dune @num:[2020 2022])=>[KNN $K @vec $BLOB AS my_scores]" PARAMS 4 BLOB "\12\a9\f5\6c" K 10 SORTBY my_scores';
+        // Data escaping is partially handled by the Redis lib
+        $expected = 'idx (@title:Dune @num:[2020 2022])=>[KNN $K @vec $BLOB AS my_scores] PARAMS 4 BLOB \12\a9\f5\6c K 10 SORTBY my_scores';
+        $builder = new Builder();
+        $search = new Search('2.4.0');
+
+        $group = new Builder\AndGroup([
+            new Builder\TextFacet(['title'], 'Dune'),
+            new Builder\NumericFacet(['num'], 2020, 2022),
+        ]);
+        $builder
+            ->addElement(
+                new Builder\QueryElementVector($group, 'K', 'vec', 'BLOB', 'my_scores')
+            )
+        ;
+        $search
+            ->setIndex('idx')
+            ->setQuery($builder->render())
+            ->addParam('BLOB', '\12\a9\f5\6c')
+            ->addParam('K', 10)
+            ->setSortBy('my_scores')
+        ;
+
+        static::assertSame($expected, implode(' ', $search->getArguments()));
+    }
+
+    /**
+     * @see https://redis.io/docs/stack/search/reference/vectors/#examples-for-querying-vector-fields
+     */
+    public function testVectorDocExample6(): void
+    {
+        // $expected = 'idx "(@type:{shirt} ~@color:{blue})=>[KNN $K @vec $BLOB AS my_scores]" PARAMS 4 BLOB "\12\a9\f5\6c" K 10 SORTBY my_scores';
+        // Data escaping is partially handled by the Redis lib
+        $expected = 'idx (@type:{shirt} ~@color:{blue})=>[KNN $K @vec $BLOB AS my_scores] PARAMS 4 BLOB \12\a9\f5\6c K 10 SORTBY my_scores';
+        $builder = new Builder();
+        $search = new Search('2.4.0');
+
+        $group = new Builder\AndGroup([
+            new Builder\TagFacet(['type'], 'shirt'),
+            new Builder\Optional(new Builder\TagFacet(['color'], 'blue')),
+        ]);
+        $builder
+            ->addElement(
+                new Builder\QueryElementVector($group, 'K', 'vec', 'BLOB', 'my_scores')
+            )
+        ;
+        $search
+            ->setIndex('idx')
+            ->setQuery($builder->render())
+            ->addParam('BLOB', '\12\a9\f5\6c')
+            ->addParam('K', 10)
+            ->setSortBy('my_scores')
+        ;
+
+        static::assertSame($expected, implode(' ', $search->getArguments()));
     }
 }

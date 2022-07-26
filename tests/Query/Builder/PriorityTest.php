@@ -60,6 +60,7 @@ use MacFJA\RediSearch\Redis\Command\SearchCommand\GeoFilterOption;
  * @covers \MacFJA\RediSearch\Query\Builder\Prefix
  * @covers \MacFJA\RediSearch\Query\Builder\QueryElement::priority
  * @covers \MacFJA\RediSearch\Query\Builder\QueryElementAttribute
+ * @covers \MacFJA\RediSearch\Query\Builder\QueryElementVector
  * @covers \MacFJA\RediSearch\Query\Builder\RawElement
  * @covers \MacFJA\RediSearch\Query\Builder\TagFacet
  * @covers \MacFJA\RediSearch\Query\Builder\TextFacet
@@ -107,6 +108,7 @@ class PriorityTest extends \PHPUnit\Framework\TestCase
         $optional = new Optional(new RawElement('foo'));
         $prefix = new Prefix('foo');
         $attribute = new QueryElementAttribute(new RawElement('foo'));
+        $vector = new Builder\QueryElementVector(new RawElement('foo'), 10, 'vec', 'BLOB');
         $raw = new RawElement('foo');
         $word = new Word('foo');
 
@@ -116,6 +118,7 @@ class PriorityTest extends \PHPUnit\Framework\TestCase
         static::assertSame(QueryElement::PRIORITY_NORMAL, $optional->priority());
         static::assertSame(QueryElement::PRIORITY_NORMAL, $prefix->priority());
         static::assertSame(QueryElement::PRIORITY_NORMAL, $attribute->priority());
+        static::assertSame(QueryElement::PRIORITY_BEFORE, $vector->priority());
         static::assertSame(QueryElement::PRIORITY_NORMAL, $raw->priority());
         static::assertSame(QueryElement::PRIORITY_NORMAL, $word->priority());
     }

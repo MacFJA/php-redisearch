@@ -19,68 +19,62 @@ declare(strict_types=1);
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MacFJA\RediSearch\Redis\Command\Option;
+namespace MacFJA\RediSearch\Redis\Command\ProfileCommand;
 
 use function assert;
-use function count;
-use function is_array;
 
-class NumberedOption extends AbstractCommandOption
+use MacFJA\RediSearch\Redis\Command\Aggregate;
+use MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption;
+use MacFJA\RediSearch\Redis\Command\Search;
+
+class QueryOption extends AbstractCommandOption
 {
-    /** @var string */
-    private $name;
-
-    /** @var null|array<float|int|string> */
-    private $arguments;
+    /**
+     * @var null|Aggregate|Search
+     */
+    private $command;
 
     /**
-     * @param null|array<float|int|string> $arguments
+     * @param Aggregate|Search $command
      */
-    public function __construct(string $name, ?array $arguments = null, ?string $versionConstraint = null)
+    public function setCommand($command): self
     {
-        $this->arguments = $arguments;
-        $this->name = $name;
-        parent::__construct($versionConstraint);
-    }
+        $this->command = $command;
 
-    /**
-     * @param null|array<float|int|string> $arguments
-     */
-    public function setArguments(?array $arguments): void
-    {
-        $this->arguments = $arguments;
+        return $this;
     }
 
     public function isValid(): bool
     {
-        return is_array($this->arguments);
+        return $this->command instanceof Search || $this->command instanceof Aggregate;
     }
 
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return null|array<float|int|string>
-     */
-    public function getArguments(): ?array
-    {
-        return $this->arguments;
-    }
-
-    /**
-     * @return null|array<mixed>
-     */
     public function getOptionData()
     {
-        return $this->getArguments();
+        return [
+            'command' => $this->command,
+        ];
+    }
+
+    public function isSearch(): bool
+    {
+        return $this->command instanceof Search;
+    }
+
+    public function getIndex(): string
+    {
+        assert($this->command instanceof Search || $this->command instanceof Aggregate);
+
+        return $this->command->getIndex();
     }
 
     protected function doRender(?string $version): array
     {
-        assert(is_array($this->arguments));
+        assert($this->command instanceof Search || $this->command instanceof Aggregate);
+        $arguments = $this->command->getArguments();
+        // remove index
+        array_shift($arguments);
 
-        return array_merge([$this->name, count($this->arguments)], $this->arguments);
+        return array_merge(['QUERY'], $arguments);
     }
 }

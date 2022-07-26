@@ -30,6 +30,7 @@ use MacFJA\RediSearch\Redis\Command\CreateCommand\JSONFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\NumericFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\TagFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\TextFieldOption;
+use MacFJA\RediSearch\Redis\Command\CreateCommand\VectorFieldOption;
 
 trait AddFieldOptionTrait
 {
@@ -73,6 +74,17 @@ trait AddFieldOptionTrait
                 ->setSeparator($separator)
                 ->setCaseSensitive($caseSensitive)
                 ->setSortable($sortable)
+                ->setNoIndex($noIndex)
+        );
+    }
+
+    public function addVectorField(string $name, string $algorithm, string $type, int $dimension, string $distanceMetric, bool $noIndex = false): self
+    {
+        return $this->addField(
+            (new VectorFieldOption())
+                ->setField($name)
+                ->setAlgorithm($algorithm)
+                ->addAttribute($type, $dimension, $distanceMetric)
                 ->setNoIndex($noIndex)
         );
     }
@@ -121,6 +133,18 @@ trait AddFieldOptionTrait
                 ->setSeparator($separator)
                 ->setCaseSensitive($caseSensitive)
                 ->setSortable($sortable)
+                ->setNoIndex($noIndex)
+        );
+    }
+
+    public function addJSONVectorField(string $path, string $attribute, string $algorithm, string $type, int $dimension, string $distanceMetric, bool $noIndex = false): self
+    {
+        return $this->addJSONField(
+            $path,
+            (new VectorFieldOption())
+                ->setField($attribute)
+                ->setAlgorithm($algorithm)
+                ->addAttribute($type, $dimension, $distanceMetric)
                 ->setNoIndex($noIndex)
         );
     }

@@ -21,66 +21,47 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Command\Option;
 
-use function assert;
-use function count;
-use function is_array;
+use function is_bool;
+use function is_scalar;
 
-class NumberedOption extends AbstractCommandOption
+class OptionListOption extends AbstractCommandOption
 {
-    /** @var string */
-    private $name;
+    /** @var array<CommandOption> */
+    private $options = [];
 
-    /** @var null|array<float|int|string> */
-    private $arguments;
-
-    /**
-     * @param null|array<float|int|string> $arguments
-     */
-    public function __construct(string $name, ?array $arguments = null, ?string $versionConstraint = null)
+    public function addOption(CommandOption $option): self
     {
-        $this->arguments = $arguments;
-        $this->name = $name;
-        parent::__construct($versionConstraint);
+        $this->options[] = $option;
+
+        return $this;
     }
 
-    /**
-     * @param null|array<float|int|string> $arguments
-     */
-    public function setArguments(?array $arguments): void
+    public function setValue(CommandOption ...$options): self
     {
-        $this->arguments = $arguments;
+        $this->options = $options;
+
+        return $this;
     }
 
     public function isValid(): bool
     {
-        return is_array($this->arguments);
+        return true;
     }
 
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return null|array<float|int|string>
-     */
-    public function getArguments(): ?array
-    {
-        return $this->arguments;
-    }
-
-    /**
-     * @return null|array<mixed>
-     */
     public function getOptionData()
     {
-        return $this->getArguments();
+        return $this->options;
     }
 
     protected function doRender(?string $version): array
     {
-        assert(is_array($this->arguments));
+        $arguments = array_filter($this->options, static function (CommandOption $option) use ($version) {
+            return $option->isCompatible($version) && $option->isValid();
+        });
+        $arguments = array_reduce($arguments, static function ($carry, CommandOption $option) use ($version) {
+            return array_merge($carry, $option->render($version));
+        }, []);
 
-        return array_merge([$this->name, count($this->arguments)], $this->arguments);
+        return array_filter($arguments, static function ($item) { return !is_bool($item) && is_scalar($item); });
     }
 }

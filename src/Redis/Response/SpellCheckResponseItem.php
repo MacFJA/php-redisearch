@@ -56,6 +56,9 @@ class SpellCheckResponseItem
         if (false === $normalized) {
             return $this->suggestions;
         }
+        if (0 === count($this->suggestions)) {
+            return [];
+        }
         $highest = max($this->suggestions);
 
         if ($highest <= 0) {

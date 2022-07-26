@@ -33,7 +33,7 @@ use MacFJA\RediSearch\Redis\Command\Option\CommandOption;
  */
 abstract class AbstractCommand implements Command
 {
-    public const MAX_IMPLEMENTED_VERSION = '2.0.12';
+    public const MAX_IMPLEMENTED_VERSION = '2.4.3';
     public const MIN_IMPLEMENTED_VERSION = '2.0.0';
 
     /**

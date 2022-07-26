@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\tests\Redis\Command;
 
+use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\AbstractCommand;
 use MacFJA\RediSearch\Redis\Command\Search;
 use MacFJA\RediSearch\Redis\Command\SearchCommand\FilterOption;
@@ -29,13 +30,15 @@ use MacFJA\RediSearch\Redis\Response\SearchResponseItem;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers  \MacFJA\RediSearch\Redis\Command\AbstractCommand
+ * @covers \MacFJA\RediSearch\Exception\UnexpectedServerResponseException
  *
+ * @covers  \MacFJA\RediSearch\Redis\Command\AbstractCommand
  * @covers \MacFJA\RediSearch\Redis\Command\Search
  * @covers \MacFJA\RediSearch\Redis\Command\SearchCommand\FilterOption
  * @covers \MacFJA\RediSearch\Redis\Command\SearchCommand\GeoFilterOption
  * @covers \MacFJA\RediSearch\Redis\Command\SearchCommand\HighlightOption
  * @covers \MacFJA\RediSearch\Redis\Command\SearchCommand\LimitOption
+ *
  * @covers \MacFJA\RediSearch\Redis\Command\SearchCommand\SortByOption
  *
  * @covers \MacFJA\RediSearch\Redis\Command\SearchCommand\SummarizeOption
@@ -61,6 +64,13 @@ class SearchTest extends TestCase
     {
         $command = new Search();
         static::assertSame('FT.SEARCH', $command->getId());
+    }
+
+    public function testGetIndex(): void
+    {
+        $command = new Search();
+        $command->setIndex('idx');
+        static::assertSame('idx', $command->getIndex());
     }
 
     public function testSizeOptions(): void
@@ -102,6 +112,7 @@ class SearchTest extends TestCase
             ->setPayload('foobar')
             ->setSortBy('@num1', 'ASC')
             ->setLimit(12, 10)
+            ->setDialect(2)
         ;
 
         static::assertSame([
@@ -128,6 +139,7 @@ class SearchTest extends TestCase
             'PAYLOAD', 'foobar',
             'SORTBY', '@num1', 'ASC',
             'LIMIT', 12, 10,
+            'DIALECT', 2,
         ], $command->getArguments());
     }
 
@@ -233,5 +245,27 @@ class SearchTest extends TestCase
         $actualResponse = $command->parseResponse($redisResponse);
 
         static::assertEquals($expectedResponse, $actualResponse);
+    }
+
+    public function testParsingInvalidServerResponse(): void
+    {
+        $this->expectException(UnexpectedServerResponseException::class);
+        $command = new Search(AbstractCommand::MAX_IMPLEMENTED_VERSION);
+        $command->parseResponse('foobar');
+    }
+
+    public function testParsingInvalidServerResponseContent(): void
+    {
+        $this->expectException(UnexpectedServerResponseException::class);
+
+        $redisResponse = [
+            1,
+            'hash_1',
+        ];
+
+        $command = new Search(AbstractCommand::MAX_IMPLEMENTED_VERSION);
+        $command->setQuery('*');
+
+        $command->parseResponse($redisResponse);
     }
 }
