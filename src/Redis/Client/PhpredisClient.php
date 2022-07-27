@@ -40,7 +40,7 @@ class PhpredisClient extends AbstractClient
     {
         if (!static::supports($redis)) {
             throw new RuntimeException($this->getMissingMessage('phpredis', true, [
-                Redis::class => ['rawCommand', 'multi', 'exec'],
+                Redis::class => ['rawCommand', 'multi', 'exec', 'getOption', 'setOption'],
             ]));
         }
         $this->redis = $redis;
@@ -49,12 +49,18 @@ class PhpredisClient extends AbstractClient
     public function execute(Command $command)
     {
         $arguments = $command->getArguments();
+
+        $originalValue = $this->redis->getOption(Redis::OPT_REPLY_LITERAL) ?? false;
+        $this->redis->setOption(Redis::OPT_REPLY_LITERAL, true);
+
         if (0 === count($arguments)) {
             /** @psalm-suppress TooFewArguments */
             $rawResponse = $this->redis->rawCommand($command->getId());
         } else {
             $rawResponse = $this->redis->rawCommand($command->getId(), ...$arguments);
         }
+
+        $this->redis->setOption(Redis::OPT_REPLY_LITERAL, $originalValue);
 
         return $command->parseResponse($rawResponse);
     }
@@ -64,6 +70,8 @@ class PhpredisClient extends AbstractClient
         return $redis instanceof Redis
             && method_exists($redis, 'rawCommand')
             && method_exists($redis, 'multi')
+            && method_exists($redis, 'setOption')
+            && method_exists($redis, 'getOption')
             && method_exists($redis, 'exec');
     }
 
