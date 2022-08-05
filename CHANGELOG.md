@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Missing default values on highlight option ([Issue#38])
 - Don't throw an exception if the result of the index definition is incorrect ([Issue#46])
+- Phpredis extension don't return raw response ([Issue#46])
 
 ### Changed
 

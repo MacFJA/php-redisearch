@@ -3,6 +3,8 @@ parameters:
     paths:
         - src
         - tests
+    stubFiles:
+        - vendor/ukko/phpredis-phpdoc/src/Redis.php
     excludePaths:
         analyse:
             - tests/psalm/stubs/phpiredis.php
