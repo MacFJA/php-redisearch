@@ -52,6 +52,7 @@ use MacFJA\RediSearch\Redis\Command\SynUpdate;
 use MacFJA\RediSearch\Redis\Command\TagVals;
 use Predis\Profile\RedisProfile;
 use Rediska_Commands;
+use Throwable;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -141,11 +142,12 @@ class Initializer
     {
         try {
             $modules = $client->executeRaw('module', 'list') ?? [];
-        } catch (\Throwable $exception) {
-            if (strpos($exception->getMessage(), 'unknown command') === false) {
+        } catch (Throwable $exception) {
+            if (false === stripos($exception->getMessage(), 'unknown command')) {
                 throw $exception;
             }
-            $modules = [];
+
+            return null;
         }
 
         foreach ($modules as $module) {

@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Missing default values on highlight option ([Issue#38])
 - Don't throw an exception if the result of the index definition is incorrect ([Issue#46])
 - Phpredis extension don't return raw response ([Issue#46])
+- Error with version reading if `MODULE LIST` command is protected ([PR#42])
 
 ### Changed
 
@@ -247,3 +248,4 @@ First version
 [PR#14]: https://github.com/MacFJA/php-redisearch/pull/14
 [PR#15]: https://github.com/MacFJA/php-redisearch/pull/15
 [PR#17]: https://github.com/MacFJA/php-redisearch/pull/17
+[PR#42]: https://github.com/MacFJA/php-redisearch/pull/42
