@@ -52,6 +52,7 @@ use MacFJA\RediSearch\Redis\Command\SynUpdate;
 use MacFJA\RediSearch\Redis\Command\TagVals;
 use Predis\Profile\RedisProfile;
 use Rediska_Commands;
+use Throwable;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -139,7 +140,15 @@ class Initializer
 
     public static function getRediSearchVersion(Client $client): ?string
     {
-        $modules = $client->executeRaw('module', 'list') ?? [];
+        try {
+            $modules = $client->executeRaw('module', 'list') ?? [];
+        } catch (Throwable $exception) {
+            if (false === stripos($exception->getMessage(), 'unknown command')) {
+                throw $exception;
+            }
+
+            return null;
+        }
 
         foreach ($modules as $module) {
             $data = array_column(
