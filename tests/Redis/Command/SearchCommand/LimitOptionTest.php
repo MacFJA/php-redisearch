@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\tests\Redis\Command\SearchCommand;
 
 use MacFJA\RediSearch\Redis\Command\SearchCommand\LimitOption;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption
@@ -29,7 +30,7 @@ use MacFJA\RediSearch\Redis\Command\SearchCommand\LimitOption;
  *
  * @internal
  */
-class LimitOptionTest extends \PHPUnit\Framework\TestCase
+class LimitOptionTest extends TestCase
 {
     public function testSetOffset(): void
     {

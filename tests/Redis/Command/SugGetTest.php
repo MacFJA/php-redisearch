@@ -28,7 +28,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Exception\UnexpectedServerResponseException
- *
  * @covers \MacFJA\RediSearch\Redis\Command\AbstractCommand
  * @covers \MacFJA\RediSearch\Redis\Command\SugGet
  *
@@ -73,7 +72,7 @@ class SugGetTest extends TestCase
         ];
 
         $rawResult = [
-            'hello',  '0.4024922251701355', 'greeting',
+            'hello', '0.4024922251701355', 'greeting',
             'hola', '0.40000000596046448', 'greeting',
         ];
 

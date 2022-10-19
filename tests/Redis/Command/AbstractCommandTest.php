@@ -24,6 +24,7 @@ namespace MacFJA\RediSearch\tests\Redis\Command;
 use InvalidArgumentException;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
 use MacFJA\RediSearch\tests\fixtures\Redis\Command\FakeAbstractCommand;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Redis\Command\AbstractCommand
@@ -33,7 +34,7 @@ use MacFJA\RediSearch\tests\fixtures\Redis\Command\FakeAbstractCommand;
  *
  * @internal
  */
-class AbstractCommandTest extends \PHPUnit\Framework\TestCase
+class AbstractCommandTest extends TestCase
 {
     public function testGetRediSearchVersion(): void
     {

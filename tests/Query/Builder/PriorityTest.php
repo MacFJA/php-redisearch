@@ -40,22 +40,20 @@ use MacFJA\RediSearch\Query\Builder\TagFacet;
 use MacFJA\RediSearch\Query\Builder\TextFacet;
 use MacFJA\RediSearch\Query\Builder\Word;
 use MacFJA\RediSearch\Redis\Command\SearchCommand\GeoFilterOption;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Query\Builder
- *
  * @covers \MacFJA\RediSearch\Query\Builder\AbstractGroup
  * @covers \MacFJA\RediSearch\Query\Builder\AndGroup
  * @covers \MacFJA\RediSearch\Query\Builder\EncapsulationGroup
  * @covers \MacFJA\RediSearch\Query\Builder\ExactMatch
  * @covers \MacFJA\RediSearch\Query\Builder\FieldFacet
- *
  * @covers \MacFJA\RediSearch\Query\Builder\Fuzzy
  * @covers \MacFJA\RediSearch\Query\Builder\GeoFacet
  * @covers \MacFJA\RediSearch\Query\Builder\Negation
  * @covers \MacFJA\RediSearch\Query\Builder\NumericFacet
  * @covers \MacFJA\RediSearch\Query\Builder\Optional
- *
  * @covers \MacFJA\RediSearch\Query\Builder\OrGroup
  * @covers \MacFJA\RediSearch\Query\Builder\Prefix
  * @covers \MacFJA\RediSearch\Query\Builder\QueryElement::priority
@@ -70,7 +68,7 @@ use MacFJA\RediSearch\Redis\Command\SearchCommand\GeoFilterOption;
  *
  * @internal
  */
-class PriorityTest extends \PHPUnit\Framework\TestCase
+class PriorityTest extends TestCase
 {
     public function testGroupPriority(): void
     {

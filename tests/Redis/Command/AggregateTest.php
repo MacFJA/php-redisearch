@@ -28,14 +28,12 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Redis\Command\AbstractCommand
- *
  * @covers \MacFJA\RediSearch\Redis\Command\Aggregate
  * @covers \MacFJA\RediSearch\Redis\Command\AggregateCommand\ApplyOption
  * @covers \MacFJA\RediSearch\Redis\Command\AggregateCommand\GroupByOption
  * @covers \MacFJA\RediSearch\Redis\Command\AggregateCommand\LimitOption
  * @covers \MacFJA\RediSearch\Redis\Command\AggregateCommand\ReduceOption
  * @covers \MacFJA\RediSearch\Redis\Command\AggregateCommand\SortByOption
- *
  * @covers \MacFJA\RediSearch\Redis\Command\AggregateCommand\WithCursor
  *
  * @uses \MacFJA\RediSearch\Redis\Command\SearchCommand\LimitOption
@@ -188,7 +186,7 @@ class AggregateTest extends TestCase
             'VERBATIM',
             'LOAD', 2, '@geo1', '@tag1',
             'GROUPBY', 1, '@text1', 'REDUCE', 'COUNT_DISTINCT', 1, '@user_id', 'REDUCE', 'AVG', 1, '@num1', 'AS', 'average',
-            'APPLY', '@timestamp - (@timestamp % 86400)',  'AS', 'day',
+            'APPLY', '@timestamp - (@timestamp % 86400)', 'AS', 'day',
             'SORTBY', 3, '@text1', '@num1', 'DESC', 'MAX', 10,
             'LIMIT', 12, 35,
             'FILTER', "@name=='foo' && @age < 20",
@@ -221,9 +219,9 @@ class AggregateTest extends TestCase
             '@text1:"hello world"',
             'VERBATIM',
             'LOAD', 2, '@geo1', '@tag1',
-            'APPLY', 'split(@tag1)',  'AS', 'tag2',
+            'APPLY', 'split(@tag1)', 'AS', 'tag2',
             'GROUPBY', 1, '@text1', 'REDUCE', 'COUNT_DISTINCT', 1, '@user_id', 'REDUCE', 'AVG', 1, '@num1', 'AS', 'average',
-            'APPLY', '@age - 1',  'AS', 'age',
+            'APPLY', '@age - 1', 'AS', 'age',
             'SORTBY', 3, '@text1', '@num1', 'DESC', 'MAX', 10,
             'LIMIT', 12, 35,
             'FILTER', "@name=='foo' && @age < 20",

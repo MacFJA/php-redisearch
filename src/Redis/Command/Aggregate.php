@@ -219,6 +219,7 @@ class Aggregate extends AbstractCommand implements PaginatedCommand
      * @param array|mixed|string $data
      *
      * @return CursorResponse|PaginatedResponse<AggregateResponseItem>
+     *
      * @phpstan-return CursorResponse|PaginatedResponse
      */
     public function parseResponse($data)

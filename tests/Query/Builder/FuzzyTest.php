@@ -23,6 +23,7 @@ namespace MacFJA\RediSearch\tests\Query\Builder;
 
 use MacFJA\RediSearch\Exception\OutOfRangeLevenshteinDistanceException;
 use MacFJA\RediSearch\Query\Builder\Fuzzy;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Exception\OutOfRangeLevenshteinDistanceException
@@ -30,7 +31,7 @@ use MacFJA\RediSearch\Query\Builder\Fuzzy;
  *
  * @internal
  */
-class FuzzyTest extends \PHPUnit\Framework\TestCase
+class FuzzyTest extends TestCase
 {
     public function testTooLow(): void
     {

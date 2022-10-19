@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\tests\Redis\Command\SpellCheckCommand;
 
 use MacFJA\RediSearch\Redis\Command\SpellCheckCommand\TermsOption;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Redis\Command\SpellCheckCommand\TermsOption
@@ -33,7 +34,7 @@ use MacFJA\RediSearch\Redis\Command\SpellCheckCommand\TermsOption;
  *
  * @internal
  */
-class TermsOptionTest extends \PHPUnit\Framework\TestCase
+class TermsOptionTest extends TestCase
 {
     public function testFullOptions(): void
     {

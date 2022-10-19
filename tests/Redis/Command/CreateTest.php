@@ -70,7 +70,7 @@ class CreateTest extends TestCase
 
         static::assertSame([
             'idx',
-            'PREFIX', 2,  'document_', 'doc_',
+            'PREFIX', 2, 'document_', 'doc_',
             'LANGUAGE', 'french',
             'SCHEMA',
             'title', 'TEXT', 'SORTABLE',

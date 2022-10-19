@@ -22,13 +22,14 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\tests\Redis\Command\Option;
 
 use MacFJA\RediSearch\tests\fixtures\Redis\Command\Option\FakeAbstractCommandOption;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption
  *
  * @internal
  */
-class AbstractCommandOptionTest extends \PHPUnit\Framework\TestCase
+class AbstractCommandOptionTest extends TestCase
 {
     public function testIsCompatible(): void
     {

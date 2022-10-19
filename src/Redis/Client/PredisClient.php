@@ -104,6 +104,7 @@ class PredisClient extends AbstractClient
 
     /**
      * @param array<float|int|string> $args
+     *
      * @codeCoverageIgnore
      */
     private static function createRawCommand(array $args): CommandInterface

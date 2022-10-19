@@ -28,9 +28,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers  \MacFJA\RediSearch\Exception\UnexpectedServerResponseException
- *
  * @covers  \MacFJA\RediSearch\Redis\Command\AbstractCommand
- *
  * @covers \MacFJA\RediSearch\Redis\Command\SpellCheck
  * @covers \MacFJA\RediSearch\Redis\Command\SpellCheckCommand\TermsOption
  **

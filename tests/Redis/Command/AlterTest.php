@@ -29,7 +29,6 @@ use PHPUnit\Framework\TestCase;
  * @covers \MacFJA\RediSearch\Redis\Command\Alter
  * @covers \MacFJA\RediSearch\Redis\Command\CreateCommand\GeoFieldOption
  * @covers \MacFJA\RediSearch\Redis\Command\CreateCommand\NumericFieldOption
- *
  * @covers \MacFJA\RediSearch\Redis\Command\CreateCommand\TagFieldOption
  *
  * @uses \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption

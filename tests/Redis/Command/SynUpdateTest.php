@@ -26,7 +26,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Redis\Command\AbstractCommand
- *
  * @covers \MacFJA\RediSearch\Redis\Command\SynUpdate
  *
  * @uses \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption
@@ -54,7 +53,7 @@ class SynUpdateTest extends TestCase
         ;
 
         static::assertSame([
-            'idx', 'blue', 'SKIPINITIALSCAN', 'blue',  'cyan', 'navy', 'teal',
+            'idx', 'blue', 'SKIPINITIALSCAN', 'blue', 'cyan', 'navy', 'teal',
         ], $command->getArguments());
     }
 }

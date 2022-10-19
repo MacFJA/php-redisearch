@@ -27,7 +27,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \MacFJA\RediSearch\Redis\Command\AbstractCommand
  * @covers \MacFJA\RediSearch\Redis\Command\Explain
- *
  * @covers \MacFJA\RediSearch\Redis\Command\ExplainCli
  *
  * @uses \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption

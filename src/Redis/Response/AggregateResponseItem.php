@@ -51,8 +51,11 @@ class AggregateResponseItem implements ResponseItem
      * @return null|array<mixed>|float|int|string
      *
      * @deprecated Use ::getFieldValue instead
+     *
      * @codeCoverageIgnore
+     *
      * @psalm-suppress
+     *
      * @SuppressWarnings
      */
     public function getValue(string $fieldName, $default = null)

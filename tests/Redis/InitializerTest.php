@@ -24,16 +24,18 @@ namespace MacFJA\RediSearch\tests\Redis;
 use Generator;
 use MacFJA\RediSearch\Redis\Client;
 use MacFJA\RediSearch\Redis\Initializer;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Redis\Initializer
  *
  * @internal
  */
-class InitializerTest extends \PHPUnit\Framework\TestCase
+class InitializerTest extends TestCase
 {
     /**
      * @param array<string> $input
+     *
      * @dataProvider dataProvider
      */
     public function testRediSearchVersion(array $input, ?string $expected): void

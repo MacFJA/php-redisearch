@@ -64,6 +64,7 @@ class IndexBuilderTest extends TestCase
 {
     /**
      * @return array<Create|IndexBuilder>
+     *
      * @medium
      */
     public function testAllSetter(): array

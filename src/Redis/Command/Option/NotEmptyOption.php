@@ -25,6 +25,7 @@ use function count;
 
 /**
  * @template T of CommandOption
+ *
  * @mixin T
  */
 class NotEmptyOption implements CommandOption, DecoratedCommandOption
