@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased v2.x]
 
+### Added
+
+- Path validation for JSON fields
+
 ### Changed
 
 - (dev) Update PHP-CS-Fixer to version `3.12.0`

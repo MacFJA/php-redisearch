@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\tests\Redis\Command\Option;
 
+use MacFJA\RediSearch\Exception\InvalidJSONPathException;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\JSONFieldOption;
 use MacFJA\RediSearch\Redis\Command\CreateCommand\TextFieldOption;
 use PHPUnit\Framework\TestCase;
@@ -36,6 +37,7 @@ use PHPUnit\Framework\TestCase;
  * @uses \MacFJA\RediSearch\Redis\Command\Option\GroupedOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\NamedOption
  * @uses \MacFJA\RediSearch\Redis\Command\Option\NamelessOption
+ * @uses \MacFJA\RediSearch\Exception\InvalidJSONPathException
  *
  * @internal
  */
@@ -50,9 +52,14 @@ class JSONFieldOptionTest extends TestCase
         static::assertFalse($json->isValid());
 
         $option->setField('data');
-        $json = new JSONFieldOption('', $option);
         static::assertTrue($option->isValid());
-        static::assertFalse($json->isValid());
+
+        try {
+            new JSONFieldOption('', $option);
+            static::fail();
+        } catch (InvalidJSONPathException $e) {
+            // Do nothing
+        }
 
         $json = new JSONFieldOption('$.data', $option);
         static::assertTrue($option->isValid());
