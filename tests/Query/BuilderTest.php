@@ -47,7 +47,6 @@ use PHPUnit\Framework\TestCase;
  * @covers \MacFJA\RediSearch\Query\Builder\TextFacet
  * @covers \MacFJA\RediSearch\Query\Builder\Word
  * @covers \MacFJA\RediSearch\Query\Escaper
- *
  * @covers \MacFJA\RediSearch\Redis\Command\Search::addParam
  *
  * @uses \MacFJA\RediSearch\Redis\Command\AbstractCommand

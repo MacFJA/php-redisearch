@@ -23,6 +23,7 @@ namespace MacFJA\RediSearch\tests\Query\Builder;
 
 use MacFJA\RediSearch\Query\Builder\QueryElementAttribute;
 use MacFJA\RediSearch\Query\Builder\RawElement;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Query\Builder\QueryElementAttribute
@@ -32,7 +33,7 @@ use MacFJA\RediSearch\Query\Builder\RawElement;
  *
  * @internal
  */
-class QueryElementAttributeTest extends \PHPUnit\Framework\TestCase
+class QueryElementAttributeTest extends TestCase
 {
     /**
      * @dataProvider dataProvider

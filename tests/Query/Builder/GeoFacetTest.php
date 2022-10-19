@@ -23,6 +23,7 @@ namespace MacFJA\RediSearch\tests\Query\Builder;
 
 use MacFJA\RediSearch\Exception\UnknownUnitException;
 use MacFJA\RediSearch\Query\Builder\GeoFacet;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Exception\UnknownUnitException
@@ -30,7 +31,7 @@ use MacFJA\RediSearch\Query\Builder\GeoFacet;
  *
  * @internal
  */
-class GeoFacetTest extends \PHPUnit\Framework\TestCase
+class GeoFacetTest extends TestCase
 {
     public function testWrongUnit(): void
     {

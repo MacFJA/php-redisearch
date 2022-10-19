@@ -28,7 +28,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Redis\Command\AbstractCommand
- *
  * @covers \MacFJA\RediSearch\Redis\Command\Profile
  * @covers \MacFJA\RediSearch\Redis\Command\ProfileCommand\QueryOption
  *

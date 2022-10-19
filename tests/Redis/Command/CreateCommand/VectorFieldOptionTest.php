@@ -66,7 +66,7 @@ class VectorFieldOptionTest extends TestCase
         $option->setField('vec');
         $option->setAlgorithm(VectorFieldOption::ALGORITHM_FLAT);
         $option->addFlatAttribute(VectorFieldOption::TYPE_FLOAT32, 10, VectorFieldOption::DISTANCE_METRIC_IP);
-        static::assertSame(['vec', 'VECTOR', 'FLAT',  6, 'TYPE', 'FLOAT32', 'DIM', 10, 'DISTANCE_METRIC', 'IP'], $option->render('2.4.0'));
+        static::assertSame(['vec', 'VECTOR', 'FLAT', 6, 'TYPE', 'FLOAT32', 'DIM', 10, 'DISTANCE_METRIC', 'IP'], $option->render('2.4.0'));
 
         $option = new VectorFieldOption();
         $option->setField('vec');
@@ -95,7 +95,7 @@ class VectorFieldOptionTest extends TestCase
         $option->setField('vec');
         $option->setAlgorithm(VectorFieldOption::ALGORITHM_HNSW);
         $option->addHnswAttribute(VectorFieldOption::TYPE_FLOAT32, 10, VectorFieldOption::DISTANCE_METRIC_IP);
-        static::assertSame(['vec', 'VECTOR', 'HNSW',  6, 'TYPE', 'FLOAT32', 'DIM', 10, 'DISTANCE_METRIC', 'IP'], $option->render('2.4.0'));
+        static::assertSame(['vec', 'VECTOR', 'HNSW', 6, 'TYPE', 'FLOAT32', 'DIM', 10, 'DISTANCE_METRIC', 'IP'], $option->render('2.4.0'));
 
         $option = new VectorFieldOption();
         $option->setField('vec');
@@ -109,7 +109,7 @@ class VectorFieldOptionTest extends TestCase
             500,
             50
         );
-        static::assertSame(['vec', 'VECTOR', 'HNSW',  14, 'TYPE', 'FLOAT32', 'DIM', 10, 'DISTANCE_METRIC', 'IP', 'INITIAL_CAP', 1000, 'M', 10, 'EF_CONSTRUCTION', 500, 'EF_RUNTIME', 50], $option->render('2.4.0'));
+        static::assertSame(['vec', 'VECTOR', 'HNSW', 14, 'TYPE', 'FLOAT32', 'DIM', 10, 'DISTANCE_METRIC', 'IP', 'INITIAL_CAP', 1000, 'M', 10, 'EF_CONSTRUCTION', 500, 'EF_RUNTIME', 50], $option->render('2.4.0'));
     }
 
     /**

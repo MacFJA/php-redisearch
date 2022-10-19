@@ -159,9 +159,8 @@ class InfoResponse implements Response
             assert($object instanceof GroupedOption);
             $object->setDataOfOption('field', $fieldName);
             $object = self::setOptionFlag($object, $field, 'NOINDEX', 'no_index');
-            $object = self::setOptionFlag($object, $field, 'SORTABLE', 'sortable');
 
-            return $object;
+            return self::setOptionFlag($object, $field, 'SORTABLE', 'sortable');
         }, $fields);
     }
 

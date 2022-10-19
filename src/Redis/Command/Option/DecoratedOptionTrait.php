@@ -25,12 +25,14 @@ use BadMethodCallException;
 
 /**
  * @template T of CommandOption
+ *
  * @mixin T
  */
 trait DecoratedOptionTrait
 {
     /**
      * @var CommandOption
+     *
      * @phpstan-var T
      */
     private $decorated;

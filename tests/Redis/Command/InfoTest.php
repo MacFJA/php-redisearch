@@ -27,9 +27,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Exception\UnexpectedServerResponseException
- *
  * @covers  \MacFJA\RediSearch\Redis\Command\AbstractCommand
- *
  * @covers \MacFJA\RediSearch\Redis\Command\Info
  **
  * @uses \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption

@@ -24,13 +24,14 @@ namespace MacFJA\RediSearch\tests\Query;
 use function count;
 
 use MacFJA\RediSearch\Query\Escaper;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Query\Escaper
  *
  * @internal
  */
-class EscaperTest extends \PHPUnit\Framework\TestCase
+class EscaperTest extends TestCase
 {
     private const TEST_TO_FIXTURE = [
         'testEscapeFieldName' => 'field name',

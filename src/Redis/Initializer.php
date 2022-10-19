@@ -61,6 +61,7 @@ class Initializer
 {
     /**
      * @codeCoverageIgnore
+     *
      * @psalm-suppress UndefinedDocblockClass
      * @psalm-suppress UndefinedClass
      *

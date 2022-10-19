@@ -26,7 +26,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Redis\Command\AbstractCommand
- *
  * @covers \MacFJA\RediSearch\Redis\Command\AliasAdd
  *
  * @uses \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption

@@ -39,6 +39,7 @@ class PhpiredisClient extends AbstractClient
 
     /**
      * @param resource $redis
+     *
      * @psalm-assert function_exists('phpiredis_command_bs')
      * @psalm-assert function_exists('phpiredis_multi_command_bs')
      */

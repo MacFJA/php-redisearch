@@ -32,6 +32,7 @@ use MacFJA\RediSearch\Redis\Command\CreateCommand\TextFieldOption;
 use MacFJA\RediSearch\Redis\Command\DropIndex;
 use MacFJA\RediSearch\Redis\Command\TagVals;
 use MacFJA\RediSearch\Redis\Response\InfoResponse;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Index
@@ -60,7 +61,7 @@ use MacFJA\RediSearch\Redis\Response\InfoResponse;
  *
  * @internal
  */
-class IndexTest extends \PHPUnit\Framework\TestCase
+class IndexTest extends TestCase
 {
     public function testAddDocumentFromArray(): void
     {

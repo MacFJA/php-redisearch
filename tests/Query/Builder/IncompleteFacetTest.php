@@ -35,7 +35,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \MacFJA\RediSearch\Exception\NotEnoughFieldsException
  * @covers \MacFJA\RediSearch\Exception\NotEnoughTermsException
- *
  * @covers \MacFJA\RediSearch\Query\Builder\FieldFacet
  * @covers \MacFJA\RediSearch\Query\Builder\GeoFacet
  * @covers \MacFJA\RediSearch\Query\Builder\NumericFacet

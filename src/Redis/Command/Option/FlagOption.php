@@ -59,6 +59,7 @@ class FlagOption extends AbstractCommandOption
 
     /**
      * @return bool
+     *
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getOptionData()

@@ -27,6 +27,7 @@ use Respect\Validation\Validatable;
 
 /**
  * @template T of CommandOption
+ *
  * @mixin T
  */
 class CustomValidatorOption implements CommandOption, DecoratedCommandOption
@@ -47,6 +48,7 @@ class CustomValidatorOption implements CommandOption, DecoratedCommandOption
 
     /**
      * @phpstan-param T $decorated
+     *
      * @psalm-param CommandOption $decorated
      *
      * @param array<float|int|string> $allowed
@@ -60,6 +62,7 @@ class CustomValidatorOption implements CommandOption, DecoratedCommandOption
 
     /**
      * @phpstan-param T $decorated
+     *
      * @psalm-param CommandOption $decorated
      *
      * @return static<T>

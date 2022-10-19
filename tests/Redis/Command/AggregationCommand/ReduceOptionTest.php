@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\tests\Redis\Command\AggregationCommand;
 
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\ReduceOption;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Redis\Command\AggregateCommand\ReduceOption
@@ -30,7 +31,7 @@ use MacFJA\RediSearch\Redis\Command\AggregateCommand\ReduceOption;
  *
  * @internal
  */
-class ReduceOptionTest extends \PHPUnit\Framework\TestCase
+class ReduceOptionTest extends TestCase
 {
     public function testShorthands(): void
     {

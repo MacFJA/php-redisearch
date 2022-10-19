@@ -31,18 +31,14 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Exception\UnexpectedServerResponseException
- *
  * @covers  \MacFJA\RediSearch\Redis\Command\AbstractCommand
  * @covers \MacFJA\RediSearch\Redis\Command\Search
  * @covers \MacFJA\RediSearch\Redis\Command\SearchCommand\FilterOption
  * @covers \MacFJA\RediSearch\Redis\Command\SearchCommand\GeoFilterOption
  * @covers \MacFJA\RediSearch\Redis\Command\SearchCommand\HighlightOption
  * @covers \MacFJA\RediSearch\Redis\Command\SearchCommand\LimitOption
- *
  * @covers \MacFJA\RediSearch\Redis\Command\SearchCommand\SortByOption
- *
  * @covers \MacFJA\RediSearch\Redis\Command\SearchCommand\SummarizeOption
- *
  * @covers \MacFJA\RediSearch\Redis\Response\PaginatedResponse
  *
  * @uses \MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption

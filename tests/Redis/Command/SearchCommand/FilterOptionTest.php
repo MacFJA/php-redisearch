@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\tests\Redis\Command\SearchCommand;
 
 use MacFJA\RediSearch\Redis\Command\SearchCommand\FilterOption;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Redis\Command\SearchCommand\FilterOption
@@ -30,7 +31,7 @@ use MacFJA\RediSearch\Redis\Command\SearchCommand\FilterOption;
  *
  * @internal
  */
-class FilterOptionTest extends \PHPUnit\Framework\TestCase
+class FilterOptionTest extends TestCase
 {
     public function testShorthands(): void
     {

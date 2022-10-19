@@ -173,6 +173,7 @@ class DockerTest extends TestCase
 
     /**
      * @dataProvider dataProvider
+     *
      * @large
      *
      * @param mixed $clientBuilder
@@ -299,6 +300,7 @@ class DockerTest extends TestCase
 
     /**
      * @dataProvider dataProvider
+     *
      * @large
      *
      * @param mixed $clientBuilder

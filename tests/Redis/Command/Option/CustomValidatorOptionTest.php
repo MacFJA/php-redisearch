@@ -25,6 +25,7 @@ use BadMethodCallException;
 use Generator;
 use MacFJA\RediSearch\Redis\Command\Option\CustomValidatorOption;
 use MacFJA\RediSearch\Redis\Command\Option\NamelessOption;
+use PHPUnit\Framework\TestCase;
 use Respect\Validation\Rules\Length;
 
 /**
@@ -36,7 +37,7 @@ use Respect\Validation\Rules\Length;
  *
  * @internal
  */
-class CustomValidatorOptionTest extends \PHPUnit\Framework\TestCase
+class CustomValidatorOptionTest extends TestCase
 {
     use BaseOptionTestTrait;
     use TestIsCompatibleTrait;

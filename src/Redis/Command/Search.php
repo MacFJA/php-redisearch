@@ -335,6 +335,7 @@ class Search extends AbstractCommand implements PaginatedCommand
      * @param mixed $data
      *
      * @return PaginatedResponse
+     *
      * @psalm-return PaginatedResponse<SearchResponseItem>
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)

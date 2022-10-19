@@ -24,6 +24,7 @@ namespace MacFJA\RediSearch\tests\Redis\Command;
 use BadMethodCallException;
 use MacFJA\RediSearch\tests\fixtures\Redis\Command\FakeAddFieldOptionTraitClass1;
 use MacFJA\RediSearch\tests\fixtures\Redis\Command\FakeAddFieldOptionTraitClass2;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \MacFJA\RediSearch\Redis\Command\AddFieldOptionTrait
@@ -39,7 +40,7 @@ use MacFJA\RediSearch\tests\fixtures\Redis\Command\FakeAddFieldOptionTraitClass2
  *
  * @internal
  */
-class AddFieldOptionTraitTest extends \PHPUnit\Framework\TestCase
+class AddFieldOptionTraitTest extends TestCase
 {
     public function testWrongParent(): void
     {
