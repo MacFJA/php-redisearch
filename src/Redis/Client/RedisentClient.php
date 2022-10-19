@@ -49,13 +49,6 @@ class RedisentClient extends AbstractClient
         return new self($redis);
     }
 
-    public function execute(Command $command)
-    {
-        $result = $this->redis->__call($command->getId(), $command->getArguments());
-
-        return $command->parseResponse($result);
-    }
-
     public function executeRaw(...$args)
     {
         $command = array_shift($args);

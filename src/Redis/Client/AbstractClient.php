@@ -41,6 +41,18 @@ abstract class AbstractClient implements Client
         }, $results, array_keys($results));
     }
 
+    public function execute(Command $command)
+    {
+        $args = [$command->getId()];
+        $commandArgs = $command->getArguments();
+        if (count($commandArgs) > 0) {
+            array_push($args, ...$commandArgs);
+        }
+        $result = $this->executeRaw(...$args);
+
+        return $command->parseResponse($result);
+    }
+
     /**
      * @return array<mixed>
      */

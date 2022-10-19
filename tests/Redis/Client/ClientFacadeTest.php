@@ -41,6 +41,7 @@ use stdClass;
  * @uses \MacFJA\RediSearch\Redis\Client\RediskaClient
  * @uses \MacFJA\RediSearch\Redis\Client\CredisClient
  * @uses \MacFJA\RediSearch\Redis\Client\TinyRedisClient
+ * @uses \MacFJA\RediSearch\Redis\Client\ReactRedisClient
  *
  * @internal
  */

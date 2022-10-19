@@ -22,9 +22,11 @@ declare(strict_types=1);
 namespace MacFJA\RediSearch\Redis\Client;
 
 use Amp\Redis\Redis as AmpRedis;
+use Clue\React\Redis\Client as ReactClient;
 use Credis_Client as CredisRedis;
 use MacFJA\RediSearch\Redis\Client;
 use Predis\ClientInterface as PredisRedis;
+use React\Promise\Promise as ReactPromise;
 use Redis as PhpredisRedis;
 use RedisClient\Client\AbstractRedisClient as CheprasovRedis;
 use redisent\Redis as RedisentRedis;
@@ -44,10 +46,11 @@ class ClientFacade
         RediskaClient::class,
         AmpRedisClient::class,
         TinyRedisClient::class,
+        ReactRedisClient::class,
     ];
 
     /**
-     * @param AmpRedis|CheprasovRedis|CredisRedis|mixed|PhpredisRedis|PredisRedis|RedisentRedis|RediskaRedis|resource $redis
+     * @param AmpRedis|CheprasovRedis|CredisRedis|mixed|PhpredisRedis|PredisRedis|ReactClient|ReactPromise|RedisentRedis|RediskaRedis|resource $redis
      */
     public function getClient($redis): Client
     {
