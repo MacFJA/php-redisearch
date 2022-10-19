@@ -21,12 +21,14 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\tests\Redis\Command;
 
+use MacFJA\RediSearch\Exception\UnexpectedServerResponseException;
 use MacFJA\RediSearch\Redis\Command\Aggregate;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\GroupByOption;
 use MacFJA\RediSearch\Redis\Command\AggregateCommand\ReduceOption;
 use PHPUnit\Framework\TestCase;
 
 /**
+ * @covers \MacFJA\RediSearch\Exception\UnexpectedServerResponseException
  * @covers \MacFJA\RediSearch\Redis\Command\AbstractCommand
  * @covers \MacFJA\RediSearch\Redis\Command\Aggregate
  * @covers \MacFJA\RediSearch\Redis\Command\AggregateCommand\ApplyOption
@@ -227,5 +229,12 @@ class AggregateTest extends TestCase
             'FILTER', "@name=='foo' && @age < 20",
             'WITHCURSOR', 'COUNT', 20, 'MAXIDLE', 30,
         ], $command->getArguments());
+    }
+
+    public function testResponseError(): void
+    {
+        $this->expectException(UnexpectedServerResponseException::class);
+        $command = new Aggregate();
+        $command->parseResponse(false);
     }
 }

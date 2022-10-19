@@ -139,7 +139,7 @@ class Initializer
         Rediska_Commands::add('__redisearch', RediskaRediSearchCommand::class);
     }
 
-    public static function getRediSearchVersion(Client $client): ?string
+    public static function getRedisModuleVersion(Client $client, string $module): ?string
     {
         try {
             $modules = $client->executeRaw('module', 'list') ?? [];
@@ -151,17 +151,17 @@ class Initializer
             return null;
         }
 
-        foreach ($modules as $module) {
+        foreach ($modules as $moduleData) {
             $data = array_column(
                 array_chunk(
-                    $module,
+                    $moduleData,
                     2
                 ),
                 1,
                 0
             );
 
-            if (!(($data['name'] ?? '') === 'search') || empty($data['ver'])) {
+            if (!(($data['name'] ?? '') === $module) || empty($data['ver'])) {
                 continue;
             }
 
@@ -178,5 +178,15 @@ class Initializer
         }
 
         return null;
+    }
+
+    public static function getRediSearchVersion(Client $client): ?string
+    {
+        return self::getRedisModuleVersion($client, 'search');
+    }
+
+    public static function getRedisJSONVersion(Client $client): ?string
+    {
+        return self::getRedisModuleVersion($client, 'ReJSON');
     }
 }
