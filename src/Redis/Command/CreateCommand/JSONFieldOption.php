@@ -21,6 +21,11 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Command\CreateCommand;
 
+use function count;
+
+use Flow\JSONPath\JSONPath;
+use Flow\JSONPath\JSONPathException;
+use MacFJA\RediSearch\Exception\InvalidJSONPathException;
 use MacFJA\RediSearch\Redis\Command\Option\AbstractCommandOption;
 
 class JSONFieldOption extends AbstractCommandOption implements CreateCommandJSONFieldOption
@@ -36,6 +41,9 @@ class JSONFieldOption extends AbstractCommandOption implements CreateCommandJSON
         parent::__construct('>=2.2.0');
         $this->path = $path;
         $this->decorated = $decorated;
+        if (!self::isPathValid($path)) {
+            throw new InvalidJSONPathException($path);
+        }
     }
 
     public function isValid(): bool
@@ -61,6 +69,26 @@ class JSONFieldOption extends AbstractCommandOption implements CreateCommandJSON
     public function getJSONPath(): string
     {
         return $this->path;
+    }
+
+    /**
+     * @throws InvalidJSONPathException
+     */
+    public static function isPathValid(string $path): bool
+    {
+        if (0 === strpos($path, '$')) {
+            $parser = new JSONPath();
+
+            try {
+                $result = $parser->parseTokens($path);
+
+                return count($result) > 0;
+            } catch (JSONPathException $e) {
+                throw new InvalidJSONPathException($path, $e);
+            }
+        }
+
+        return false;
     }
 
     protected function doRender(?string $version): array

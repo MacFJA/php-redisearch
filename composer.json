@@ -23,7 +23,8 @@
         "php": "^7.2 || ^8.0",
         "ext-intl": "*",
         "composer/semver": "^3.2",
-        "respect/validation": "^2.0"
+        "respect/validation": "^2.0",
+        "softcreatr/jsonpath": "^0.7.6 || ^0.8.1"
     },
     "require-dev": {
         "ext-mbstring": "*",
