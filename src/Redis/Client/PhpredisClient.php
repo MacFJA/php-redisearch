@@ -85,6 +85,7 @@ class PhpredisClient extends AbstractClient
         if (count($args) < 1) {
             return null;
         }
+
         // @phpstan-ignore-next-line
         return $this->redis->rawCommand(...$args);
     }

@@ -30,15 +30,9 @@ const PHPIREDIS_REPLY_NIL = 4;
 const PHPIREDIS_REPLY_STATUS = 5;
 const PHPIREDIS_REPLY_ERROR = 6;
 
-function phpiredis_connect($host, $port = 6379): void
-{
-}
-function phpiredis_pconnect($host, $port = 6379): void
-{
-}
-function phpiredis_disconnect(): void
-{
-}
+function phpiredis_connect($host, $port = 6379): void {}
+function phpiredis_pconnect($host, $port = 6379): void {}
+function phpiredis_disconnect(): void {}
 
 /**
  * @param resource $redis
@@ -46,18 +40,14 @@ function phpiredis_disconnect(): void
  *
  * @return bool|string
  */
-function phpiredis_command_bs($redis, array $command)
-{
-}
+function phpiredis_command_bs($redis, array $command) {}
 
 /**
  * @param resource $redis
  *
  * @return bool|string
  */
-function phpiredis_command($redis, string $command)
-{
-}
+function phpiredis_command($redis, string $command) {}
 
 /**
  * @param resource      $redis
@@ -65,9 +55,7 @@ function phpiredis_command($redis, string $command)
  *
  * @return array<bool|string>
  */
-function phpiredis_multi_command($redis, array $commands)
-{
-}
+function phpiredis_multi_command($redis, array $commands) {}
 
 /**
  * @param resource             $redis
@@ -75,85 +63,61 @@ function phpiredis_multi_command($redis, array $commands)
  *
  * @return array<bool|string>
  */
-function phpiredis_multi_command_bs($redis, array $commands)
-{
-}
+function phpiredis_multi_command_bs($redis, array $commands) {}
 
 /**
  * @param array<float|int|string> $args
  */
-function phpiredis_format_command(array $args): string
-{
-}
+function phpiredis_format_command(array $args): string {}
 
 /**
  * @return resource
  */
-function phpiredis_reader_create()
-{
-}
+function phpiredis_reader_create() {}
 
 /**
  * @param resource $reader
  */
-function phpiredis_reader_reset($reader): void
-{
-}
+function phpiredis_reader_reset($reader): void {}
 
 /**
  * @param resource $reader
  */
-function phpiredis_reader_feed($reader, string $response): void
-{
-}
+function phpiredis_reader_feed($reader, string $response): void {}
 
 /**
  * @param resource $reader
  *
  * @return bool|int
  */
-function phpiredis_reader_get_state($reader)
-{
-}
+function phpiredis_reader_get_state($reader) {}
 
 /**
  * @param resource $reader
  *
  * @return bool|string
  */
-function phpiredis_reader_get_error($reader)
-{
-}
+function phpiredis_reader_get_error($reader) {}
 
 /**
  * @param resource $reader
  *
  * @return array<array|bool|int|string>|bool|int|string
  */
-function phpiredis_reader_get_reply($reader, int &$type)
-{
-}
+function phpiredis_reader_get_reply($reader, int &$type) {}
 
 /**
  * @param resource $redis
  */
-function phpiredis_reader_destroy($redis): void
-{
-}
+function phpiredis_reader_destroy($redis): void {}
 
 /**
  * @param resource $reader
  */
-function phpiredis_reader_set_error_handler($reader, ?callable $handler): void
-{
-}
+function phpiredis_reader_set_error_handler($reader, ?callable $handler): void {}
 
 /**
  * @param resource $reader
  */
-function phpiredis_reader_set_status_handler($reader, ?callable $handler): void
-{
-}
-function phpiredis_utils_crc16(string $data): int
-{
-}
+function phpiredis_reader_set_status_handler($reader, ?callable $handler): void {}
+function phpiredis_utils_crc16(string $data): int {}

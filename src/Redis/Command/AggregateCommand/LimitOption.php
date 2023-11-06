@@ -21,6 +21,4 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Command\AggregateCommand;
 
-class LimitOption extends \MacFJA\RediSearch\Redis\Command\SearchCommand\LimitOption
-{
-}
+class LimitOption extends \MacFJA\RediSearch\Redis\Command\SearchCommand\LimitOption {}

@@ -65,6 +65,7 @@ class AggregateResponseItem implements ResponseItem
             __METHOD__,
             __CLASS__
         ), E_USER_DEPRECATED);
+
         // @phpstan-ignore-next-line
         return $this->getFieldValue($fieldName, $default);
     }

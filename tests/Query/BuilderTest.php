@@ -384,8 +384,7 @@ class BuilderTest extends TestCase
         $expected = 'hello|world';
         $builder = new Builder();
 
-        $builder->addElement(Builder\OrGroup::fromStrings('hello', 'world'))
-        ;
+        $builder->addElement(Builder\OrGroup::fromStrings('hello', 'world'));
 
         static::assertSame($expected, $builder->render());
     }

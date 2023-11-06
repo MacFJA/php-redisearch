@@ -107,7 +107,7 @@ class GroupedOptionTest extends TestCase
     public function testSetUnknownOptionData(): void
     {
         $this->expectException(OutOfRangeException::class);
-        $this->expectErrorMessage('There is no option for foobar');
+        $this->expectExceptionMessage('There is no option for foobar');
 
         $option = new GroupedOption([], []);
         $option->setDataOfOption('foobar', 'bar');
@@ -116,7 +116,7 @@ class GroupedOptionTest extends TestCase
     public function testSetLockOptionData(): void
     {
         $this->expectException(BadMethodCallException::class);
-        $this->expectErrorMessage('The option lock can\'t be modified');
+        $this->expectExceptionMessage('The option lock can\'t be modified');
 
         $option = new GroupedOption(['lock' => new NamelessOption('foo')], [], ['lock']);
         $option->setDataOfOption('lock', 'bar');
