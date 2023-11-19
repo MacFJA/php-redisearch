@@ -33,7 +33,7 @@ use InvalidArgumentException;
 class QueryElementVector implements QueryElementDecorator
 {
     private const PARAMETERS = [
-        'EF_RUNTIME' => 'int',
+        'EF_RUNTIME' => 'integer',
     ];
 
     /** @var QueryElement */

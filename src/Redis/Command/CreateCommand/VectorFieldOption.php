@@ -121,8 +121,7 @@ class VectorFieldOption extends GroupedOption implements CreateCommandFieldOptio
             + (is_int($blockSize) ? 2 : 0)
             + (is_int($maxEdge) ? 2 : 0)
             + (is_int($efConstruction) ? 2 : 0)
-            + (is_int($efRuntime) ? 2 : 0)
-        ;
+            + (is_int($efRuntime) ? 2 : 0);
 
         /** @var int $count */
         $count = $this->getDataOfOption('count') ?? 0;

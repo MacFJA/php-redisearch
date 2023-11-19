@@ -61,6 +61,9 @@ trait DecoratedOptionTrait
         return $this->decorated->getVersionConstraint();
     }
 
+    /**
+     * @return array<float|int|string>
+     */
     public function render(?string $version = null): array
     {
         return $this->decorated->render($version);

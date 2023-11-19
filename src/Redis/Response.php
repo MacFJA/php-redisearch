@@ -21,6 +21,4 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis;
 
-interface Response
-{
-}
+interface Response {}

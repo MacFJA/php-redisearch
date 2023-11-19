@@ -360,8 +360,7 @@ class Search extends AbstractCommand implements PaginatedCommand
             + (true === $useScores ? 1 : 0)
             + (true === $usePayloads ? 1 : 0)
             + (true === $useSortKeys ? 1 : 0)
-            - (true === $noContent ? 1 : 0)
-        ;
+            - (true === $noContent ? 1 : 0);
 
         $documents = array_chunk($data, $chunkSize);
 
