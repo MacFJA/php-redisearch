@@ -24,6 +24,7 @@ This lib can use several connector for Redis:
  - [Rediska](https://github.com/Shumkov/Rediska) - Pure PHP implementation
  - [Redisent](https://github.com/jdp/redisent) - Pure PHP implementation
  - [TinyRedis](https://github.com/ptrofimov/tinyredisclient) - Pure PHP implementation
+ - [RecatPHP Redis](https://github.com/clue/reactphp-redis) - Pure PHP Async implementation
 
 You can pick the connector depending on your need.
 
@@ -56,6 +57,9 @@ $client = $clientFacade->getClient(new \TinyRedisClient(/* ... */));
 
 // With Credis
 $client = $clientFacade->getClient(new \Credis_Client(/* ... */));
+
+// With ReactPHP Redis
+$client = $clientFacade->getClient(new (new \Clue\React\Redis\Factory())->createClient(/* ... */));
 ```
 
 You can add your own implementation, all you need is to implement the interface `\MacFJA\RediSearch\Redis\Client` and add it to the client facace with:

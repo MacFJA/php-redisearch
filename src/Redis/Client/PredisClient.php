@@ -55,13 +55,6 @@ class PredisClient extends AbstractClient
         $this->redis = $redis;
     }
 
-    public function execute(Command $command)
-    {
-        $rawResponse = $this->redis->executeCommand(self::createRawCommand(array_merge([$command->getId()], $command->getArguments())));
-
-        return $command->parseResponse($rawResponse);
-    }
-
     public static function supports($redis): bool
     {
         if (

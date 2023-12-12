@@ -59,6 +59,7 @@ use TinyRedisClient;
  * @covers \MacFJA\RediSearch\Redis\Client\ClientFacade
  * @covers \MacFJA\RediSearch\Redis\Client\CredisClient
  * @covers \MacFJA\RediSearch\Redis\Client\PredisClient
+ * @covers \MacFJA\RediSearch\Redis\Client\ReactRedisClient
  * @covers \MacFJA\RediSearch\Redis\Client\RedisentClient
  * @covers \MacFJA\RediSearch\Redis\Client\RediskaClient
  * @covers \MacFJA\RediSearch\Redis\Client\TinyRedisClient
@@ -277,24 +278,26 @@ class DockerTest extends TestCase
     {
         if (in_array($testName, ['testIntegration', 'testAddDocument'])) {
             return [
-                [static function () { return Client\PredisClient::make(new \Predis\Client(['scheme' => 'tcp', 'host' => 'localhost', 'port' => '16379', 'db' => 0])); }],
-                [static function () { return Client\RediskaClient::make(new Rediska(['servers' => [['host' => 'localhost', 'port' => '16379', 'db' => 0]]])); }],
-                [static function () { return Client\RedisentClient::make(new \redisent\Redis('redis://localhost:16379')); }],
-                [static function () { return Client\CheprasovRedisClient::make(new \RedisClient\Client\Version\RedisClient6x0(['server' => 'localhost:16379', 'database' => 0])); }],
-                [static function () { return Client\AmpRedisClient::make(new \Amp\Redis\Redis(new RemoteExecutor(Config::fromUri('redis://localhost:16379')))); }],
-                [static function () { return Client\TinyRedisClient::make(new TinyRedisClient('localhost:16379')); }],
-                [static function () { return Client\CredisClient::make(new Credis_Client('localhost', 16379, null, '', 0)); }],
+                'Predis' => [static function () { return Client\PredisClient::make(new \Predis\Client(['scheme' => 'tcp', 'host' => 'localhost', 'port' => '16379', 'db' => 0])); }],
+                'Rediska' => [static function () { return Client\RediskaClient::make(new Rediska(['servers' => [['host' => 'localhost', 'port' => '16379', 'db' => 0]]])); }],
+                'Redisent' => [static function () { return Client\RedisentClient::make(new \redisent\Redis('redis://localhost:16379')); }],
+                'CheprasovRedis' => [static function () { return Client\CheprasovRedisClient::make(new \RedisClient\Client\Version\RedisClient6x0(['server' => 'localhost:16379', 'database' => 0])); }],
+                'AmpRedis' => [static function () { return Client\AmpRedisClient::make(new \Amp\Redis\Redis(new RemoteExecutor(Config::fromUri('redis://localhost:16379')))); }],
+                'TinyRedis' => [static function () { return Client\TinyRedisClient::make(new TinyRedisClient('localhost:16379')); }],
+                'Credis' => [static function () { return Client\CredisClient::make(new Credis_Client('localhost', 16379, null, '', 0)); }],
+                'ReactRedis' => [static function () { return Client\ReactRedisClient::make((new \Clue\React\Redis\Factory())->createClient('localhost:16379')); }],
             ];
         }
 
         return [
-            [Client\PredisClient::class, static function () { return new \Predis\Client(['scheme' => 'tcp', 'host' => 'localhost', 'port' => '16379', 'db' => 0]); }],
-            [Client\RediskaClient::class, static function () { return new Rediska(['servers' => [['host' => 'localhost', 'port' => '16379', 'db' => 0]]]); }],
-            [Client\RedisentClient::class, static function () { return new \redisent\Redis('redis://localhost:16379'); }],
-            [Client\CheprasovRedisClient::class, static function () { return new \RedisClient\Client\Version\RedisClient6x0(['server' => 'localhost:16379', 'database' => 0]); }],
-            [Client\AmpRedisClient::class, static function () { return new \Amp\Redis\Redis(new RemoteExecutor(Config::fromUri('redis://localhost:16379'))); }],
-            [Client\TinyRedisClient::class, static function () { return new TinyRedisClient('localhost:16379'); }],
-            [Client\CredisClient::class, static function () { return new Credis_Client('localhost', 16379, null, '', 0); }],
+            'Predis' => [Client\PredisClient::class, static function () { return new \Predis\Client(['scheme' => 'tcp', 'host' => 'localhost', 'port' => '16379', 'db' => 0]); }],
+            'Rediska' => [Client\RediskaClient::class, static function () { return new Rediska(['servers' => [['host' => 'localhost', 'port' => '16379', 'db' => 0]]]); }],
+            'Redisent' => [Client\RedisentClient::class, static function () { return new \redisent\Redis('redis://localhost:16379'); }],
+            'CheprasovRedis' => [Client\CheprasovRedisClient::class, static function () { return new \RedisClient\Client\Version\RedisClient6x0(['server' => 'localhost:16379', 'database' => 0]); }],
+            'AmpRedis' => [Client\AmpRedisClient::class, static function () { return new \Amp\Redis\Redis(new RemoteExecutor(Config::fromUri('redis://localhost:16379'))); }],
+            'TinyRedis' => [Client\TinyRedisClient::class, static function () { return new TinyRedisClient('localhost:16379'); }],
+            'Credis' => [Client\CredisClient::class, static function () { return new Credis_Client('localhost', 16379, null, '', 0); }],
+            'ReactRedis' => [Client\ReactRedisClient::class, static function () { return (new \Clue\React\Redis\Factory())->createClient('localhost:16379'); }],
         ];
     }
 

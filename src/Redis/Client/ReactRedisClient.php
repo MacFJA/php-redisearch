@@ -21,51 +21,45 @@ declare(strict_types=1);
 
 namespace MacFJA\RediSearch\Redis\Client;
 
-use function Amp\Promise\wait;
 use function function_exists;
+use function React\Async\await;
 
-use Amp\Promise;
-use Amp\Redis\Redis;
-use MacFJA\RediSearch\Redis\Client;
+use Clue\React\Redis\Client;
 use MacFJA\RediSearch\Redis\Command;
+use React\Promise\Promise;
+use React\Promise\PromiseInterface;
 use RuntimeException;
 
-class AmpRedisClient extends AbstractClient
+class ReactRedisClient extends AbstractClient
 {
-    /** @var Redis */
+    /**
+     * @var Client
+     */
     private $redis;
 
     /**
      * @codeCoverageIgnore
+     *
+     * @param mixed $redis
      */
-    private function __construct(Redis $redis)
+    private function __construct($redis)
     {
         if (!static::supports($redis)) {
-            throw new RuntimeException($this->getMissingMessage('Amp\Redis', false, [
-                Redis::class => ['query'],
-            ], ['\\Amp\\Promise\\wait']));
+            throw new RuntimeException($this->getMissingMessage('Clue Redis React and/or React\\Async', false, [
+                Client::class => [],
+                PromiseInterface::class => [],
+            ], ['\React\Async\await']));
+        }
+        if ($redis instanceof Promise) {
+            $realRedis = await($redis);
+            if (!$realRedis instanceof Client) {
+                throw new RuntimeException('The provided $redis parameter is not a valid Redis client');
+            }
+            $this->redis = $realRedis;
+
+            return;
         }
         $this->redis = $redis;
-    }
-
-    public static function make($redis): Client
-    {
-        return new self($redis);
-    }
-
-    public function executeRaw(...$args)
-    {
-        /** @var Promise<mixed> $query */
-        $query = $this->redis->query(...array_map('strval', $args));
-
-        return wait($query);
-    }
-
-    public static function supports($redis): bool
-    {
-        return $redis instanceof Redis
-            && method_exists($redis, 'query')
-            && function_exists('\\Amp\\Promise\\wait');
     }
 
     /**
@@ -74,11 +68,28 @@ class AmpRedisClient extends AbstractClient
     public function pipeline(Command ...$commands): array
     {
         false === static::$disableNotice
-            && trigger_error('Warning, \\Amp\\Redis\\Redis don\'t use a real Redis Pipeline', E_USER_NOTICE);
+        && trigger_error('Warning, Clue\\React\\Redis\\Client don\'t use a real Redis Pipeline', E_USER_NOTICE);
 
         return array_map(function (Command $command) {
             return $this->execute($command);
         }, $commands);
+    }
+
+    public static function make($redis): \MacFJA\RediSearch\Redis\Client
+    {
+        return new self($redis);
+    }
+
+    public function executeRaw(...$args)
+    {
+        $command = array_shift($args);
+
+        return await($this->redis->__call((string) $command, array_map('strval', $args)));
+    }
+
+    public static function supports($redis): bool
+    {
+        return ($redis instanceof Client || $redis instanceof PromiseInterface) && function_exists('\React\Async\await');
     }
 
     /**

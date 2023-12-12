@@ -55,13 +55,6 @@ class TinyRedisClient extends AbstractClient
         }, $commands);
     }
 
-    public function execute(Command $command)
-    {
-        $result = $this->redis->__call($command->getId(), $command->getArguments());
-
-        return $command->parseResponse($result);
-    }
-
     public function executeRaw(...$args)
     {
         $command = array_shift($args);

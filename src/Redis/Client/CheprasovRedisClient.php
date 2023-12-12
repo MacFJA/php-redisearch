@@ -52,13 +52,6 @@ class CheprasovRedisClient extends AbstractClient
         return new self($redis);
     }
 
-    public function execute(Command $command)
-    {
-        $response = $this->redis->executeRaw(array_merge([$command->getId()], $command->getArguments()));
-
-        return $command->parseResponse($response);
-    }
-
     public function executeRaw(...$args)
     {
         return $this->redis->executeRaw(array_map('strval', $args));
